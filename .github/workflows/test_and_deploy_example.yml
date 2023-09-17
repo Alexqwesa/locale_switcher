@@ -42,10 +42,6 @@ jobs:
       # - name: Verify formatting
       #   run: dart format --output=none --set-exit-if-changed .
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: flutter analyze
-
       - name: install lcov
         run: sudo apt-get install -y lcov
       # Your project will need to have tests in test/ and a dependency on
@@ -90,3 +86,7 @@ jobs:
           commit-message: '[Auto] update example'
           remote: origin
           fail-if-empty: true
+
+      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze project source
+        run: flutter analyze
