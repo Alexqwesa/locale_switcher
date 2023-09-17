@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences:
+  shared_preferences: ^2.2.1
   circle_flags: ^3.0.1
   animated_toggle_switch: ^0.8.0
 
