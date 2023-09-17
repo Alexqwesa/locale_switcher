@@ -55,7 +55,7 @@ flutter: # in this section
   generate: true  # add this line - REQUIRED   
 ```
 
-Optionally - in [l10n.yaml](l10n.yaml):
+Optionally - in [l10n.yaml](example/l10n.yaml):
 
 ```yaml
 arb-dir: lib/src/l10n

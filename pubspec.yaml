@@ -11,12 +11,14 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
+  animated_toggle_switch: ^0.8.0
+  circle_flags: ^3.0.1
+  intl:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   shared_preferences: ^2.2.1
-  circle_flags: ^3.0.1
-  animated_toggle_switch: ^0.8.0
-
 
 
   # The following adds the Cupertino Icons font to your application.
