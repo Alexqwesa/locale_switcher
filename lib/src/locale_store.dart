@@ -27,6 +27,7 @@ abstract class LocaleStore {
   ///
   /// Set it via [LocaleManager].[sharedPreferenceName]
   static String _sharedPreferenceName = 'LocaleSwitcherCurrentLocale';
+
   /// If initialized: locale will be stored in [SharedPreferences].
   static SharedPreferences? _pref;
 

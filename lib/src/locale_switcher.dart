@@ -3,7 +3,7 @@ import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
-const OTHER_LOCALES = 'show_other_locales';
+const showOtherLocales = 'show_other_locales';
 
 /// A Widget to switch locale of App.
 class LocaleSwitcher extends StatelessWidget {
@@ -29,7 +29,7 @@ class LocaleSwitcher extends StatelessWidget {
           .take(numberOfShown) // chose most used
           .map((e) => e.languageCode),
       if ((LocaleStore.supportedLocales?.length ?? 0) > numberOfShown)
-        OTHER_LOCALES
+        showOtherLocales
     ];
     return ValueListenableBuilder(
       valueListenable: LocaleStore.realLocaleNotifier,
@@ -60,14 +60,13 @@ class LocaleSwitcher extends StatelessWidget {
                         LocaleStore.setLocale(langCode);
                       },
                       style: const ToggleStyle(
-                        // indicatorColor: Colors.white38,
-                        backgroundColor: Colors.black12
-                      ),
+                          // indicatorColor: Colors.white38,
+                          backgroundColor: Colors.black12),
                       iconBuilder: (value, foreground) {
                         if (value == LocaleStore.systemLocale) {
                           return const ClipOval(child: Icon(Icons.language));
                         }
-                        if (value == OTHER_LOCALES) {
+                        if (value == showOtherLocales) {
                           return const ClipOval(child: Icon(Icons.menu));
                         }
                         if (value == 'en') {
