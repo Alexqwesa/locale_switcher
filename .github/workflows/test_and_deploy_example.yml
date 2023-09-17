@@ -7,9 +7,9 @@ name: Test + Deploy Web App
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -53,20 +53,10 @@ jobs:
           lcov --remove coverage/lcov.info 'lib/src/l10n/*' 'lib/src/generated/*' 'lib/src/stubs_for_testing/*' -o coverage/lcov.info
           # genhtml coverage/lcov.info --output=coverage
 
-      - name: Upload coverage to Codecov
-        # uses: actions/checkout@master
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          # flags: unittests # optional
-          directory: ./coverage/
-          # version: "v0.1.15"
-          verbose: true # optional (default = false)
-          # name: codecov # optional
-          # files: lcov.info
-          # fail_ci_if_error: true # optional (default = false)
-          # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Build locale_switcher
         run: |
