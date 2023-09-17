@@ -2,6 +2,8 @@
 
 A widget for switching the locale of your application.
 
+[![codecov](https://codecov.io/gh/Alexqwesa/locale_switcher/graph/badge.svg?token=2F9HPWGCQE)](https://codecov.io/gh/Alexqwesa/locale_switcher)
+
 ## About
 
 This package allows you to add locale-switching functionality to your app with just a few lines of code.

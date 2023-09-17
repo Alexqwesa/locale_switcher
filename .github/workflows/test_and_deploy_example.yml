@@ -65,16 +65,16 @@ jobs:
           flutter build web --release --base-href /locale_switcher/
           mv 'build/web/' '../docs/'
 
-      - name: Git add  docs
-        run:  git add -A docs/
+      - name: Commit files
+        run: |
+          git config --local user.email "Auto@test.com"
+          git config --local user.name "Auto"
+          git commit -a -m "[Auto] Update online example"
 
-      # - name: Upload example
-      - uses: actions-go/push@master
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          create-commit: true
-          commit-message: '[Auto] update example'
-          remote: origin
-          fail-if-empty: true
+          github_token: ${{ env.TOKEN }}
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
