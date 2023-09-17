@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "example": "An example of usage of locale_switcher ",
+  "chooseLanguage": "Please choose language",
+  "increment": "Increment",
+  "counterDescription": "You have pushed the button this many times:"
+}

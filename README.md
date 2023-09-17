@@ -44,6 +44,11 @@ The following instruction is from [intl](https://pub.dev/packages/intl) package,
 In `pubspec.yaml`:
 
 ```yaml  
+
+dependencies:
+  intl:
+  flutter_localizations:
+    sdk: flutter
 dev_dependencies: # in this section
   build_runner:   # add this line - REQUIRED   
 flutter: # in this section

@@ -74,6 +74,11 @@ class LocaleSwitcher extends StatelessWidget {
                             'us',
                           );
                         }
+                        if (value == 'vi') {
+                          return CircleFlag(
+                            'vn',
+                          );
+                        }
                         return CircleFlag(
                           value,
                         );

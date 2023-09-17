@@ -1,0 +1,7 @@
+{
+  "@@locale": "vi",
+  "example": "Một ví dụ về cách sử dụng locale_switcher",
+  "chooseLanguage": "Vui lòng chọn ngôn ngữ",
+  "increment": "Tăng",
+  "counterDescription": "Bạn đã nhấn nút này nhiều lần:"
+}
