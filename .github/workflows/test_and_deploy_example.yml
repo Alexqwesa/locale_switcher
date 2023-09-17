@@ -69,6 +69,7 @@ jobs:
         run: |
           git config --local user.email "Auto@test.com"
           git config --local user.name "Auto"
+          git add docs
           git commit -a -m "[Auto] Update online example"
 
       - name: Push changes
