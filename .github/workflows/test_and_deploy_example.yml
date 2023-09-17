@@ -68,13 +68,12 @@ jobs:
           # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
 
 
-      - name: Build web3uson
-        run: flutter build web --release --base-href /web3uson/
-
-      - name: Move web to docs
+      - name: Build locale_switcher
         run: |
           rm -rf 'docs/'
-          mv 'build/web/' 'docs/'
+          cd example/
+          flutter build web --release --base-href /locale_switcher/
+          mv 'build/web/' '../docs/'
 
       - name: Git add  docs
         run:  git add -A docs/
