@@ -33,7 +33,7 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    final deLoc = const Locale('de').tr;
+    // final deLoc = const Locale('de').tr;
     final enLoc = const Locale('en').tr;
     final flags = find.byType(CircleFlag);
     expect(flags, findsNWidgets(3));
