@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
+// ignore: avoid_relative_lib_imports
 import '../example/lib/main.dart';
 
 void main() {

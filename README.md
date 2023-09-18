@@ -4,13 +4,24 @@ A widget for switching the locale of your application.
 
 [![codecov](https://codecov.io/gh/Alexqwesa/locale_switcher/graph/badge.svg?token=2F9HPWGCQE)](https://codecov.io/gh/Alexqwesa/locale_switcher)
 
+
+<img align="right" src="https://raw.githubusercontent.com/alexqwesa/locale_switcher/master/screenshot.gif" width="262" height="540">
+
+## Content
+
+- [About](#about)
+- [Features](#features)
+- [Usage](#usage)
+- [Todo](#todo)
+- [FAQ](#faq)
+
 ## About
 
 This package allows you to add locale-switching functionality to your app with just a few lines of code.
 
 It depends on [intl](https://pub.dev/packages/intl) package (not tested with other localization packages).
 
-**Functionality:**
+## Features
 
 - contains nice a widget to switch locale,
     - which provide list of locales of you app with additional option to use system locale,
@@ -39,7 +50,7 @@ Note: localization should be setup before you start to use this package,
 if there some problems - please, check next section and/or [intl](https://pub.dev/packages/intl) documentation,
 before reporting bug.
 
-## Checking that intl package is setup correctly:
+### Checking that intl package is setup correctly:
 
 The following instruction is from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
 
@@ -47,14 +58,14 @@ In `pubspec.yaml`:
 
 ```yaml  
 
-dependencies:
-  intl:
+dependencies: # in this section
+  intl: 
   flutter_localizations:
     sdk: flutter
-dev_dependencies: # in this section
-  build_runner:   # add this line - REQUIRED   
-flutter: # in this section
-  generate: true  # add this line - REQUIRED   
+dev_dependencies: # in this section 
+  build_runner:  
+flutter: # in this section 
+  generate: true  
 ```
 
 Optionally - in [l10n.yaml](example/l10n.yaml):
@@ -65,10 +76,32 @@ template-arb-file: intl_en.arb
 output-dir: lib/src/l10n/generated
 output-localization-file: app_localizations.dart
 untranslated-messages-file: desiredFileName.txt
-preferred-supported-locales: [ "en", "ru", "de" ]
+preferred-supported-locales: [ "en", "vi", "de" ]
 nullable-getter: false
 ```
 
 ## TODO:
 
 - [ ] Test with other localization system
+- [ ] Customize switcher
+- [ ] Allow to change language-flag assignment
+- [ ] Finish showOtherLocales button
+
+## FAQ
+#### - How to use localization outside of `MaterialApp`(or CupertinoApp):
+Here is a useful example, although it is not depend on this package:
+
+```dart
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+/// Access localization through locale
+extension LocaleWithDelegate on Locale {
+  /// Get class with translation strings for this locale.
+  AppLocalizations get tr => lookupAppLocalizations(this);
+}
+
+Locale("en").tr.example
+// or 
+LocaleManager.locale.value.tr.example
+```

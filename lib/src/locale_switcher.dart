@@ -7,18 +7,28 @@ const showOtherLocales = 'show_other_locales';
 
 /// A Widget to switch locale of App.
 class LocaleSwitcher extends StatelessWidget {
+  /// A text describing switcher
+  /// 
+  /// default: 'Choose the language:'
+  /// pass null if not needed.
   final String? title;
 
+  /// Title position,
+  ///
+  /// default `true` - on Top
+  /// use `false` to show at Left side
+  final bool titlePositionTop;
+
+  /// Number of shown flags
   final int numberOfShown;
 
-  final bool inRow;
 
   /// A Widget to switch locale of App.
   const LocaleSwitcher({
     super.key,
     this.title = 'Choose the language:',
     this.numberOfShown = 4,
-    this.inRow = false,
+    this.titlePositionTop = true,
   });
 
   @override
@@ -39,14 +49,14 @@ class LocaleSwitcher extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (!inRow)
+              if (titlePositionTop)
                 Padding(
                   padding: const EdgeInsets.all(4),
                   child: Center(child: Text(title ?? '')),
                 ),
               Row(
                 children: [
-                  if (inRow)
+                  if (!titlePositionTop)
                     Padding(
                       padding: const EdgeInsets.all(4),
                       child: Center(child: Text(title ?? '')),
