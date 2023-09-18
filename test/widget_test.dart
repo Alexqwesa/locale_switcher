@@ -58,6 +58,5 @@ void main() {
     expect(LocaleStore.realLocaleNotifier.value, "en");
     // expect(find.text(enLoc.counterDescription), findsOneWidget);
     // expect(find.text(deLoc.counterDescription), findsNothing);
-
   });
 }

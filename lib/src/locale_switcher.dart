@@ -8,7 +8,7 @@ const showOtherLocales = 'show_other_locales';
 /// A Widget to switch locale of App.
 class LocaleSwitcher extends StatelessWidget {
   /// A text describing switcher
-  /// 
+  ///
   /// default: 'Choose the language:'
   /// pass null if not needed.
   final String? title;
@@ -21,7 +21,6 @@ class LocaleSwitcher extends StatelessWidget {
 
   /// Number of shown flags
   final int numberOfShown;
-
 
   /// A Widget to switch locale of App.
   const LocaleSwitcher({

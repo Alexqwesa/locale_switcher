@@ -12,6 +12,7 @@ A widget for switching the locale of your application.
 - [About](#about)
 - [Features](#features)
 - [Usage](#usage)
+- [Example](#example)
 - [Todo](#todo)
 - [FAQ](#faq)
 
@@ -31,7 +32,7 @@ It depends on [intl](https://pub.dev/packages/intl) package (not tested with oth
 
 ## Usage
 
-Wrap `MaterialApp` or `CupertinoApp` with `LocaleManager`:
+1) Wrap `MaterialApp` or `CupertinoApp` with `LocaleManager`:
 
 ```dart
   @override
@@ -44,9 +45,9 @@ Widget build(BuildContext context, WidgetRef ref) {
   //...
 ```
 
-Add `LocaleSwitcher` widget into your app.
+2) Add `LocaleSwitcher` widget anywhere into your app.
 
-Note: localization should be setup before you start to use this package,
+Note: localization should be set up before you start to use this package,
 if there some problems - please, check next section and/or [intl](https://pub.dev/packages/intl) documentation,
 before reporting bug.
 
@@ -79,6 +80,11 @@ untranslated-messages-file: desiredFileName.txt
 preferred-supported-locales: [ "en", "vi", "de" ]
 nullable-getter: false
 ```
+## Example
+
+[Online Example here](https://alexqwesa.github.io/locale_switcher/)
+
+[Example Code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart)
 
 ## TODO:
 
