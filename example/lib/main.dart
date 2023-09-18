@@ -105,7 +105,12 @@ class _CounterWidgetState extends State<CounterWidget> {
           const SizedBox(
             height: 20,
           ),
-          Text(loc.counterDescription, textAlign: TextAlign.center , softWrap: false, overflow: TextOverflow.fade,),
+          Text(
+            loc.counterDescription,
+            textAlign: TextAlign.center,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+          ),
           Text(
             '$_counter',
             style: Theme.of(context).textTheme.headlineMedium,
