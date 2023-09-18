@@ -33,22 +33,24 @@ class LocaleSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var locales = [
+    final staticLocales = [
       LocaleStore.systemLocale,
       ...(LocaleStore.supportedLocales ?? [])
           .take(numberOfShown) // chose most used
           .map((e) => e.languageCode),
     ];
-    if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
-      locales.last = LocaleStore.realLocaleNotifier.value;
-    }
-    if ((LocaleStore.supportedLocales?.length ?? 0) > numberOfShown) {
-      locales.add(showOtherLocales);
-    }
 
     return ValueListenableBuilder(
       valueListenable: LocaleStore.realLocaleNotifier,
       builder: (BuildContext context, value, Widget? child) {
+        var locales = [...staticLocales];
+        if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
+          locales.last = LocaleStore.realLocaleNotifier.value;
+        }
+        if ((LocaleStore.supportedLocales?.length ?? 0) > numberOfShown) {
+          locales.add(showOtherLocales);
+        }
+
         return Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
@@ -68,6 +70,7 @@ class LocaleSwitcher extends StatelessWidget {
                     ),
                   Expanded(
                     child: AnimatedToggleSwitch<String>.rolling(
+                      allowUnlistedValues: true,
                       current: LocaleStore.realLocaleNotifier.value,
                       values: locales,
                       loading: false,

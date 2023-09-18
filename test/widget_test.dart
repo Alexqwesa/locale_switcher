@@ -38,7 +38,7 @@ void main() {
     // final deLoc = const Locale('de').tr;
     final enLoc = const Locale('en').tr;
     final flags = find.byType(CircleFlag);
-    expect(flags, findsNWidgets(3));
+    expect(flags, findsNWidgets(5)); // 3 from first switcher + 2 from second
 
     // test start with english locale
     expect(find.text(enLoc.counterDescription), findsOneWidget);
