@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0
+## 0.3.3
 
 * added new parameter: reassignFlags (to change what language had what flag).
 

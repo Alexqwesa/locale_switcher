@@ -75,7 +75,10 @@ class LocaleSwitcher extends StatelessWidget {
                         if (LocaleStore.languageToCountry[value] != null) {
                           final lang = LocaleStore.languageToCountry[value]!;
                           if (value == showOtherLocales) {
-                            return IconButton(icon: ClipOval(child: lang[2]), onPressed: () {  },);
+                            return IconButton(
+                              icon: ClipOval(child: lang[2]),
+                              onPressed: () {},
+                            );
                           }
 
                           if (lang.length > 2) {
