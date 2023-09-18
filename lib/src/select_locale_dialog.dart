@@ -33,7 +33,7 @@ Future<void> showSelectLocaleDialog(BuildContext context) {
         actions: <Widget>[
           Row(
             children: [
-              Spacer(),
+              const Spacer(),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
@@ -44,7 +44,7 @@ Future<void> showSelectLocaleDialog(BuildContext context) {
                   Navigator.of(context).pop();
                 },
               ),
-              Spacer(),
+              const Spacer(),
             ],
           )
         ],
