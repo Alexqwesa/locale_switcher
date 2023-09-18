@@ -26,8 +26,8 @@ Future<void> showSelectLocaleDialog(BuildContext context) {
       return AlertDialog(
         title: const Text('Select language'),
         content: SizedBox(
-          width: size.width * 0.75,
-          height: size.height * 0.75,
+          width: size.width * 0.6,
+          height: size.height * 0.6,
           child: const ListOfLanguages(),
         ),
         actions: <Widget>[
@@ -64,8 +64,8 @@ class ListOfLanguages extends StatelessWidget {
     ];
 
     return GridView(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
       ),
       children: [
         ...locales.map((e) {
