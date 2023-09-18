@@ -46,6 +46,7 @@ Widget build(BuildContext context, WidgetRef ref) {
 ```
 
 2) Add [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) widget anywhere into your app.
+3) Or use `SelectLocaleButton` or just use `showSelectLocaleDialog`.
 
 Note: localization should be set up before you start to use this package,
 if there some problems - please, check next section and/or [intl](https://pub.dev/packages/intl) documentation,

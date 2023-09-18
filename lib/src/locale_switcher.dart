@@ -2,6 +2,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/src/locale_store.dart';
+import 'package:locale_switcher/src/select_locale_dialog.dart';
 
 const showOtherLocales = 'show_other_locales';
 
@@ -32,14 +33,19 @@ class LocaleSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locales = [
+    var locales = [
       LocaleStore.systemLocale,
       ...(LocaleStore.supportedLocales ?? [])
           .take(numberOfShown) // chose most used
           .map((e) => e.languageCode),
-      if ((LocaleStore.supportedLocales?.length ?? 0) > numberOfShown)
-        showOtherLocales
     ];
+    if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
+      locales.last = LocaleStore.realLocaleNotifier.value;
+    }
+    if ((LocaleStore.supportedLocales?.length ?? 0) > numberOfShown) {
+      locales.add(showOtherLocales);
+    }
+
     return ValueListenableBuilder(
       valueListenable: LocaleStore.realLocaleNotifier,
       builder: (BuildContext context, value, Widget? child) {
@@ -62,11 +68,15 @@ class LocaleSwitcher extends StatelessWidget {
                     ),
                   Expanded(
                     child: AnimatedToggleSwitch<String>.rolling(
-                      current: LocaleStore.realLocale,
+                      current: LocaleStore.realLocaleNotifier.value,
                       values: locales,
                       loading: false,
                       onChanged: (langCode) async {
-                        LocaleStore.setLocale(langCode);
+                        if (langCode == showOtherLocales) {
+                          showSelectLocaleDialog(context);
+                        } else {
+                          LocaleStore.setLocale(langCode);
+                        }
                       },
                       style: const ToggleStyle(
                           // indicatorColor: Colors.white38,
@@ -75,12 +85,8 @@ class LocaleSwitcher extends StatelessWidget {
                         if (LocaleStore.languageToCountry[value] != null) {
                           final lang = LocaleStore.languageToCountry[value]!;
                           if (value == showOtherLocales) {
-                            return IconButton(
-                              icon: ClipOval(child: lang[2]),
-                              onPressed: () {},
-                            );
+                            return const SelectLocaleButton();
                           }
-
                           if (lang.length > 2) {
                             return ClipOval(child: lang[2]);
                           } else {

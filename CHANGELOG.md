@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+* added `SelectLocaleButton`
+* added function `showSelectLocaleDialog`
+
 ## 0.3.3
 
 * added new parameter: reassignFlags (to change what language had what flag).

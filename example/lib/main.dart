@@ -57,7 +57,15 @@ class MyHomePage extends StatelessWidget {
                 width: 400,
                 child: LocaleSwitcher(
                   title: loc.chooseLanguage,
-                  // inRow: true,
+                ),
+              ),
+            ),
+            Center(
+              child: SizedBox(
+                width: 400,
+                child: LocaleSwitcher(
+                  title: loc.chooseLanguage,
+                  numberOfShown: 2,
                 ),
               ),
             ),
@@ -97,7 +105,7 @@ class _CounterWidgetState extends State<CounterWidget> {
           const SizedBox(
             height: 20,
           ),
-          Text(loc.counterDescription, textAlign: TextAlign.center),
+          Text(loc.counterDescription, textAlign: TextAlign.center , softWrap: false, overflow: TextOverflow.fade,),
           Text(
             '$_counter',
             style: Theme.of(context).textTheme.headlineMedium,
