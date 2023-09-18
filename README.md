@@ -32,7 +32,7 @@ It depends on [intl](https://pub.dev/packages/intl) package (not tested with oth
 
 ## Usage
 
-1) Wrap `MaterialApp` or `CupertinoApp` with `LocaleManager`:
+1) Wrap `MaterialApp` or `CupertinoApp` with [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html):
 
 ```dart
   @override
@@ -45,7 +45,7 @@ Widget build(BuildContext context, WidgetRef ref) {
   //...
 ```
 
-2) Add `LocaleSwitcher` widget anywhere into your app.
+2) Add [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) widget anywhere into your app.
 
 Note: localization should be set up before you start to use this package,
 if there some problems - please, check next section and/or [intl](https://pub.dev/packages/intl) documentation,

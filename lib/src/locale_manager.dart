@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
-//todo:
+// todo:
 /// An alternative to LocaleManager,
 // Future<void> openStorageAndReadLocale({
 //   ifReadEmpty = LocaleStore.systemLocale,
@@ -30,12 +30,20 @@ class LocaleManager extends StatefulWidget {
   /// Make sure what static data only initialized once.
   static bool isInitialized = false;
 
+  /// Change language to flag mapping.
+  ///
+  /// Example:
+  /// {'en': ['GB', 'English', <Your_icon_optional>]}
+  /// (first two option required, third is optional)
+  final Map<String, List>? reassignFlags;
+
   /// A [ValueListenable] with current locale.
   static ValueNotifier<Locale> get locale => LocaleStore.locale;
 
   const LocaleManager({
     super.key,
     required this.child,
+    this.reassignFlags,
     this.storeLocale = true,
     this.sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
   });
@@ -55,6 +63,13 @@ class _LocaleManagerState extends State<LocaleManager> {
   @override
   void initState() {
     if (!LocaleManager.isInitialized) {
+      // reassign flags
+      if (widget.reassignFlags != null) {
+        for (final MapEntry(:key, :value) in widget.reassignFlags!.entries) {
+          LocaleStore.languageToCountry[key] = value;
+        }
+      }
+
       // init LocaleStore
       final child = widget.child;
       LocaleStore.initSystemLocaleObserver();

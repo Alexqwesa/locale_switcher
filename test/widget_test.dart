@@ -9,6 +9,7 @@ import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/locale_store.dart';
 
 // ignore: avoid_relative_lib_imports
 import '../example/lib/main.dart';

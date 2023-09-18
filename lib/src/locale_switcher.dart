@@ -72,25 +72,20 @@ class LocaleSwitcher extends StatelessWidget {
                           // indicatorColor: Colors.white38,
                           backgroundColor: Colors.black12),
                       iconBuilder: (value, foreground) {
-                        if (value == LocaleStore.systemLocale) {
-                          return const ClipOval(child: Icon(Icons.language));
+                        if (LocaleStore.languageToCountry[value] != null) {
+                          final lang = LocaleStore.languageToCountry[value]!;
+                          if (value == showOtherLocales) {
+                            return IconButton(icon: ClipOval(child: lang[2]), onPressed: () {  },);
+                          }
+
+                          if (lang.length > 2) {
+                            return ClipOval(child: lang[2]);
+                          } else {
+                            return CircleFlag(
+                                (lang[0] as String).toLowerCase());
+                          }
                         }
-                        if (value == showOtherLocales) {
-                          return const ClipOval(child: Icon(Icons.menu));
-                        }
-                        if (value == 'en') {
-                          return CircleFlag(
-                            'us',
-                          );
-                        }
-                        if (value == 'vi') {
-                          return CircleFlag(
-                            'vn',
-                          );
-                        }
-                        return CircleFlag(
-                          value,
-                        );
+                        return CircleFlag(value);
                       },
 
                       // for deactivating loading animation

@@ -8,4 +8,4 @@ library locale_switcher;
 
 export 'package:locale_switcher/src/locale_switcher.dart';
 export 'package:locale_switcher/src/locale_manager.dart';
-export 'package:locale_switcher/src/locale_store.dart';
+// export 'package:locale_switcher/src/locale_store.dart';

@@ -1,6 +1,6 @@
 import 'dart:developer' as dev;
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,6 +41,69 @@ abstract class LocaleStore {
   static String get realLocale => realLocaleNotifier.value;
 
   static ValueNotifier<String> get realLocaleNotifier => _realLocaleNotifier;
+
+  /// Map flag to country.
+  /// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+  static Map<String, List<dynamic>> languageToCountry = {
+    // use OS locale
+    LocaleStore.systemLocale: [
+      'System',
+      'OS locale',
+      const Icon(Icons.language)
+    ],
+    // if not all locales shown - add this symbol
+    showOtherLocales: ['Other', 'Show other locales', const Icon(Icons.menu)],
+    // English
+    'en': ['US', 'English'],
+    // Spanish
+    'es': ['ES', 'Español'],
+    // French
+    'fr': ['FR', 'Français'],
+    // German
+    'de': ['DE', 'Deutsch'],
+    // Italian
+    'it': ['IT', 'Italiano'],
+    // Portuguese
+    'pt': ['BR', 'Português'],
+    // Dutch
+    'nl': ['NL', 'Nederlands'],
+    // Russian
+    'ru': ['RU', 'Русский'],
+    // Chinese (Simplified)
+    'zh': ['CN', '中文'],
+    // Japanese
+    'ja': ['JP', '日本語'],
+    // Korean
+    'ko': ['KR', '한국어'],
+    // Arabic
+    'ar': ['SA', 'العربية'],
+    // Hindi
+    'hi': ['IN', 'हिन्दी'],
+    // Bengali
+    'bn': ['BD', 'বাঙালি'],
+    // Turkish
+    'tr': ['TR', 'Türkçe'],
+    // Vietnamese
+    'vi': ['VN', 'Tiếng Việt'],
+    // Greek
+    'el': ['GR', 'Ελληνικά'],
+    // Polish
+    'pl': ['PL', 'Polski'],
+    // Ukrainian
+    'uk': ['UA', 'Українська'],
+    // Thai
+    'th': ['TH', 'ไทย'],
+    // Indonesian
+    'id': ['ID', 'Bahasa Indonesia'],
+    // Malay
+    'ms': ['MY', 'Bahasa Melayu'],
+    // Swedish
+    'sv': ['SE', 'Svenska'],
+    // Finnish
+    'fi': ['FI', 'Suomi'],
+    // Norwegian
+    'no': ['NO', 'Norsk'],
+  };
 
   /// Current [Locale], use [LocaleStore.setLocale] to update it.
   ///
