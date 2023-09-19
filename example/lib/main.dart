@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
-/// Just useful extension
+/// Useful extension, in case you need to use localization outside MaterialApp.
 extension LocaleWithDelegate on Locale {
   /// Get class with translation strings for this locale.
   AppLocalizations get tr => lookupAppLocalizations(this);
 }
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,26 +40,21 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
+    final loc = AppLocalizations.of(context); // localization shortcut
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        actions: const [SelectLocaleButton()],
+        actions: const [
+          SelectLocaleButton(
+            toolTipPrefix: 'Current locale: ',
+          )
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Center(
-              child: SizedBox(
-                width: 400,
-                child: LocaleSwitcher(
-                  title: loc.chooseLanguage,
-                ),
-              ),
-            ),
-            const Divider(),
             Center(
               child: SizedBox(
                 width: 400,
@@ -80,7 +73,9 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-/// OPTIONAL!!!
+///
+/// HERE IS JUST SOME RANDOM CODE - YOU DON'T NEED IT!!!!!!
+///
 class CounterWidget extends StatefulWidget {
   const CounterWidget({super.key});
 

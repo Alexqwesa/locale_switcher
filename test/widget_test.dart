@@ -38,16 +38,16 @@ void main() {
     // final deLoc = const Locale('de').tr;
     final enLoc = const Locale('en').tr;
     final flags = find.byType(CircleFlag);
-    expect(flags, findsNWidgets(5)); // 3 from first switcher + 2 from second
+    expect(flags, findsNWidgets(2));
 
     // test start with english locale
     expect(find.text(enLoc.counterDescription), findsOneWidget);
     expect(LocaleStore.realLocaleNotifier.value, "system");
 
-    // Verify that de locale is loaded
-    await tester.tap(flags.at(2));
-    expect(LocaleManager.locale.value.languageCode, "de");
-    expect(LocaleStore.realLocaleNotifier.value, "de");
+    // Verify that vi locale is loaded
+    await tester.tap(flags.at(1));
+    expect(LocaleManager.locale.value.languageCode, "vi");
+    expect(LocaleStore.realLocaleNotifier.value, "vi");
     await tester.pumpAndSettle();
     // expect(find.text(deLoc.counterDescription), findsOneWidget);
     // expect(find.text(enLoc.counterDescription), findsNothing);

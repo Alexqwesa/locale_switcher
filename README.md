@@ -24,8 +24,8 @@ It depends on [intl](https://pub.dev/packages/intl) package (not tested with oth
 
 ## Features
 
-- contains nice a widget to switch locale,
-    - which provide list of locales of you app with additional option to use system locale,
+- Contains widgets to switch locale([LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html), [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html)),
+    - which have list of locales of you app with additional option to use system locale,
 - Store last selected locale in [SharedPreferences] (optional),
 - Provides a [ValueNotifier] to dynamically change the app's locale.
 - Observes changes in the system locale.
@@ -95,7 +95,13 @@ nullable-getter: false
 - [ ] Finish showOtherLocales button
 
 ## FAQ
-#### - How to use localization outside of `MaterialApp`(or CupertinoApp):
+
+#### - How to change order of languages?
+
+Languages are shown in the same order as they listed in [l10n.yaml](example/l10n.yaml).
+
+#### - How to use localization outside of `MaterialApp`(or CupertinoApp)?
+
 Here is a useful example, although it is not depend on this package:
 
 ```dart

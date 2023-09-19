@@ -2,11 +2,9 @@
 ///
 library locale_switcher;
 
-// import 'package:locale_switcher/src/locale_switcher.dart';
-// import 'package:locale_switcher/src/locale_manager.dart';
-// import 'package:locale_switcher/src/locale_store.dart';
-
+export 'package:locale_switcher/src/lang_icon_with_tool_tip.dart';
 export 'package:locale_switcher/src/locale_manager.dart';
 export 'package:locale_switcher/src/locale_switcher.dart';
-export 'package:locale_switcher/src/select_locale_dialog.dart';
+export 'package:locale_switcher/src/select_locale_button.dart';
+
 // export 'package:locale_switcher/src/locale_store.dart';

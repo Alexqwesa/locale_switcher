@@ -1,8 +1,9 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:locale_switcher/src/lang_icon_with_tool_tip.dart';
 import 'package:locale_switcher/src/locale_store.dart';
-import 'package:locale_switcher/src/select_locale_dialog.dart';
+import 'package:locale_switcher/src/select_locale_button.dart';
 
 const showOtherLocales = 'show_other_locales';
 
@@ -86,15 +87,13 @@ class LocaleSwitcher extends StatelessWidget {
                           backgroundColor: Colors.black12),
                       iconBuilder: (value, foreground) {
                         if (LocaleStore.languageToCountry[value] != null) {
-                          final lang = LocaleStore.languageToCountry[value]!;
                           if (value == showOtherLocales) {
-                            return const SelectLocaleButton();
+                            return const SelectLocaleButton(
+                              updateIconOnChange: false,
+                            );
                           }
-                          return Tooltip(
-                            message: lang[1],
-                            child: lang.length <= 2
-                                ? CircleFlag((lang[0] as String).toLowerCase())
-                                : ClipOval(child: lang[2]),
+                          return LangIconWithToolTip(
+                            langCode: value,
                           );
                         }
                         return CircleFlag(value);

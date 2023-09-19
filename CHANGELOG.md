@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+* added a lot of parameters,
+* update icons.
+
 ## 0.5.0
 
-* added tooltips, 
+* added tooltips,
 * update docs and icons.
 
 ## 0.4.3
