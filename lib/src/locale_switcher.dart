@@ -90,12 +90,12 @@ class LocaleSwitcher extends StatelessWidget {
                           if (value == showOtherLocales) {
                             return const SelectLocaleButton();
                           }
-                          if (lang.length > 2) {
-                            return ClipOval(child: lang[2]);
-                          } else {
-                            return CircleFlag(
-                                (lang[0] as String).toLowerCase());
-                          }
+                          return Tooltip(
+                            message: lang[1],
+                            child: lang.length <= 2
+                                ? CircleFlag((lang[0] as String).toLowerCase())
+                                : ClipOval(child: lang[2]),
+                          );
                         }
                         return CircleFlag(value);
                       },

@@ -47,6 +47,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
+        actions: const [SelectLocaleButton()],
       ),
       body: Center(
         child: Column(
@@ -60,6 +61,7 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
             ),
+            const Divider(),
             Center(
               child: SizedBox(
                 width: 400,
@@ -69,6 +71,7 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
             ),
+            const Divider(),
             const CounterWidget(),
           ],
         ),
@@ -101,7 +104,6 @@ class _CounterWidgetState extends State<CounterWidget> {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          const Divider(),
           const SizedBox(
             height: 20,
           ),

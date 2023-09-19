@@ -80,20 +80,23 @@ class ListOfLanguages extends StatelessWidget {
               child: Column(
                 children: [
                   Expanded(
-                    child: FittedBox(
-                      child: (lang.length > 2)
-                          ? ClipOval(child: lang[2])
-                          : CircleFlag(
-                              (lang[0] as String).toLowerCase(),
-                              size: 30,
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: FittedBox(
+                        child: (lang.length > 2)
+                            ? ClipOval(child: lang[2])
+                            : CircleFlag(
+                                (lang[0] as String).toLowerCase(),
+                                size: 30,
+                              ),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
                       lang[1],
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   )
                 ],

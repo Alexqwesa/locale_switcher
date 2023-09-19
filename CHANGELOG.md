@@ -1,9 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+* added tooltips, 
+* update docs and icons.
+
 ## 0.4.3
 
-* added `SelectLocaleButton`
-* added function `showSelectLocaleDialog`
+* added `SelectLocaleButton`,
+* added function `showSelectLocaleDialog`.
 
 ## 0.3.3
 

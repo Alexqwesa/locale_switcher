@@ -1,5 +1,7 @@
 import 'dart:developer' as dev;
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,10 +51,16 @@ abstract class LocaleStore {
     LocaleStore.systemLocale: [
       'System',
       'OS locale',
-      const Icon(Icons.language)
+      if (!kIsWeb && Platform.isAndroid) const Icon(Icons.android),
+      if (!kIsWeb && Platform.isIOS) const Icon(Icons.phone_iphone),
+      const Icon(Icons.desktop_windows),
     ],
     // if not all locales shown - add this symbol
-    showOtherLocales: ['Other', 'Show other locales', const Icon(Icons.menu)],
+    showOtherLocales: [
+      'Other',
+      'Show other locales',
+      const Icon(Icons.language)
+    ],
     // English
     'en': ['US', 'English'],
     // Spanish
