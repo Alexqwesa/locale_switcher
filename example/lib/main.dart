@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
-/// Useful extension, in case you need to use localization outside MaterialApp.
+/// Useful extension, in case you need to use localization outside of MaterialApp.
 extension LocaleWithDelegate on Locale {
   /// Get class with translation strings for this locale.
   AppLocalizations get tr => lookupAppLocalizations(this);
@@ -15,11 +15,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ============= THIS 5 LINES REQUIRED =============
     return LocaleManager(
       child: MaterialApp(
         locale: LocaleManager.locale.value,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+
+        // ...
         title: LocaleManager.locale.value.tr.example,
         home: MyHomePage(title: LocaleManager.locale.value.tr.example),
         debugShowCheckedModeBanner: false,
@@ -56,13 +59,13 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
-              child: LocaleSwitcher.menu(
-                title: loc.chooseLanguage,
-              ),
+              // =============== THIS LINE ===============
+              child: LocaleSwitcher.menu(title: loc.chooseLanguage),
             ),
             const Divider(),
             SizedBox(
               width: 400,
+              // =============== THIS LINE ===============
               child: LocaleSwitcher.toggle(
                 title: loc.chooseLanguage,
                 numberOfShown: 2,

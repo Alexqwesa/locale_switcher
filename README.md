@@ -24,7 +24,6 @@ It depends on [intl](https://pub.dev/packages/intl) package (not tested with oth
 
 ## Features
 
-
 - Contains widget to switch locale - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html):
     - which includes a list of locales for you app with additional option to use system locale,
     - it offers several constructors:  [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html), [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html) or [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
@@ -55,9 +54,11 @@ Note: localization should be set up before you start to use this package,
 if there some problems - please, check next section and/or [intl](https://pub.dev/packages/intl) documentation,
 before reporting bug.
 
+## Troubleshooting
+
 ### Checking that intl package is setup correctly:
 
-The following instruction is from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
+The following instructions are  from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
 
 In `pubspec.yaml`:
 
@@ -93,9 +94,6 @@ nullable-getter: false
 ## TODO:
 
 - [ ] Test with other localization system
-- [ ] Customize switcher
-- [ ] Allow to change language-flag assignment
-- [ ] Finish showOtherLocales button
 
 ## FAQ
 
