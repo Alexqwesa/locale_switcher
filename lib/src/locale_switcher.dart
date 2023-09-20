@@ -241,12 +241,13 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
           (e) => DropdownMenuEntry<String>(
             value: e,
             label: LocaleStore.languageToCountry[e]?[1] ?? e,
-            leadingIcon:
+            leadingIcon: SizedBox(
+            key: ValueKey('item-$e'),child:
                 (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
                         getIconForLanguage(e, null, 40)
                     : getIconForLanguage(e, null, 40),
-          ),
+          ),),
         )
         .toList();
 

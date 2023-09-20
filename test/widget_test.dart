@@ -96,41 +96,82 @@ void main() {
 
     // tap menu
     final dropMenu = find.byType(DropdownMenu<String>);
-    final openMenu =
-        find.descendant(of: dropMenu, matching: find.byType(InkWell)
-            // find.widgetWithIcon(Icon, Icons.arrow_drop_down),
-            );
-    // await tester.tap(dropMenu); // ???
-    await tester.tap(openMenu.at(0));
+    await tester.tap(dropMenu);
     await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 1));
 
     expect(LocaleManager.locale.value.languageCode, "vi");
     expect(LocaleManager.realLocaleNotifier.value, "vi");
 
     // tap item
-    final option = find.descendant(
+    final deOption = find.descendant(
       of: dropMenu,
-      matching: find.text(LocaleStore.languageToCountry['de']![1]),
-    ); // Replace with the text of the option you want to select
-    final deOption = find.ancestor(
-      of: option,
-      matching: find.byType(InkWell),
-    ); // Replace with the text of the option you want to select
-    expect(deOption, findsOneWidget);
-    await tester.ensureVisible(deOption);
-    await tester.pumpAndSettle();
-    await tester.tap(deOption);
+      matching: find.byType(LangIconWithToolTip),
+      // matching: find.text(LocaleStore.languageToCountry['de']![1]),
+    );
+    expect(deOption, findsNWidgets(5)); // 4 + current
+    // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
+    // await tester.ensureVisible(deOption.at(4));
+    // await tester.pumpAndSettle();
+    // await tester.tap(deOption.at(4));
+    await tester.tap(find.byKey(const ValueKey("item-de")).at(1));
     await tester.pumpAndSettle();
     await tester.pump(const Duration(seconds: 1));
 
     // selected todo:
-    // expect(
-    // find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
-    // expect(LocaleManager.realLocaleNotifier.value, "de");
-    // expect(LocaleManager.locale.value.languageCode, "de");
+    expect(
+        find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
+    expect(LocaleManager.realLocaleNotifier.value, "de");
+    expect(LocaleManager.locale.value.languageCode, "de");
+
+    final deLoc = const Locale('de').tr;
+    expect(find.text(deLoc.counterDescription), findsOneWidget);
+
+    // ??
+    final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+    await tester.tap(sysFlag); // restore ?
+  });
+
+  testWidgets('it change locale via popUp dialog', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues(
+        {LocaleStore.innerSharedPreferenceName: "system"});
+    // Build our app and trigger a frame.
+    await SharedPreferences.getInstance();
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
 
     // final deLoc = const Locale('de').tr;
-    // expect(find.text(deLoc.counterDescription), findsOneWidget);
+    final enLoc = const Locale('en').tr;
+
+    // test start with english locale
+    expect(LocaleStore.realLocaleNotifier.value, "system");
+    expect(find.text(enLoc.counterDescription), findsOneWidget);
+
+    // Verify that vi locale is loaded
+    final selectLocaleButton = find.byType(SelectLocaleButton);
+    expect(selectLocaleButton, findsNWidgets(2));
+    await tester.tap(selectLocaleButton.at(0));
+    await tester.pumpAndSettle();
+
+    final grid = find.byType(GridOfLanguages);
+    expect(grid, findsOneWidget);
+
+    // tap item
+    final deOption = find.descendant(
+      of: grid,
+      matching: find.text(LocaleStore.languageToCountry['de']![1]),
+    );
+    expect(deOption, findsOneWidget);
+    await tester.tap(deOption);
+    await tester.pumpAndSettle();
+
+    // Verify that en locale is loaded
+    expect(LocaleManager.locale.value.languageCode, "de");
+    expect(LocaleStore.realLocaleNotifier.value, "de");
+
+    expect(find.text(const Locale('de').tr.counterDescription), findsOneWidget);
+    expect(find.text(enLoc.counterDescription), findsNothing);
+
+    // final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+    // await tester.tap(sysFlag); // restore ?
   });
 }
