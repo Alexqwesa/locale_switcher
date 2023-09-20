@@ -27,10 +27,10 @@ It depends on [intl](https://pub.dev/packages/intl) package (not tested with oth
 
 - Contains widget to switch locale - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html):
     - which includes a list of locales for you app with additional option to use system locale,
-    - it offers several constructors:  [LocaleSwitcher.toggle], [LocaleSwitcher.menu] or [LocaleSwitcher.custom]
+    - it offers several constructors:  [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html), [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html) or [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
 - Contains a button [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html) to open popup window,
 - Optionally stores the last selected locale in  [SharedPreferences],
-- Provides a [LocaleManager.realLocaleNotifier] to dynamically change the app's locale (and [LocaleManager.localeNotifier] to listen to locale changes).
+- Provides a [LocaleManager.realLocaleNotifier](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/realLocaleNotifier.html) to dynamically change the app's locale (and notifier [LocaleManager.locale](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/locale.html) to listen to locale changes).
 - Observes changes in the system locale.
 
 ## Usage
