@@ -119,7 +119,7 @@ class GridOfLanguages extends StatelessWidget {
               [langCode, 'Unknown locale'];
           return InkWell(
             onTap: () {
-              LocaleStore.setLocale(langCode);
+              LocaleManager.realLocaleNotifier.value = langCode;
               additionalCallBack?.call(context);
             },
             child: Card(

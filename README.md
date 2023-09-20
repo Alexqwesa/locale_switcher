@@ -24,10 +24,13 @@ It depends on [intl](https://pub.dev/packages/intl) package (not tested with oth
 
 ## Features
 
-- Contains widgets to switch locale([LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html), [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html)),
-    - which have list of locales of you app with additional option to use system locale,
-- Store last selected locale in [SharedPreferences] (optional),
-- Provides a [ValueNotifier] to dynamically change the app's locale.
+
+- Contains widget to switch locale - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html):
+    - which includes a list of locales for you app with additional option to use system locale,
+    - it offers several constructors:  [LocaleSwitcher.toggle], [LocaleSwitcher.menu] or [LocaleSwitcher.custom]
+- Contains a button [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html) to open popup window,
+- Optionally stores the last selected locale in  [SharedPreferences],
+- Provides a [LocaleManager.realLocaleNotifier] to dynamically change the app's locale (and [LocaleManager.localeNotifier] to listen to locale changes).
 - Observes changes in the system locale.
 
 ## Usage
@@ -99,6 +102,19 @@ nullable-getter: false
 #### - How to change order of languages?
 
 Languages are shown in the same order as they listed in [l10n.yaml](example/l10n.yaml).
+
+#### - How to change flag of language?
+
+Use [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html).`reassign` parameter like this:
+```dart
+LocaleManager(
+  reassign: {'en': ['GB', 'English', <Your_icon_optional>]}
+  // (first two options are required, third is optional)
+  // first option is the code of country which flag you want to use
+...
+)
+```
+
 
 #### - How to use localization outside of `MaterialApp`(or CupertinoApp)?
 

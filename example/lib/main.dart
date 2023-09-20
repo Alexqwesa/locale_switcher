@@ -56,15 +56,20 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
-              child: SizedBox(
-                width: 400,
-                child: LocaleSwitcher(
-                  title: loc.chooseLanguage,
-                  numberOfShown: 2,
-                ),
+              child: LocaleSwitcher.menu(
+                title: loc.chooseLanguage,
               ),
             ),
             const Divider(),
+            SizedBox(
+              width: 400,
+              child: LocaleSwitcher.toggle(
+                title: loc.chooseLanguage,
+                numberOfShown: 2,
+              ),
+            ),
+            const Divider(),
+            // OR LocaleSwitcher.custom(...)
             const CounterWidget(),
           ],
         ),
@@ -74,7 +79,7 @@ class MyHomePage extends StatelessWidget {
 }
 
 ///
-/// HERE IS JUST SOME RANDOM CODE - YOU DON'T NEED IT!!!!!!
+/// BELOW IS JUST SOME RANDOM CODE - YOU DON'T NEED IT!!!!!!
 ///
 class CounterWidget extends StatefulWidget {
   const CounterWidget({super.key});

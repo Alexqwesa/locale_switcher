@@ -34,8 +34,14 @@ class LocaleManager extends StatefulWidget {
   ///
   /// Example:
   /// {'en': ['GB', 'English', <Your_icon_optional>]}
-  /// (first two option required, third is optional)
+  /// (first two options are required, third is optional)
   final Map<String, List>? reassignFlags;
+
+  /// Current language code, could be 'system'.
+  ///
+  /// Value of this notifier should be either from [supportedLocales] or 'system'.
+  static ValueNotifier<String> get realLocaleNotifier =>
+      LocaleStore.realLocaleNotifier;
 
   /// A [ValueListenable] with current locale.
   static ValueNotifier<Locale> get locale => LocaleStore.locale;
@@ -72,7 +78,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
       // init LocaleStore
       final child = widget.child;
-      LocaleStore.initSystemLocaleObserver();
+      LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
       if (child.runtimeType == MaterialApp) {
         final delegate = (child as MaterialApp).localizationsDelegates?.first;
         final supportedLocales = child.supportedLocales.toList(growable: false);

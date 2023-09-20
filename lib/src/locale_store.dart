@@ -20,13 +20,36 @@ abstract class LocaleStore {
   /// Auto-updatable value, auto-update started after first access to [locale].
   static String currentSystemLocale = 'en';
 
+  // todo: use ChangeNotifier to check values.
+  // todo: store list of recently used locales
+  /// Value of this notifier should be either from [supportedLocales] or 'system'.
+  static ValueNotifier<String> get realLocaleNotifier {
+    if (__observer == null) {
+      initSystemLocaleObserverAndLocaleUpdater();
+      // _locale.value = WidgetsBinding.instance.platformDispatcher.locale;
+      // todo: try to read pref here?
+    }
+    return _realLocaleNotifier;
+  }
+
+  /// Current [Locale], use [LocaleStore.setLocale] to update it.
+  ///
+  /// [LocaleStore.realLocaleNotifier] contains the real value that stored in [SharedPreferences].
+  static ValueNotifier<Locale> get locale {
+    if (__observer == null) {
+      initSystemLocaleObserverAndLocaleUpdater();
+      _locale.value = WidgetsBinding.instance.platformDispatcher.locale;
+    }
+    return _locale;
+  }
+
   /// List of supported locales, setup by [LocaleManager]
   static List<Locale>? supportedLocales;
 
   /// A name of key used to store locale in [SharedPreferences].
   ///
   /// Set it via [LocaleManager].[sharedPreferenceName]
-  static String _sharedPreferenceName = 'LocaleSwitcherCurrentLocale';
+  static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
 
   /// If initialized: locale will be stored in [SharedPreferences].
   static SharedPreferences? _pref;
@@ -37,10 +60,6 @@ abstract class LocaleStore {
   static LocalizationsDelegate? _delegate;
 
   static _LocaleObserver? __observer;
-
-  static String get realLocale => realLocaleNotifier.value;
-
-  static ValueNotifier<String> get realLocaleNotifier => _realLocaleNotifier;
 
   /// Map flag to country.
   /// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
@@ -111,32 +130,18 @@ abstract class LocaleStore {
     'no': ['NO', 'Norsk'],
   };
 
-  /// Current [Locale], use [LocaleStore.setLocale] to update it.
-  ///
-  /// [LocaleStore.realLocale] is real value that stored in [SharedPreferences].
-  static ValueNotifier<Locale> get locale {
-    //
-    // > add locale observer
-    //
-    if (__observer == null) {
-      initSystemLocaleObserver();
-      _locale.value = WidgetsBinding.instance.platformDispatcher.locale;
-    }
-    return _locale;
-  }
-
   /// Set locale with checks.
   ///
   /// It save locale into [SharedPreferences],
   /// and allow to use [systemLocale].
-  static void setLocale(String langCode) {
+  static void _setLocale(String langCode) {
     late Locale newLocale;
     if (langCode == systemLocale || langCode == '') {
       newLocale = WidgetsBinding.instance.platformDispatcher.locale;
-      realLocaleNotifier.value = systemLocale;
+      // realLocaleNotifier.value = systemLocale;
     } else {
       newLocale = Locale(langCode);
-      realLocaleNotifier.value = newLocale.languageCode;
+      // realLocaleNotifier.value = newLocale.languageCode;
     }
 
     if (_delegate != null) {
@@ -147,12 +152,12 @@ abstract class LocaleStore {
       }
     }
 
-    _pref?.setString(_sharedPreferenceName, realLocaleNotifier.value);
+    _pref?.setString(innerSharedPreferenceName, realLocaleNotifier.value);
     locale.value = newLocale;
   }
 
   // AppLocalizations get tr => lookupAppLocalizations(locale);
-  static void initSystemLocaleObserver() {
+  static void initSystemLocaleObserverAndLocaleUpdater() {
     if (__observer == null) {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = _LocaleObserver(onChanged: (_) {
@@ -165,6 +170,9 @@ abstract class LocaleStore {
       WidgetsBinding.instance.addObserver(
         __observer!,
       );
+
+      realLocaleNotifier
+          .addListener(() => _setLocale(realLocaleNotifier.value));
     }
   }
 
@@ -187,16 +195,16 @@ abstract class LocaleStore {
     //
     // > init shared preference
     //
-    _sharedPreferenceName = sharedPreferenceName;
+    innerSharedPreferenceName = sharedPreferenceName;
     _pref = await SharedPreferences.getInstance();
     //
     // > read locale from sharedPreference
     //
     String langCode = systemLocale;
     if (_pref != null) {
-      langCode = _pref!.getString(_sharedPreferenceName) ?? langCode;
+      langCode = _pref!.getString(innerSharedPreferenceName) ?? langCode;
     }
-    setLocale(langCode);
+    realLocaleNotifier.value = langCode;
   }
 
   static void setLocaleAndDelegate(
