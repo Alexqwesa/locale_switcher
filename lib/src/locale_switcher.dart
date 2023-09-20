@@ -236,18 +236,24 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const radius = 40.0;
     final localeEntries = locales
         .map<DropdownMenuEntry<String>>(
           (e) => DropdownMenuEntry<String>(
             value: e,
             label: LocaleStore.languageToCountry[e]?[1] ?? e,
             leadingIcon: SizedBox(
-            key: ValueKey('item-$e'),child:
-                (LocaleStore.languageToCountry[e] ?? const []).length > 2
+              width: radius,
+              height: radius,
+              key: ValueKey('item-$e'),
+              child: FittedBox(
+                child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
-                        getIconForLanguage(e, null, 40)
-                    : getIconForLanguage(e, null, 40),
-          ),),
+                        getIconForLanguage(e, null, radius)
+                    : getIconForLanguage(e, null, radius),
+              ),
+            ),
+          ),
         )
         .toList();
 
