@@ -1,8 +1,14 @@
 # Changelog
 
+## 0.8.0
+
+* update documentation,
+* new tests.
+
 ## 0.7.2
 
-* provides a [LocaleManager.realLocaleNotifier] to dynamically change locale (and [LocaleManager.localeNotifier] to listen to locale changes),
+* provides a [LocaleManager.realLocaleNotifier] to dynamically change locale (and [LocaleManager.localeNotifier] to
+  listen to locale changes),
 * factory constructors for [LocaleSwitcher]: [LocaleSwitcher.toggle], [LocaleSwitcher.menu] or [LocaleSwitcher.custom],
 * various...
 

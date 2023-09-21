@@ -90,9 +90,9 @@ Future<void> showSelectLocaleDialog(
   );
 }
 
+/// This is the [GridView] used by [showSelectLocaleDialog] internally.
 class GridOfLanguages extends StatelessWidget {
   final SliverGridDelegate? gridDelegate;
-
   final Function(BuildContext)? additionalCallBack;
 
   const GridOfLanguages({

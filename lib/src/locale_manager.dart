@@ -13,10 +13,11 @@ import 'package:locale_switcher/src/locale_store.dart';
 
 /// This should be a parent to either [MaterialApp] or [CupertinoApp].
 ///
-/// It will:
-/// - observe system locale,
-/// - listen to locale change [],
-/// - save current locale to [SharedPreference].
+/// It:
+/// - Rebuilds the child widget when the [locale] changes.
+/// - Observes changes in the system locale.
+/// - Saves the current locale to [SharedPreferences].
+/// - Loads the last used locale from [SharedPreferences].
 class LocaleManager extends StatefulWidget {
   /// Either [MaterialApp] or [CupertinoApp].
   final Widget child;
@@ -62,7 +63,7 @@ class _LocaleManagerState extends State<LocaleManager> {
   void updateParent() => setState(() {
         context.visitAncestorElements((element) {
           element.markNeedsBuild();
-          return false;
+          return false; // rebuild only first parent
         });
       });
 

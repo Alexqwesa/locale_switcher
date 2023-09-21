@@ -236,7 +236,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const radius = 40.0;
+    const radius = 38.0;
     final localeEntries = locales
         .map<DropdownMenuEntry<String>>(
           (e) => DropdownMenuEntry<String>(
