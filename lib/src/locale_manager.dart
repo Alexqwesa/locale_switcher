@@ -66,6 +66,31 @@ class _LocaleManagerState extends State<LocaleManager> {
         });
       });
 
+  /// init [LocaleStore]'s delegate and supportedLocales
+  void _readAppLocalization(Widget child) {
+    LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
+    if (child.runtimeType == MaterialApp) {
+      final delegate = (child as MaterialApp).localizationsDelegates?.first;
+      final supportedLocales = child.supportedLocales.toList(growable: false);
+      if (delegate == null) {
+        throw UnsupportedError(
+            'MaterialApp should have initialized: delegate and supportedLocales parameters');
+      }
+      LocaleStore.setLocaleAndDelegate(supportedLocales, delegate);
+    } else if (child.runtimeType == CupertinoApp) {
+      final delegate = (child as CupertinoApp).localizationsDelegates?.first;
+      final supportedLocales = child.supportedLocales.toList(growable: false);
+      if (delegate == null) {
+        throw UnsupportedError(
+            'CupertinoApp should have initialized: delegate and supportedLocales parameters');
+      }
+      LocaleStore.setLocaleAndDelegate(supportedLocales, delegate);
+    } else {
+      throw UnimplementedError(
+          "The child should be either CupertinoApp or MaterialApp class");
+    }
+  }
+
   @override
   void initState() {
     if (!LocaleManager.isInitialized) {
@@ -76,29 +101,8 @@ class _LocaleManagerState extends State<LocaleManager> {
         }
       }
 
-      // init LocaleStore
-      final child = widget.child;
-      LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
-      if (child.runtimeType == MaterialApp) {
-        final delegate = (child as MaterialApp).localizationsDelegates?.first;
-        final supportedLocales = child.supportedLocales.toList(growable: false);
-        if (delegate == null) {
-          throw UnsupportedError(
-              'MaterialApp should have initialized: delegate and supportedLocales parameters');
-        }
-        LocaleStore.setLocaleAndDelegate(supportedLocales, delegate);
-      } else if (child.runtimeType == CupertinoApp) {
-        final delegate = (child as CupertinoApp).localizationsDelegates?.first;
-        final supportedLocales = child.supportedLocales.toList(growable: false);
-        if (delegate == null) {
-          throw UnsupportedError(
-              'CupertinoApp should have initialized: delegate and supportedLocales parameters');
-        }
-        LocaleStore.setLocaleAndDelegate(supportedLocales, delegate);
-      } else {
-        throw UnimplementedError(
-            "The child should be either CupertinoApp or MaterialApp class");
-      }
+      // init LocaleStore delegate and supportedLocales
+      _readAppLocalization(widget.child);
     }
 
     super.initState();
