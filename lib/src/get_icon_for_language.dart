@@ -6,8 +6,11 @@ import 'package:locale_switcher/src/locale_store.dart';
 /// Return Icon widget for [langCode].
 Widget getIconForLanguage(String langCode, [bool? foreground, double? radius]) {
   if (langCode == showOtherLocales) {
-    return const SelectLocaleButton(
-      updateIconOnChange: false,
+    return LocaleSwitcher.iconButton(
+      useStaticIcon:
+          ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
+              ? LocaleStore.languageToCountry[showOtherLocales]![2]
+              : const Icon(Icons.expand_more),
     );
   }
   if (LocaleStore.languageToCountry[langCode] != null) {

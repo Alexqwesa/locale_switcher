@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.4
+
+* use `LocaleSwitcher.iconButton` instead of `SelectLocaleButton`.
+
 ## 0.8.1
 
 * update documentation,
@@ -7,9 +11,9 @@
 
 ## 0.7.2
 
-* provides a [LocaleManager.realLocaleNotifier] to dynamically change locale (and [LocaleManager.localeNotifier] to
+* provides a `LocaleManager.realLocaleNotifier` to dynamically change locale (and `LocaleManager.localeNotifier` to
   listen to locale changes),
-* factory constructors for [LocaleSwitcher]: [LocaleSwitcher.toggle], [LocaleSwitcher.menu] or [LocaleSwitcher.custom],
+* factory constructors for `LocaleSwitcher`: `LocaleSwitcher.toggle`, `LocaleSwitcher.menu` or `LocaleSwitcher.custom`,
 * various...
 
 ## 0.6.4

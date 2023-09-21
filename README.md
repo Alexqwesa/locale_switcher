@@ -18,7 +18,7 @@ A widget for switching the locale of your application.
 
 ## About
 
-This package allows you to add locale-switching functionality to your app with just a few lines of code.
+This package allows you to add **locale-switching** functionality to your app **with just 2 lines** of code.
 
 This is NOT a localization package, it is just a few useful widget that extend 
 functionality of localization systems, such as: [intl](https://pub.dev/packages/intl), 
@@ -36,8 +36,8 @@ a widget to switch locale:
     - constructor [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html),
     - constructor [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html),
     - constructor [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
-- [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html) - button/indicator which open popup window to select locale,
-- And various other helpers...
+    - constructor [LocaleSwitcher.iconButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.iconButton.html) - button/indicator which open popup window to select locale,
+- Some other helpers...
 
 [//]: # (    - [LocaleManager.realLocaleNotifier]&#40;https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/realLocaleNotifier.html&#41; )
 
@@ -62,13 +62,13 @@ Widget build(BuildContext context, WidgetRef ref) {
 ```
 
 2) Add [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) widget anywhere into your app.
-3) Or use [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html) or just use `showSelectLocaleDialog`.
 
-Note: localization should be set up before you start to use this package,
-if there some problems - please, check next section and/or [intl](https://pub.dev/packages/intl) documentation,
-before reporting bug.
 
 ## Troubleshooting
+
+Note: localization should be set up before you start to use this package,
+if there some problems - please, check next section and/or documentation of localization system you use,
+before reporting bug.
 
 ### Check that intl package is setup correctly:
 
@@ -101,9 +101,12 @@ nullable-getter: false
 ```
 ## Example
 
-[Online Example here](https://alexqwesa.github.io/locale_switcher/)
+[Online Example here](https://alexqwesa.github.io/locale_switcher/) 
 
-[Example Code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart)
+- [Example Code (recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
+
+
+Another example code: [LocaleSwitcher used without LocaleManager(not recommended)]()
 
 ## TODO:
 

@@ -51,10 +51,9 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        actions: const [
-          SelectLocaleButton(
-            toolTipPrefix: 'Current locale: ',
-          )
+        actions: [
+          // =============== THIS LINE ===============
+          LocaleSwitcher.iconButton(),
         ],
       ),
       body: Center(
