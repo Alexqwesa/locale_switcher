@@ -76,7 +76,7 @@ class _LocaleManagerState extends State<LocaleManager> {
         throw UnsupportedError(
             'MaterialApp should have initialized: delegate and supportedLocales parameters');
       }
-      LocaleStore.setLocaleAndDelegate(supportedLocales, delegate);
+      LocaleStore.setLocales(supportedLocales);
     } else if (child.runtimeType == CupertinoApp) {
       final delegate = (child as CupertinoApp).localizationsDelegates?.first;
       final supportedLocales = child.supportedLocales.toList(growable: false);
@@ -84,7 +84,7 @@ class _LocaleManagerState extends State<LocaleManager> {
         throw UnsupportedError(
             'CupertinoApp should have initialized: delegate and supportedLocales parameters');
       }
-      LocaleStore.setLocaleAndDelegate(supportedLocales, delegate);
+      LocaleStore.setLocales(supportedLocales);
     } else {
       throw UnimplementedError(
           "The child should be either CupertinoApp or MaterialApp class");

@@ -1,4 +1,3 @@
-import 'dart:developer' as dev;
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -58,8 +57,6 @@ abstract class LocaleStore {
 
   static final _locale = ValueNotifier<Locale>(const Locale('en'));
   static final _realLocaleNotifier = ValueNotifier<String>(systemLocale);
-
-  static LocalizationsDelegate? _delegate;
 
   static _LocaleObserver? __observer;
 
@@ -146,14 +143,6 @@ abstract class LocaleStore {
       // realLocaleNotifier.value = newLocale.languageCode;
     }
 
-    if (_delegate != null) {
-      if (!_delegate!.isSupported(newLocale)) {
-        newLocale = supportedLocales?.first ??
-            const Locale('en'); // todo: throw warning?
-        dev.log('Unsupported locale: $langCode');
-      }
-    }
-
     _pref?.setString(innerSharedPreferenceName, realLocaleNotifier.value);
     locale.value = newLocale;
   }
@@ -193,7 +182,7 @@ abstract class LocaleStore {
     //
     // > init inner vars
     //
-    setLocaleAndDelegate(supportedLocales, delegate);
+    setLocales(supportedLocales);
     //
     // > init shared preference
     //
@@ -209,15 +198,11 @@ abstract class LocaleStore {
     realLocaleNotifier.value = langCode;
   }
 
-  static void setLocaleAndDelegate(
+  static void setLocales(
     List<Locale>? supportedLocales,
-    LocalizationsDelegate? delegate,
   ) {
     if (supportedLocales != null) {
       LocaleStore.supportedLocales = supportedLocales;
-    }
-    if (delegate != null) {
-      _delegate = delegate;
     }
   }
 }
