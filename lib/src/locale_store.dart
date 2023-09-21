@@ -1,5 +1,7 @@
 import 'dart:developer' as dev;
+import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +28,7 @@ abstract class LocaleStore {
   static ValueNotifier<String> get realLocaleNotifier {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
-      // _locale.value = WidgetsBinding.instance.platformDispatcher.locale;
+      // _locale.value = platformDispatcher.locale;
       // todo: try to read pref here?
     }
     return _realLocaleNotifier;
@@ -38,7 +40,7 @@ abstract class LocaleStore {
   static ValueNotifier<Locale> get locale {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
-      _locale.value = WidgetsBinding.instance.platformDispatcher.locale;
+      _locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
     }
     return _locale;
   }
@@ -137,7 +139,7 @@ abstract class LocaleStore {
   static void _setLocale(String langCode) {
     late Locale newLocale;
     if (langCode == systemLocale || langCode == '') {
-      newLocale = WidgetsBinding.instance.platformDispatcher.locale;
+      newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
       // realLocaleNotifier.value = systemLocale;
     } else {
       newLocale = Locale(langCode);
@@ -162,9 +164,9 @@ abstract class LocaleStore {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = _LocaleObserver(onChanged: (_) {
         currentSystemLocale =
-            WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+            TestablePlatformDispatcher.platformDispatcher.locale.languageCode;
         if (realLocaleNotifier.value == systemLocale) {
-          locale.value = WidgetsBinding.instance.platformDispatcher.locale;
+          locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
         }
       });
       WidgetsBinding.instance.addObserver(
@@ -216,6 +218,18 @@ abstract class LocaleStore {
     }
     if (delegate != null) {
       _delegate = delegate;
+    }
+  }
+}
+
+class TestablePlatformDispatcher {
+  static PlatformDispatcher? overridePlatformDispatcher;
+
+  static PlatformDispatcher get platformDispatcher {
+    if (overridePlatformDispatcher != null) {
+      return overridePlatformDispatcher!;
+    } else {
+      return WidgetsBinding.instance.platformDispatcher;
     }
   }
 }

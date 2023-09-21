@@ -16,23 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../example/lib/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
-
+  group('Material tests', () {
   testWidgets('it change locale via toggle switcher',
       (WidgetTester tester) async {
     // Build our app and trigger a frame.
@@ -67,7 +51,8 @@ void main() {
     // expect(find.text(enLoc.counterDescription), findsOneWidget);
     // expect(find.text(deLoc.counterDescription), findsNothing);
 
-    final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+    final sysFlag =
+        find.byTooltip(LocaleStore.languageToCountry['system']![1]);
     await tester.tap(enFlag.at(1));
     await tester.pumpAndSettle();
     expect(LocaleManager.locale.value.languageCode, "en");
@@ -92,7 +77,8 @@ void main() {
     expect(find.text(viLoc.counterDescription), findsOneWidget);
     expect(LocaleStore.realLocaleNotifier.value, "vi");
 
-    expect(find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
+    expect(
+        find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
 
     // tap menu
     final dropMenu = find.byType(DropdownMenu<String>);
@@ -127,15 +113,18 @@ void main() {
     expect(find.text(deLoc.counterDescription), findsOneWidget);
 
     // ??
-    final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+    final sysFlag =
+        find.byTooltip(LocaleStore.languageToCountry['system']![1]);
     await tester.tap(sysFlag); // restore ?
   });
 
-  testWidgets('it change locale via popUp dialog', (WidgetTester tester) async {
+  testWidgets('it change locale via popUp dialog',
+      (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues(
         {LocaleStore.innerSharedPreferenceName: "system"});
     // Build our app and trigger a frame.
     await SharedPreferences.getInstance();
+    // verify(SharedPreferences.getInstance()).called(1);
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
@@ -168,10 +157,12 @@ void main() {
     expect(LocaleManager.locale.value.languageCode, "de");
     expect(LocaleStore.realLocaleNotifier.value, "de");
 
-    expect(find.text(const Locale('de').tr.counterDescription), findsOneWidget);
+    expect(
+        find.text(const Locale('de').tr.counterDescription), findsOneWidget);
     expect(find.text(enLoc.counterDescription), findsNothing);
 
     // final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
     // await tester.tap(sysFlag); // restore ?
+  });
   });
 }
