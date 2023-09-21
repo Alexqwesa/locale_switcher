@@ -182,7 +182,7 @@ abstract class LocaleStore {
     //
     // > init inner vars
     //
-    setLocales(supportedLocales);
+    setSupportedLocales(supportedLocales);
     //
     // > init shared preference
     //
@@ -198,7 +198,7 @@ abstract class LocaleStore {
     realLocaleNotifier.value = langCode;
   }
 
-  static void setLocales(
+  static void setSupportedLocales(
     List<Locale>? supportedLocales,
   ) {
     if (supportedLocales != null) {

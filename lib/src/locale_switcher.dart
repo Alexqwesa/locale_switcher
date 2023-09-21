@@ -1,8 +1,9 @@
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/toggle_language_switch.dart';
 
 const showOtherLocales = 'show_other_locales';
 
@@ -10,6 +11,7 @@ enum _Switcher {
   toggle,
   menu,
   custom,
+  grid,
 }
 
 typedef LocaleSwitchBuilder = Widget Function(List<String>);
@@ -65,6 +67,11 @@ class LocaleSwitcher extends StatelessWidget {
   /// ```
   final LocaleSwitchBuilder? builder;
 
+  /// Only for LocaleSwitcher.grid constructor
+  final SliverGridDelegate? gridDelegate;
+
+  final Function(BuildContext)? additionalCallBack;
+
   /// A Widget to switch locale of App.
   const LocaleSwitcher._({
     super.key,
@@ -77,6 +84,8 @@ class LocaleSwitcher extends StatelessWidget {
     this.titlePadding = const EdgeInsets.all(4),
     type = _Switcher.toggle,
     this.builder,
+    this.gridDelegate,
+    this.additionalCallBack,
   }) : _type = type;
 
   /// A Widget to switch locale of App with [ToggleLanguageSwitch].
@@ -123,6 +132,24 @@ class LocaleSwitcher extends StatelessWidget {
     );
   }
 
+  /// A Widget to switch locale of App with [DropDownMenuLanguageSwitch]
+  factory LocaleSwitcher.grid({
+    Key? key,
+    int numberOfShown = 200,
+    bool showOsLocale = true,
+    SliverGridDelegate? gridDelegate,
+    Function(BuildContext)? additionalCallBack,
+  }) {
+    return LocaleSwitcher._(
+      key: key,
+      showOsLocale: showOsLocale,
+      numberOfShown: numberOfShown,
+      type: _Switcher.grid,
+      gridDelegate: gridDelegate,
+      additionalCallBack: additionalCallBack,
+    );
+  }
+
   /// A Widget to switch locale of App with your own widget:
   ///
   ///
@@ -162,9 +189,9 @@ class LocaleSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // todo: move to initState ?
+// todo: move to initState ?
     if (LocaleStore.supportedLocales.isEmpty) {
-      // assume it was not inited
+// assume it was not inited
       final child = context.findAncestorWidgetOfExactType<MaterialApp>() ??
           context.findAncestorWidgetOfExactType<CupertinoApp>();
       if (child != null) {
@@ -175,7 +202,7 @@ class LocaleSwitcher extends StatelessWidget {
             throw UnsupportedError(
                 'MaterialApp should have initialized supportedLocales parameter');
           }
-          LocaleStore.setLocales(supportedLocales);
+          LocaleStore.setSupportedLocales(supportedLocales);
         } else if (child.runtimeType == CupertinoApp) {
           final supportedLocales =
               (child as CupertinoApp).supportedLocales.toList(growable: false);
@@ -183,159 +210,55 @@ class LocaleSwitcher extends StatelessWidget {
             throw UnsupportedError(
                 'CupertinoApp should have initialized supportedLocales parameter');
           }
-          LocaleStore.setLocales(supportedLocales);
+          LocaleStore.setSupportedLocales(supportedLocales);
         }
       }
     }
 
-    // Prepare list of languageCodes where systemLocale is first and length == numberOfShown
-    // final systemLocaleExist = (LocaleStore.supportedLocales ?? []).where(
-    //   (element) => element == WidgetsBinding.instance.platformDispatcher.locale,
-    // );
+// Prepare list of languageCodes where systemLocale is first and length == numberOfShown
+// final systemLocaleExist = (LocaleStore.supportedLocales ?? []).where(
+//   (element) => element == WidgetsBinding.instance.platformDispatcher.locale,
+// );
     final staticLocales = <String>[
       if (showOsLocale) LocaleStore.systemLocale,
-      // if (systemLocaleExist.isNotEmpty) systemLocaleExist.first.languageCode,
+// if (systemLocaleExist.isNotEmpty) systemLocaleExist.first.languageCode,
       ...LocaleStore.supportedLocales
-          // .where((element) =>
-          //     element != WidgetsBinding.instance.platformDispatcher.locale)
+// .where((element) =>
+//     element != WidgetsBinding.instance.platformDispatcher.locale)
           .take(numberOfShown) // chose most used
           .map((e) => e.languageCode),
     ];
 
-    return Padding(
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: crossAxisAlignment,
-        children: [
-          if (_type == _Switcher.toggle && titlePositionTop)
-            Padding(
-              padding: titlePadding,
-              child: Center(child: Text(title ?? '')),
-            ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_type == _Switcher.toggle && !titlePositionTop)
-                Padding(
-                  padding: titlePadding,
-                  child: Center(child: Text(title ?? '')),
-                ),
-              ValueListenableBuilder(
-                valueListenable: LocaleStore.realLocaleNotifier,
-                builder: (BuildContext context, value, Widget? child) {
-                  var locales = [...staticLocales];
-                  if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
-                    locales.last = LocaleStore.realLocaleNotifier.value;
-                  }
-                  if (LocaleStore.supportedLocales.length > numberOfShown) {
-                    locales.add(showOtherLocales);
-                  }
-
-                  return switch (_type) {
-                    _Switcher.toggle => Expanded(
-                        child: ToggleLanguageSwitch(locales: locales),
-                      ),
-                    _Switcher.menu => DropDownMenuLanguageSwitch(
-                        locales: locales, title: title),
-                    _Switcher.custom => builder!(locales),
-                  };
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DropDownMenuLanguageSwitch extends StatelessWidget {
-  final String? title;
-
-  const DropDownMenuLanguageSwitch({
-    super.key,
-    required this.locales,
-    this.title,
-  });
-
-  final List<String> locales;
-
-  @override
-  Widget build(BuildContext context) {
-    const radius = 38.0;
-    final localeEntries = locales
-        .map<DropdownMenuEntry<String>>(
-          (e) => DropdownMenuEntry<String>(
-            value: e,
-            label: LocaleStore.languageToCountry[e]?[1] ?? e,
-            leadingIcon: SizedBox(
-              width: radius,
-              height: radius,
-              key: ValueKey('item-$e'),
-              child: FittedBox(
-                child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
-                    ? LocaleStore.languageToCountry[e]![2] ??
-                        getIconForLanguage(e, null, radius)
-                    : getIconForLanguage(e, null, radius),
-              ),
-            ),
-          ),
-        )
-        .toList();
-
-    return DropdownMenu<String>(
-      initialSelection: LocaleStore.realLocaleNotifier.value,
-      leadingIcon: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
-            getIconForLanguage(LocaleStore.realLocaleNotifier.value, null, 32),
-      ),
-      // controller: colorController,
-      label: const Text('Language'),
-      dropdownMenuEntries: localeEntries,
-      onSelected: (String? langCode) {
-        if (langCode != null) {
-          if (langCode == showOtherLocales) {
-            showSelectLocaleDialog(context);
-          } else {
-            LocaleManager.realLocaleNotifier.value = langCode;
-          }
+    return ValueListenableBuilder(
+      valueListenable: LocaleStore.realLocaleNotifier,
+      builder: (BuildContext context, value, Widget? child) {
+        var locales = [...staticLocales];
+        if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
+          locales.last = LocaleStore.realLocaleNotifier.value;
         }
-      },
-      enableSearch: true,
-    );
-  }
-}
-
-class ToggleLanguageSwitch extends StatelessWidget {
-  const ToggleLanguageSwitch({
-    super.key,
-    required this.locales,
-  });
-
-  final List<String> locales;
-
-  @override
-  Widget build(BuildContext context) {
-    if (locales.length < 2) {
-      locales
-          .add(showOtherLocales); // AnimatedToggleSwitch crash with one value
-    }
-
-    return AnimatedToggleSwitch<String>.rolling(
-      allowUnlistedValues: true,
-      current: LocaleManager.realLocaleNotifier.value,
-      values: locales,
-      loading: false,
-      onChanged: (langCode) async {
-        if (langCode == showOtherLocales) {
-          showSelectLocaleDialog(context);
-        } else {
-          LocaleManager.realLocaleNotifier.value = langCode;
+        if (LocaleStore.supportedLocales.length > numberOfShown) {
+          locales.add(showOtherLocales);
         }
+
+        return switch (_type) {
+          _Switcher.toggle => ToggleLanguageSwitch(
+              padding: padding,
+              crossAxisAlignment: crossAxisAlignment,
+              titlePositionTop: titlePositionTop,
+              titlePadding: titlePadding,
+              title: title,
+              locales: locales,
+            ),
+          _Switcher.menu =>
+            DropDownMenuLanguageSwitch(locales: locales, title: title),
+          _Switcher.custom => builder!(locales),
+          // TODO: Handle this case.
+          _Switcher.grid => GridOfLanguages(
+              gridDelegate: gridDelegate,
+              additionalCallBack: additionalCallBack,
+            ),
+        };
       },
-      style: const ToggleStyle(backgroundColor: Colors.black12),
-      iconBuilder: getIconForLanguage,
     );
   }
 }

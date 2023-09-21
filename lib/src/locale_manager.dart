@@ -91,7 +91,7 @@ class _LocaleManagerState extends State<LocaleManager> {
   void _readAppLocalization(Widget child) {
     LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
     if (widget._supportedLocales != null) {
-      LocaleStore.setLocales(widget._supportedLocales!);
+      LocaleStore.setSupportedLocales(widget._supportedLocales!);
     } else if (child.runtimeType == MaterialApp) {
       final supportedLocales =
           (child as MaterialApp).supportedLocales.toList(growable: false);
@@ -99,7 +99,7 @@ class _LocaleManagerState extends State<LocaleManager> {
         throw UnsupportedError(
             'MaterialApp should have initialized supportedLocales parameter');
       }
-      LocaleStore.setLocales(supportedLocales);
+      LocaleStore.setSupportedLocales(supportedLocales);
     } else if (child.runtimeType == CupertinoApp) {
       final supportedLocales =
           (child as CupertinoApp).supportedLocales.toList(growable: false);
@@ -107,7 +107,7 @@ class _LocaleManagerState extends State<LocaleManager> {
         throw UnsupportedError(
             'CupertinoApp should have initialized supportedLocales parameter');
       }
-      LocaleStore.setLocales(supportedLocales);
+      LocaleStore.setSupportedLocales(supportedLocales);
     } else {
       throw UnimplementedError(
           "The child should be either CupertinoApp or MaterialApp class");

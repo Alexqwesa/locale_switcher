@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_relative_lib_imports
