@@ -56,7 +56,7 @@ before reporting bug.
 
 ## Troubleshooting
 
-### Checking that intl package is setup correctly:
+### Check that intl package is setup correctly:
 
 The following instructions are  from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
 
