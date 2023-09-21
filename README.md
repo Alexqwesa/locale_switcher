@@ -20,17 +20,31 @@ A widget for switching the locale of your application.
 
 This package allows you to add locale-switching functionality to your app with just a few lines of code.
 
-It depends on [intl](https://pub.dev/packages/intl) package (not tested with other localization packages).
+This is NOT a localization package, it is just a few useful widget that extend 
+functionality of localization systems, such as: [intl](https://pub.dev/packages/intl), 
+[easy_localization](https://pub.dev/packages/easy_localization), etc...
 
 ## Features
 
-- Contains widget to switch locale - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html):
-    - which includes a list of locales for you app with additional option to use system locale,
-    - it offers several constructors:  [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html), [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html) or [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
-- Contains a button [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html) to open popup window,
-- Optionally stores the last selected locale in  [SharedPreferences],
-- Provides a [LocaleManager.realLocaleNotifier](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/realLocaleNotifier.html) to dynamically change the app's locale (and notifier [LocaleManager.locale](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/locale.html) to listen to locale changes).
-- Observes changes in the system locale.
+- [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html) widget:
+  - optionally: load/stores the last selected locale in `SharedPreferences`,
+  - update locale of app (listen to `notifier` and rebuild `MaterialApp`),
+  - observes changes in the system locale,
+- [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) - 
+a widget to switch locale:
+    - show a list of locales and special option to use system locale,
+    - constructor [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html),
+    - constructor [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html),
+    - constructor [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
+- [SelectLocaleButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/SelectLocaleButton-class.html) - button/indicator which open popup window to select locale,
+- And various other helpers...
+
+[//]: # (    - [LocaleManager.realLocaleNotifier]&#40;https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/realLocaleNotifier.html&#41; )
+
+[//]: # (  to dynamically change the app's locale,)
+
+[//]: # (    - [LocaleManager.locale]&#40;https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/locale.html&#41; to listen to locale changes&#41;.)
+
 
 ## Usage
 
@@ -42,8 +56,8 @@ Widget build(BuildContext context, WidgetRef ref) {
   return LocaleManager(
       child: MaterialApp(
         locale: LocaleManager.locale.value,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
   //...
 ```
 
@@ -93,7 +107,8 @@ nullable-getter: false
 
 ## TODO:
 
-- [ ] Test with other localization system
+- [ ] Test with other localization system (currently: tested only intl)
+- [ ] Support slang
 
 ## FAQ
 

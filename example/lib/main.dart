@@ -15,14 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ============= THIS 5 LINES REQUIRED =============
+    // ============= THIS 4 LINES ARE REQUIRED =============
     return LocaleManager(
       child: MaterialApp(
         locale: LocaleManager.locale.value,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-
         // ...
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         title: LocaleManager.locale.value.tr.example,
         home: MyHomePage(title: LocaleManager.locale.value.tr.example),
         debugShowCheckedModeBanner: false,

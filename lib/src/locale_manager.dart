@@ -47,13 +47,33 @@ class LocaleManager extends StatefulWidget {
   /// A [ValueListenable] with current locale.
   static ValueNotifier<Locale> get locale => LocaleStore.locale;
 
+  final List<Locale>? _supportedLocales;
+
   const LocaleManager({
     super.key,
     required this.child,
     this.reassignFlags,
     this.storeLocale = true,
     this.sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
-  });
+
+    /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
+    /// or [CupertinoApp].
+    ///
+    /// Note: [MaterialApp] or [CupertinoApp] and this widget should still be inside the
+    /// same `build` method, otherwise it will not listen to [locale] notifier!
+    ///
+    /// Example:
+    /// ```dart
+    /// Widget build(BuildContext context) {
+    /// return LocaleManager(
+    ///   supportedLocales: AppLocalizations.supportedLocales,
+    ///   child: SomeOtherWidget(
+    ///     child: MaterialApp(
+    ///       locale: LocaleManager.locale.value,
+    ///       supportedLocales: AppLocalizations.supportedLocales,
+    /// ```
+    List<Locale>? supportedLocales,
+  }) : _supportedLocales = supportedLocales;
 
   @override
   State<LocaleManager> createState() => _LocaleManagerState();
@@ -70,20 +90,22 @@ class _LocaleManagerState extends State<LocaleManager> {
   /// init [LocaleStore]'s delegate and supportedLocales
   void _readAppLocalization(Widget child) {
     LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
-    if (child.runtimeType == MaterialApp) {
-      final delegate = (child as MaterialApp).localizationsDelegates?.first;
-      final supportedLocales = child.supportedLocales.toList(growable: false);
-      if (delegate == null) {
+    if (widget._supportedLocales != null) {
+      LocaleStore.setLocales(widget._supportedLocales!);
+    } else if (child.runtimeType == MaterialApp) {
+      final supportedLocales =
+          (child as MaterialApp).supportedLocales.toList(growable: false);
+      if (supportedLocales.isEmpty) {
         throw UnsupportedError(
-            'MaterialApp should have initialized: delegate and supportedLocales parameters');
+            'MaterialApp should have initialized supportedLocales parameter');
       }
       LocaleStore.setLocales(supportedLocales);
     } else if (child.runtimeType == CupertinoApp) {
-      final delegate = (child as CupertinoApp).localizationsDelegates?.first;
-      final supportedLocales = child.supportedLocales.toList(growable: false);
-      if (delegate == null) {
+      final supportedLocales =
+          (child as CupertinoApp).supportedLocales.toList(growable: false);
+      if (supportedLocales.isEmpty) {
         throw UnsupportedError(
-            'CupertinoApp should have initialized: delegate and supportedLocales parameters');
+            'CupertinoApp should have initialized supportedLocales parameter');
       }
       LocaleStore.setLocales(supportedLocales);
     } else {

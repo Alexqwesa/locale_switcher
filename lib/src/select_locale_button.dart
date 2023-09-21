@@ -105,7 +105,7 @@ class GridOfLanguages extends StatelessWidget {
   Widget build(BuildContext context) {
     final locales = [
       LocaleStore.systemLocale,
-      ...?LocaleStore.supportedLocales?.map((e) => e.languageCode),
+      ...LocaleStore.supportedLocales.map((e) => e.languageCode),
     ];
 
     return GridView(

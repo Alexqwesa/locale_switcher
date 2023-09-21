@@ -45,7 +45,7 @@ abstract class LocaleStore {
   }
 
   /// List of supported locales, setup by [LocaleManager]
-  static List<Locale>? supportedLocales;
+  static List<Locale> supportedLocales = [];
 
   /// A name of key used to store locale in [SharedPreferences].
   ///

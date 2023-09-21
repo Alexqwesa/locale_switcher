@@ -1,4 +1,5 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
@@ -161,6 +162,34 @@ class LocaleSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // todo: move to initState ?
+    if (LocaleStore.supportedLocales.isEmpty) {
+      // assume it was not inited:
+      context.visitAncestorElements((child) {
+        if (child.runtimeType == MaterialApp) {
+          final supportedLocales =
+              (child as MaterialApp).supportedLocales.toList(growable: false);
+          if (supportedLocales.isEmpty) {
+            throw UnsupportedError(
+                'MaterialApp should have initialized supportedLocales parameter');
+          }
+          LocaleStore.setLocales(supportedLocales);
+          return false;
+        } else if (child.runtimeType == CupertinoApp) {
+          final supportedLocales =
+              (child as CupertinoApp).supportedLocales.toList(growable: false);
+          if (supportedLocales.isEmpty) {
+            throw UnsupportedError(
+                'CupertinoApp should have initialized supportedLocales parameter');
+          }
+          LocaleStore.setLocales(supportedLocales);
+          return false;
+        }
+
+        return true;
+      });
+    }
+
     // Prepare list of languageCodes where systemLocale is first and length == numberOfShown
     // final systemLocaleExist = (LocaleStore.supportedLocales ?? []).where(
     //   (element) => element == WidgetsBinding.instance.platformDispatcher.locale,
@@ -168,7 +197,7 @@ class LocaleSwitcher extends StatelessWidget {
     final staticLocales = <String>[
       if (showOsLocale) LocaleStore.systemLocale,
       // if (systemLocaleExist.isNotEmpty) systemLocaleExist.first.languageCode,
-      ...(LocaleStore.supportedLocales ?? [])
+      ...LocaleStore.supportedLocales
           // .where((element) =>
           //     element != WidgetsBinding.instance.platformDispatcher.locale)
           .take(numberOfShown) // chose most used
@@ -200,8 +229,7 @@ class LocaleSwitcher extends StatelessWidget {
                   if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
                     locales.last = LocaleStore.realLocaleNotifier.value;
                   }
-                  if ((LocaleStore.supportedLocales?.length ?? 0) >
-                      numberOfShown) {
+                  if (LocaleStore.supportedLocales.length > numberOfShown) {
                     locales.add(showOtherLocales);
                   }
 
