@@ -164,8 +164,10 @@ class LocaleSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     // todo: move to initState ?
     if (LocaleStore.supportedLocales.isEmpty) {
-      // assume it was not inited:
-      context.visitAncestorElements((child) {
+      // assume it was not inited
+      final child = context.findAncestorWidgetOfExactType<MaterialApp>() ??
+          context.findAncestorWidgetOfExactType<CupertinoApp>();
+      if (child != null) {
         if (child.runtimeType == MaterialApp) {
           final supportedLocales =
               (child as MaterialApp).supportedLocales.toList(growable: false);
@@ -174,7 +176,6 @@ class LocaleSwitcher extends StatelessWidget {
                 'MaterialApp should have initialized supportedLocales parameter');
           }
           LocaleStore.setLocales(supportedLocales);
-          return false;
         } else if (child.runtimeType == CupertinoApp) {
           final supportedLocales =
               (child as CupertinoApp).supportedLocales.toList(growable: false);
@@ -183,11 +184,8 @@ class LocaleSwitcher extends StatelessWidget {
                 'CupertinoApp should have initialized supportedLocales parameter');
           }
           LocaleStore.setLocales(supportedLocales);
-          return false;
         }
-
-        return true;
-      });
+      }
     }
 
     // Prepare list of languageCodes where systemLocale is first and length == numberOfShown
@@ -319,6 +317,11 @@ class ToggleLanguageSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (locales.length < 2) {
+      locales
+          .add(showOtherLocales); // AnimatedToggleSwitch crash with one value
+    }
+
     return AnimatedToggleSwitch<String>.rolling(
       allowUnlistedValues: true,
       current: LocaleManager.realLocaleNotifier.value,
