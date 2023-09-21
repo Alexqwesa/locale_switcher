@@ -20,7 +20,7 @@ A widget for switching the locale of your application.
 
 This package allows you to add **locale-switching** functionality to your app **with just 2 lines** of code.
 
-This is NOT a localization package, it is just a few useful widget that extend 
+This is NOT a localization package, it is just a few useful widgets that extend 
 functionality of localization systems, such as: [intl](https://pub.dev/packages/intl), 
 [easy_localization](https://pub.dev/packages/easy_localization), etc...
 
