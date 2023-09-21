@@ -17,152 +17,152 @@ import '../example/lib/main.dart';
 
 void main() {
   group('Material tests', () {
-  testWidgets('it change locale via toggle switcher',
-      (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    testWidgets('it change locale via toggle switcher',
+        (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(const MyApp());
 
-    // final deLoc = const Locale('de').tr;
-    final enLoc = const Locale('en').tr;
-    final flags = find.byType(CircleFlag);
-    expect(flags, findsNWidgets(5)); // 2 + 3
+      // final deLoc = const Locale('de').tr;
+      final enLoc = const Locale('en').tr;
+      final flags = find.byType(CircleFlag);
+      expect(flags, findsNWidgets(5)); // 2 + 3
 
-    // test start with english locale
-    expect(find.text(enLoc.counterDescription), findsOneWidget);
-    expect(LocaleStore.realLocaleNotifier.value, "system");
+      // test start with english locale
+      expect(find.text(enLoc.counterDescription), findsOneWidget);
+      expect(LocaleStore.realLocaleNotifier.value, "system");
 
-    // Verify that vi locale is loaded
-    final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
-    expect(viFlag, findsNWidgets(2));
-    await tester.tap(viFlag.at(1));
-    expect(LocaleManager.locale.value.languageCode, "vi");
-    expect(LocaleStore.realLocaleNotifier.value, "vi");
-    await tester.pumpAndSettle();
-    // expect(find.text(deLoc.counterDescription), findsOneWidget);
-    // expect(find.text(enLoc.counterDescription), findsNothing);
+      // Verify that vi locale is loaded
+      final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
+      expect(viFlag, findsNWidgets(2));
+      await tester.tap(viFlag.at(1));
+      expect(LocaleManager.locale.value.languageCode, "vi");
+      expect(LocaleStore.realLocaleNotifier.value, "vi");
+      await tester.pumpAndSettle();
+      // expect(find.text(deLoc.counterDescription), findsOneWidget);
+      // expect(find.text(enLoc.counterDescription), findsNothing);
 
-    // Verify that en locale is loaded
+      // Verify that en locale is loaded
 
-    final enFlag = find.byTooltip(LocaleStore.languageToCountry['en']![1]);
-    await tester.tap(enFlag.at(1));
-    await tester.pumpAndSettle();
-    expect(LocaleManager.locale.value.languageCode, "en");
-    expect(LocaleStore.realLocaleNotifier.value, "en");
-    // expect(find.text(enLoc.counterDescription), findsOneWidget);
-    // expect(find.text(deLoc.counterDescription), findsNothing);
+      final enFlag = find.byTooltip(LocaleStore.languageToCountry['en']![1]);
+      await tester.tap(enFlag.at(1));
+      await tester.pumpAndSettle();
+      expect(LocaleManager.locale.value.languageCode, "en");
+      expect(LocaleStore.realLocaleNotifier.value, "en");
+      // expect(find.text(enLoc.counterDescription), findsOneWidget);
+      // expect(find.text(deLoc.counterDescription), findsNothing);
 
-    final sysFlag =
-        find.byTooltip(LocaleStore.languageToCountry['system']![1]);
-    await tester.tap(enFlag.at(1));
-    await tester.pumpAndSettle();
-    expect(LocaleManager.locale.value.languageCode, "en");
-    expect(LocaleStore.realLocaleNotifier.value, "en");
+      final sysFlag =
+          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      await tester.tap(enFlag.at(1));
+      await tester.pumpAndSettle();
+      expect(LocaleManager.locale.value.languageCode, "en");
+      expect(LocaleStore.realLocaleNotifier.value, "en");
 
-    await tester.tap(sysFlag); // restore ?
-  });
+      await tester.tap(sysFlag); // restore ?
+    });
 
-  testWidgets('it load locale and change via menu',
-      (WidgetTester tester) async {
-    SharedPreferences.setMockInitialValues(
-        {LocaleStore.innerSharedPreferenceName: "vi"});
-    // Build our app and trigger a frame.
-    // await LocaleStore.init();
-    await SharedPreferences.getInstance();
-    await tester.pumpWidget(const MyApp());
-    await tester.pumpAndSettle();
+    testWidgets('it load locale and change via menu',
+        (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues(
+          {LocaleStore.innerSharedPreferenceName: "vi"});
+      // Build our app and trigger a frame.
+      // await LocaleStore.init();
+      await SharedPreferences.getInstance();
+      await tester.pumpWidget(const MyApp());
+      await tester.pumpAndSettle();
 
-    final viLoc = const Locale('vi').tr;
+      final viLoc = const Locale('vi').tr;
 
-    // test start with english locale
-    expect(find.text(viLoc.counterDescription), findsOneWidget);
-    expect(LocaleStore.realLocaleNotifier.value, "vi");
+      // test start with english locale
+      expect(find.text(viLoc.counterDescription), findsOneWidget);
+      expect(LocaleStore.realLocaleNotifier.value, "vi");
 
-    expect(
-        find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
+      expect(
+          find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
 
-    // tap menu
-    final dropMenu = find.byType(DropdownMenu<String>);
-    await tester.tap(dropMenu);
-    await tester.pumpAndSettle();
+      // tap menu
+      final dropMenu = find.byType(DropdownMenu<String>);
+      await tester.tap(dropMenu);
+      await tester.pumpAndSettle();
 
-    expect(LocaleManager.locale.value.languageCode, "vi");
-    expect(LocaleManager.realLocaleNotifier.value, "vi");
+      expect(LocaleManager.locale.value.languageCode, "vi");
+      expect(LocaleManager.realLocaleNotifier.value, "vi");
 
-    // tap item
-    final deOption = find.descendant(
-      of: dropMenu,
-      matching: find.byType(LangIconWithToolTip),
-      // matching: find.text(LocaleStore.languageToCountry['de']![1]),
-    );
-    expect(deOption, findsNWidgets(5)); // 4 + current
-    // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
-    // await tester.ensureVisible(deOption.at(4));
-    // await tester.pumpAndSettle();
-    // await tester.tap(deOption.at(4));
-    await tester.tap(find.byKey(const ValueKey("item-de")).at(1));
-    await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 1));
+      // tap item
+      final deOption = find.descendant(
+        of: dropMenu,
+        matching: find.byType(LangIconWithToolTip),
+        // matching: find.text(LocaleStore.languageToCountry['de']![1]),
+      );
+      expect(deOption, findsNWidgets(5)); // 4 + current
+      // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
+      // await tester.ensureVisible(deOption.at(4));
+      // await tester.pumpAndSettle();
+      // await tester.tap(deOption.at(4));
+      await tester.tap(find.byKey(const ValueKey("item-de")).at(1));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
-    // selected todo:
-    expect(
-        find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
-    expect(LocaleManager.realLocaleNotifier.value, "de");
-    expect(LocaleManager.locale.value.languageCode, "de");
+      // selected todo:
+      expect(
+          find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
+      expect(LocaleManager.realLocaleNotifier.value, "de");
+      expect(LocaleManager.locale.value.languageCode, "de");
 
-    final deLoc = const Locale('de').tr;
-    expect(find.text(deLoc.counterDescription), findsOneWidget);
+      final deLoc = const Locale('de').tr;
+      expect(find.text(deLoc.counterDescription), findsOneWidget);
 
-    // ??
-    final sysFlag =
-        find.byTooltip(LocaleStore.languageToCountry['system']![1]);
-    await tester.tap(sysFlag); // restore ?
-  });
+      // ??
+      final sysFlag =
+          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      await tester.tap(sysFlag); // restore ?
+    });
 
-  testWidgets('it change locale via popUp dialog',
-      (WidgetTester tester) async {
-    SharedPreferences.setMockInitialValues(
-        {LocaleStore.innerSharedPreferenceName: "system"});
-    // Build our app and trigger a frame.
-    await SharedPreferences.getInstance();
-    // verify(SharedPreferences.getInstance()).called(1);
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    testWidgets('it change locale via popUp dialog',
+        (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues(
+          {LocaleStore.innerSharedPreferenceName: "system"});
+      // Build our app and trigger a frame.
+      await SharedPreferences.getInstance();
+      // verify(SharedPreferences.getInstance()).called(1);
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(const MyApp());
 
-    // final deLoc = const Locale('de').tr;
-    final enLoc = const Locale('en').tr;
+      // final deLoc = const Locale('de').tr;
+      final enLoc = const Locale('en').tr;
 
-    // test start with english locale
-    expect(LocaleStore.realLocaleNotifier.value, "system");
-    expect(find.text(enLoc.counterDescription), findsOneWidget);
+      // test start with english locale
+      expect(LocaleStore.realLocaleNotifier.value, "system");
+      expect(find.text(enLoc.counterDescription), findsOneWidget);
 
-    // Verify that vi locale is loaded
-    final selectLocaleButton = find.byType(SelectLocaleButton);
-    expect(selectLocaleButton, findsNWidgets(2));
-    await tester.tap(selectLocaleButton.at(0));
-    await tester.pumpAndSettle();
+      // Verify that vi locale is loaded
+      final selectLocaleButton = find.byType(SelectLocaleButton);
+      expect(selectLocaleButton, findsNWidgets(2));
+      await tester.tap(selectLocaleButton.at(0));
+      await tester.pumpAndSettle();
 
-    final grid = find.byType(GridOfLanguages);
-    expect(grid, findsOneWidget);
+      final grid = find.byType(GridOfLanguages);
+      expect(grid, findsOneWidget);
 
-    // tap item
-    final deOption = find.descendant(
-      of: grid,
-      matching: find.text(LocaleStore.languageToCountry['de']![1]),
-    );
-    expect(deOption, findsOneWidget);
-    await tester.tap(deOption);
-    await tester.pumpAndSettle();
+      // tap item
+      final deOption = find.descendant(
+        of: grid,
+        matching: find.text(LocaleStore.languageToCountry['de']![1]),
+      );
+      expect(deOption, findsOneWidget);
+      await tester.tap(deOption);
+      await tester.pumpAndSettle();
 
-    // Verify that en locale is loaded
-    expect(LocaleManager.locale.value.languageCode, "de");
-    expect(LocaleStore.realLocaleNotifier.value, "de");
+      // Verify that en locale is loaded
+      expect(LocaleManager.locale.value.languageCode, "de");
+      expect(LocaleStore.realLocaleNotifier.value, "de");
 
-    expect(
-        find.text(const Locale('de').tr.counterDescription), findsOneWidget);
-    expect(find.text(enLoc.counterDescription), findsNothing);
+      expect(
+          find.text(const Locale('de').tr.counterDescription), findsOneWidget);
+      expect(find.text(enLoc.counterDescription), findsNothing);
 
-    // final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
-    // await tester.tap(sysFlag); // restore ?
-  });
+      // final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      // await tester.tap(sysFlag); // restore ?
+    });
   });
 }
