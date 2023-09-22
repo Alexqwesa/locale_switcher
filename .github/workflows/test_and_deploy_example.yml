@@ -43,19 +43,18 @@ jobs:
       #   run: dart format --output=none --set-exit-if-changed .
 
       - name: install lcov
-        run: sudo apt-get install -y lcov
+        run: sudo apt-get install -y lcov sed
       # Your project will need to have tests in test/ and a dependency on
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
-      - name: Run tests
+      - name: Prepare and Run tests
         run: |
-          pushd example
+          mv example/test/*.dart test/
+          sed "s@^import '../lib/main@import '../example/lib/main@g" test/* -i
           flutter test --coverage
-          popd
 
-      - name: Cleanup and move coverage from example dir
+      - name: Cleanup coverage
         run: |
-          move example/coverage/ .
           lcov --remove coverage/lcov.info 'lib/src/l10n/*' 'lib/src/generated/*' 'lib/src/stubs_for_testing/*' -o coverage/lcov.info
           # genhtml coverage/lcov.info --output=coverage
 
