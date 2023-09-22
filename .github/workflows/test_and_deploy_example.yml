@@ -55,7 +55,7 @@ jobs:
 
       - name: Cleanup and move coverage from example dir
         run: |
-          move example/coverage/ .
+          mv example/coverage/ .
           lcov --remove coverage/lcov.info 'lib/src/l10n/*' 'lib/src/generated/*' 'lib/src/stubs_for_testing/*' -o coverage/lcov.info
           # genhtml coverage/lcov.info --output=coverage
 
