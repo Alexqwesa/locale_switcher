@@ -30,7 +30,8 @@ void main() {
       expect(LocaleManager.locale.value.languageCode, "vi");
       expect(LocaleStore.realLocaleNotifier.value, "vi");
       await tester.pumpAndSettle();
-      expect(find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
+      expect(
+          find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
       expect(find.text(enLoc.counterDescription), findsNothing);
 
       // Verify that en locale is loaded
