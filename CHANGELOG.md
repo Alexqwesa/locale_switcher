@@ -1,10 +1,9 @@
 # Changelog
 
-## 0.9.0
+## 0.9.1
 
 * update documentation,
-* move tests to example dir,
-* remove unneeded dependencies(were used by tests).
+* cleanup dependencies.
 
 ## 0.8.4
 

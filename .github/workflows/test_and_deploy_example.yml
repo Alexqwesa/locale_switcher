@@ -49,8 +49,8 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Prepare and Run tests
         run: |
-          mv example/test/*.dart test/
-          sed "s@^import '../lib/main@import '../example/lib/main@g" test/* -i
+          # cp -a example/test/*.dart test/
+          # sed "s@^import '../lib/main@import '../example/lib/main@g" test/* -i
           flutter test --coverage
 
       - name: Cleanup coverage

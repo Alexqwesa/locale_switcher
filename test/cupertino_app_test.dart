@@ -17,7 +17,7 @@ import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_butt
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_relative_lib_imports
-import '../lib/main.dart';
+import '../example/lib/main.dart';
 
 class MyAppCupertinoTest extends StatelessWidget {
   const MyAppCupertinoTest({super.key});
