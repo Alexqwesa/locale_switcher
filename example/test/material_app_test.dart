@@ -15,7 +15,7 @@ import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_butt
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_relative_lib_imports
-import '../example/lib/main.dart';
+import '../lib/main.dart';
 
 void main() {
   group('Material tests', () {

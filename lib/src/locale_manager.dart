@@ -31,10 +31,10 @@ class LocaleManager extends StatefulWidget {
   /// Make sure what static data only initialized once.
   static bool isInitialized = false;
 
-  /// Change language to flag mapping.
+  /// Add or change language to flag mapping.
   ///
   /// Example:
-  /// {'en': ['GB', 'English', <Your_icon_optional>]}
+  /// {'en': ['GB', 'English', <Icon>]}
   /// (first two options are required, third is optional)
   final Map<String, List>? reassignFlags;
 

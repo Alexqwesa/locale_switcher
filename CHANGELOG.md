@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+* update documentation,
+* move tests to example dir,
+* remove unneeded dependencies(were used by tests).
+
 ## 0.8.4
 
 * use `LocaleSwitcher.iconButton` instead of `SelectLocaleButton`.

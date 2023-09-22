@@ -49,14 +49,18 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         run: |
+          pushd example
           flutter test --coverage
           lcov --remove coverage/lcov.info 'lib/src/l10n/*' 'lib/src/generated/*' 'lib/src/stubs_for_testing/*' -o coverage/lcov.info
           # genhtml coverage/lcov.info --output=coverage
+          popd
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ./example/coverage/lcov.info
 
       - name: Build locale_switcher
         run: |
