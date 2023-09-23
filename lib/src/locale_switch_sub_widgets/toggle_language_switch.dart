@@ -48,14 +48,14 @@ class ToggleLanguageSwitch extends StatelessWidget {
               Expanded(
                 child: AnimatedToggleSwitch<String>.rolling(
                   allowUnlistedValues: true,
-                  current: LocaleManager.realLocaleNotifier.value,
+                  current: LocaleManager.languageCode.value,
                   values: locales,
                   loading: false,
                   onChanged: (langCode) async {
                     if (langCode == showOtherLocales) {
                       showSelectLocaleDialog(context);
                     } else {
-                      LocaleManager.realLocaleNotifier.value = langCode;
+                      LocaleManager.languageCode.value = langCode;
                     }
                   },
                   style: const ToggleStyle(backgroundColor: Colors.black12),

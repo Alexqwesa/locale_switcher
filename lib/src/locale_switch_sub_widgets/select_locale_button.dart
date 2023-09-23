@@ -28,14 +28,14 @@ class SelectLocaleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.realLocaleNotifier,
+      valueListenable: LocaleStore.languageCode,
       builder: (BuildContext context, value, Widget? child) {
         return IconButton(
           icon: useStaticIcon ??
               LangIconWithToolTip(
                 // langCode: LocaleManager.locale.value.languageCode,
                 toolTipPrefix: toolTipPrefix,
-                langCode: LocaleStore.realLocaleNotifier.value,
+                langCode: LocaleStore.languageCode.value,
                 radius: radius,
               ),
           // tooltip: LocaleStore.languageToCountry[showOtherLocales]?[1] ??

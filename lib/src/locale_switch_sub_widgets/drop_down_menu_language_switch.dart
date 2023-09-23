@@ -37,11 +37,10 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<String>(
-      initialSelection: LocaleStore.realLocaleNotifier.value,
+      initialSelection: LocaleStore.languageCode.value,
       leadingIcon: Padding(
         padding: const EdgeInsets.all(8.0),
-        child:
-            getIconForLanguage(LocaleStore.realLocaleNotifier.value, null, 32),
+        child: getIconForLanguage(LocaleStore.languageCode.value, null, 32),
       ),
       // controller: colorController,
       label: const Text('Language'),
@@ -51,7 +50,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
           if (langCode == showOtherLocales) {
             showSelectLocaleDialog(context);
           } else {
-            LocaleManager.realLocaleNotifier.value = langCode;
+            LocaleManager.languageCode.value = langCode;
           }
         }
       },

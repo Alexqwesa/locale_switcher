@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.2
+
+* rename `LocaleManager.realLocaleNotifier` to `LocaleManager.languageCode`. 
+
 ## 0.9.1
 
 * update documentation,

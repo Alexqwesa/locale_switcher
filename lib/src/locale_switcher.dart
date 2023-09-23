@@ -53,14 +53,14 @@ class LocaleSwitcher extends StatelessWidget {
   /// LocaleSwitcher.custom(
   ///   builder: (locales) {
   ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.realLocaleNotifier.value,
+  ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
   ///       loading: false,
   ///       onChanged: (langCode) async {
   ///         if (langCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.realLocaleNotifier.value = langCode;
+  ///           LocaleManager.languageCode.value = langCode;
   ///         }
   ///       },
   ///       iconBuilder: getIconForLanguage,
@@ -179,14 +179,14 @@ class LocaleSwitcher extends StatelessWidget {
   /// LocaleSwitcher.custom(
   ///   builder: (locales) {
   ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.realLocaleNotifier.value,
+  ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
   ///       loading: false,
   ///       onChanged: (langCode) async {
   ///         if (langCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.realLocaleNotifier.value = langCode;
+  ///           LocaleManager.languageCode.value = langCode;
   ///         }
   ///       },
   ///       iconBuilder: getIconForLanguage,
@@ -273,11 +273,11 @@ class LocaleSwitcher extends StatelessWidget {
     ];
 
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.realLocaleNotifier,
+      valueListenable: LocaleStore.languageCode,
       builder: (BuildContext context, value, Widget? child) {
         var locales = [...staticLocales];
-        if (!locales.contains(LocaleStore.realLocaleNotifier.value)) {
-          locales.last = LocaleStore.realLocaleNotifier.value;
+        if (!locales.contains(LocaleStore.languageCode.value)) {
+          locales.last = LocaleStore.languageCode.value;
         }
         if (LocaleStore.supportedLocales.length > numberOfShown) {
           locales.add(showOtherLocales);

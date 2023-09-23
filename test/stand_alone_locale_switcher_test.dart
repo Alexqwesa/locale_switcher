@@ -21,14 +21,14 @@ void main() {
 
       // test start with english locale
       expect(find.text(enLoc.counterDescription), findsOneWidget);
-      expect(LocaleStore.realLocaleNotifier.value, "system");
+      expect(LocaleStore.languageCode.value, "system");
 
       // Verify that vi locale is loaded
       final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
       expect(viFlag, findsNWidgets(2));
       await tester.tap(viFlag.at(1));
       expect(LocaleManager.locale.value.languageCode, "vi");
-      expect(LocaleStore.realLocaleNotifier.value, "vi");
+      expect(LocaleStore.languageCode.value, "vi");
       await tester.pumpAndSettle();
       expect(
           find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
@@ -40,7 +40,7 @@ void main() {
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
       expect(LocaleManager.locale.value.languageCode, "en");
-      expect(LocaleStore.realLocaleNotifier.value, "en");
+      expect(LocaleStore.languageCode.value, "en");
       expect(find.text(enLoc.counterDescription), findsOneWidget);
       expect(find.text(deLoc.counterDescription), findsNothing);
 
@@ -49,7 +49,7 @@ void main() {
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
       expect(LocaleManager.locale.value.languageCode, "en");
-      expect(LocaleStore.realLocaleNotifier.value, "en");
+      expect(LocaleStore.languageCode.value, "en");
 
       await tester.tap(sysFlag); // restore ?
     });

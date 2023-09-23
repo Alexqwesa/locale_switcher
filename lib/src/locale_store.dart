@@ -24,18 +24,18 @@ abstract class LocaleStore {
   // todo: use ChangeNotifier to check values.
   // todo: store list of recently used locales
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get realLocaleNotifier {
+  static ValueNotifier<String> get languageCode {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
       // _locale.value = platformDispatcher.locale;
       // todo: try to read pref here?
     }
-    return _realLocaleNotifier;
+    return _languageCode;
   }
 
   /// Current [Locale], use [LocaleStore.setLocale] to update it.
   ///
-  /// [LocaleStore.realLocaleNotifier] contains the real value that stored in [SharedPreferences].
+  /// [LocaleStore.languageCode] contains the real value that stored in [SharedPreferences].
   static ValueNotifier<Locale> get locale {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
@@ -56,7 +56,7 @@ abstract class LocaleStore {
   static SharedPreferences? _pref;
 
   static final _locale = ValueNotifier<Locale>(const Locale('en'));
-  static final _realLocaleNotifier = ValueNotifier<String>(systemLocale);
+  static final _languageCode = ValueNotifier<String>(systemLocale);
 
   static _LocaleObserver? __observer;
 
@@ -137,13 +137,13 @@ abstract class LocaleStore {
     late Locale newLocale;
     if (langCode == systemLocale || langCode == '') {
       newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
-      // realLocaleNotifier.value = systemLocale;
+      // languageCode.value = systemLocale;
     } else {
       newLocale = Locale(langCode);
-      // realLocaleNotifier.value = newLocale.languageCode;
+      // languageCode.value = newLocale.languageCode;
     }
 
-    _pref?.setString(innerSharedPreferenceName, realLocaleNotifier.value);
+    _pref?.setString(innerSharedPreferenceName, languageCode.value);
     locale.value = newLocale;
   }
 
@@ -154,7 +154,7 @@ abstract class LocaleStore {
       __observer = _LocaleObserver(onChanged: (_) {
         currentSystemLocale =
             TestablePlatformDispatcher.platformDispatcher.locale.languageCode;
-        if (realLocaleNotifier.value == systemLocale) {
+        if (languageCode.value == systemLocale) {
           locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
         }
       });
@@ -162,8 +162,7 @@ abstract class LocaleStore {
         __observer!,
       );
 
-      realLocaleNotifier
-          .addListener(() => _setLocale(realLocaleNotifier.value));
+      languageCode.addListener(() => _setLocale(languageCode.value));
     }
   }
 
@@ -195,7 +194,7 @@ abstract class LocaleStore {
     if (_pref != null) {
       langCode = _pref!.getString(innerSharedPreferenceName) ?? langCode;
     }
-    realLocaleNotifier.value = langCode;
+    languageCode.value = langCode;
   }
 
   static void setSupportedLocales(

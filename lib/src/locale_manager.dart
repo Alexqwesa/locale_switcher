@@ -38,13 +38,15 @@ class LocaleManager extends StatefulWidget {
   /// (first two options are required, third is optional)
   final Map<String, List>? reassignFlags;
 
-  /// Current language code, could be 'system'.
+  /// [ValueNotifier] with current language code, could be 'system'.
   ///
+  /// Will automatically update [LocaleManager.locale].
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get realLocaleNotifier =>
-      LocaleStore.realLocaleNotifier;
+  static ValueNotifier<String> get languageCode => LocaleStore.languageCode;
 
   /// A [ValueListenable] with current locale.
+  ///
+  /// Use [LocaleStore.languageCode] to update this notifier.
   static ValueNotifier<Locale> get locale => LocaleStore.locale;
 
   final List<Locale>? _supportedLocales;
