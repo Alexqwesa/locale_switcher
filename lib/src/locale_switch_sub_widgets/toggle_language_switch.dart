@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
 class ToggleLanguageSwitch extends StatelessWidget {
+  final int useNLettersInsteadOfIcon;
+
   const ToggleLanguageSwitch({
     super.key,
     required this.padding,
@@ -11,6 +13,7 @@ class ToggleLanguageSwitch extends StatelessWidget {
     required this.titlePadding,
     required this.title,
     required this.locales,
+    this.useNLettersInsteadOfIcon = 0,
   });
 
   final EdgeInsets padding;
@@ -58,8 +61,18 @@ class ToggleLanguageSwitch extends StatelessWidget {
                       LocaleManager.languageCode.value = langCode;
                     }
                   },
-                  style: const ToggleStyle(backgroundColor: Colors.black12),
-                  iconBuilder: getIconForLanguage,
+                  style: ToggleStyle(
+                    backgroundColor: Colors.black12,
+                    indicatorColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                  ),
+                  iconBuilder: (lang, foreground) => getIconForLanguage(
+                    lang,
+                    false,
+                    null,
+                    useNLettersInsteadOfIcon,
+                    // TextStyle(color: Theme.of(context).colorScheme.primary),
+                  ),
                 ),
               ),
             ],

@@ -16,6 +16,8 @@ class SelectLocaleButton extends StatelessWidget {
 
   final String popUpWindowTitle;
 
+  final int useNLettersInsteadOfIcon;
+
   const SelectLocaleButton({
     super.key,
     this.updateIconOnChange = true,
@@ -23,6 +25,7 @@ class SelectLocaleButton extends StatelessWidget {
     this.radius = 32,
     this.useStaticIcon,
     this.popUpWindowTitle = "",
+    this.useNLettersInsteadOfIcon = 0,
   });
 
   @override
@@ -37,6 +40,7 @@ class SelectLocaleButton extends StatelessWidget {
                 toolTipPrefix: toolTipPrefix,
                 langCode: LocaleStore.languageCode.value,
                 radius: radius,
+                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
               ),
           // tooltip: LocaleStore.languageToCountry[showOtherLocales]?[1] ??
           //     "Other locales",

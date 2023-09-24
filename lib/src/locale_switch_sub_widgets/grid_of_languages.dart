@@ -29,12 +29,12 @@ class GridOfLanguages extends StatelessWidget {
         ...locales.map((langCode) {
           final lang = LocaleStore.languageToCountry[langCode] ??
               [langCode, 'Unknown locale'];
-          return InkWell(
-            onTap: () {
-              LocaleManager.languageCode.value = langCode;
-              additionalCallBack?.call(context);
-            },
-            child: Card(
+          return Card(
+            child: InkWell(
+              onTap: () {
+                LocaleManager.languageCode.value = langCode;
+                additionalCallBack?.call(context);
+              },
               child: Column(
                 children: [
                   Expanded(

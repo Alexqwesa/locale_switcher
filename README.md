@@ -31,7 +31,6 @@ functionality of localization systems, such as: [intl](https://pub.dev/packages/
   - update locale of app (listen to `notifier` and rebuild `MaterialApp`),
   - observes changes in the system locale,
 
-[//]: # (  - notifiers: [LocaleManager.locale]&#40;https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/locale.html&#41; - current Locale, [LocaleManager.languageCode]&#40;https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager/languageCode.html&#41; - use this to change locale.)
 - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) - 
 a widget to switch locale:
     - show a list of locales and special option to use system locale,
@@ -39,6 +38,7 @@ a widget to switch locale:
     - constructor [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html),
     - constructor [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
     - constructor [LocaleSwitcher.iconButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.iconButton.html) - button/indicator which open popup window to select locale,
+
 - Some other helpers...
 
 ## Usage
@@ -107,6 +107,8 @@ Another example code: [LocaleSwitcher used without LocaleManager(not recommended
 
 - [ ] Test with other localization system (currently: tested only intl)
 - [ ] Support slang
+- [ ] noIcon option
+- [ ] reduce assets: use flutter_svg: format .vec? and code_gen to add assets
 
 ## FAQ
 

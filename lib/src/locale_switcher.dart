@@ -84,6 +84,9 @@ class LocaleSwitcher extends StatelessWidget {
   /// Only for [LocaleSwitcher.iconButton].
   final double? iconRadius;
 
+  /// If null or 0 - used Icon, otherwise first N letters of language code.
+  final int useNLettersInsteadOfIcon;
+
   /// A Widget to switch locale of App.
   const LocaleSwitcher._({
     super.key,
@@ -101,6 +104,7 @@ class LocaleSwitcher extends StatelessWidget {
     this.toolTipPrefix,
     this.useStaticIcon,
     this.iconRadius,
+    this.useNLettersInsteadOfIcon = 0,
   }) : _type = type;
 
   /// A Widget to switch locale of App with [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
@@ -115,6 +119,7 @@ class LocaleSwitcher extends StatelessWidget {
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.stretch,
     EdgeInsets padding = const EdgeInsets.all(8),
     EdgeInsets titlePadding = const EdgeInsets.all(4),
+    int? useNLettersInsteadOfIcon,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -126,6 +131,7 @@ class LocaleSwitcher extends StatelessWidget {
       padding: padding,
       titlePadding: titlePadding,
       type: _Switcher.toggle,
+      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
     );
   }
 
@@ -139,6 +145,7 @@ class LocaleSwitcher extends StatelessWidget {
     bool showOsLocale = true,
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
     EdgeInsets padding = const EdgeInsets.all(8),
+    int? useNLettersInsteadOfIcon,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -148,6 +155,7 @@ class LocaleSwitcher extends StatelessWidget {
       crossAxisAlignment: crossAxisAlignment,
       padding: padding,
       type: _Switcher.menu,
+      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
     );
   }
 
@@ -161,6 +169,7 @@ class LocaleSwitcher extends StatelessWidget {
     bool showOsLocale = true,
     SliverGridDelegate? gridDelegate,
     Function(BuildContext)? additionalCallBack,
+    int? useNLettersInsteadOfIcon,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -169,6 +178,7 @@ class LocaleSwitcher extends StatelessWidget {
       type: _Switcher.grid,
       gridDelegate: gridDelegate,
       additionalCallBack: additionalCallBack,
+      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
     );
   }
 
@@ -223,6 +233,7 @@ class LocaleSwitcher extends StatelessWidget {
     // required LocaleSwitchBuilder builder,
     int numberOfShown = 200,
     bool showOsLocale = true,
+    int? useNLettersInsteadOfIcon,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -233,6 +244,7 @@ class LocaleSwitcher extends StatelessWidget {
       useStaticIcon: useStaticIcon,
       iconRadius: iconRadius,
       type: _Switcher.iconButton,
+      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       // builder: builder,
     );
   }
@@ -285,8 +297,10 @@ class LocaleSwitcher extends StatelessWidget {
 
         return switch (_type) {
           _Switcher.custom => builder!(locales),
-          _Switcher.menu =>
-            DropDownMenuLanguageSwitch(locales: locales, title: title),
+          _Switcher.menu => DropDownMenuLanguageSwitch(
+              locales: locales,
+              title: title,
+              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon),
           _Switcher.grid => GridOfLanguages(
               gridDelegate: gridDelegate,
               additionalCallBack: additionalCallBack,
@@ -298,13 +312,16 @@ class LocaleSwitcher extends StatelessWidget {
               titlePadding: titlePadding,
               title: title,
               locales: locales,
+              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
             ),
           _Switcher.iconButton => SelectLocaleButton(
               radius: iconRadius ?? 32,
               popUpWindowTitle: title ?? '',
               updateIconOnChange: (useStaticIcon != null),
               useStaticIcon: useStaticIcon,
-              toolTipPrefix: toolTipPrefix ?? ''),
+              toolTipPrefix: toolTipPrefix ?? '',
+              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+            ),
         };
       },
     );

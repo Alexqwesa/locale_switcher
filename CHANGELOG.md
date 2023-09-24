@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.3
+
+* allow to use letters instead of country's flags 
+
+
 ## 0.9.2
 
 * rename `LocaleManager.realLocaleNotifier` to `LocaleManager.languageCode`. 

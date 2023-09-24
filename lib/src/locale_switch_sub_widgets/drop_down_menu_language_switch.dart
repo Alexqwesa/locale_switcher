@@ -5,10 +5,13 @@ import 'package:locale_switcher/src/locale_store.dart';
 class DropDownMenuLanguageSwitch extends StatelessWidget {
   final String? title;
 
+  final int useNLettersInsteadOfIcon;
+
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
     this.title,
+    this.useNLettersInsteadOfIcon = 0,
   });
 
   final List<String> locales;
@@ -28,8 +31,10 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
               child: FittedBox(
                 child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
-                        getIconForLanguage(e, null, radius)
-                    : getIconForLanguage(e, null, radius),
+                        getIconForLanguage(
+                            e, null, radius, useNLettersInsteadOfIcon)
+                    : getIconForLanguage(
+                        e, null, radius, useNLettersInsteadOfIcon),
               ),
             ),
           ),
@@ -40,7 +45,8 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       initialSelection: LocaleStore.languageCode.value,
       leadingIcon: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: getIconForLanguage(LocaleStore.languageCode.value, null, 32),
+        child: getIconForLanguage(
+            LocaleStore.languageCode.value, null, 32, useNLettersInsteadOfIcon),
       ),
       // controller: colorController,
       label: const Text('Language'),
