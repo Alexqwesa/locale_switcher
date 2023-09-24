@@ -50,13 +50,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int showNletters = 0;
 
+  bool showLeading = true;
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context); // localization shortcut
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Text(widget.title),
         actions: [
           // =============== THIS LINE ===============
@@ -65,50 +67,85 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              // =============== THIS LINE ===============
-              child: LocaleSwitcher.menu(
-                title: loc.chooseLanguage,
-                useNLettersInsteadOfIcon: showNletters,
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: Table(
+                  columnWidths: const <int, TableColumnWidth>{
+                    0: IntrinsicColumnWidth(),
+                    1: FixedColumnWidth(300),
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: <TableRow>[
+                    TableRow(
+                      children: <Widget>[
+                        TableCell(
+                          // =============== THIS LINE ===============
+                          child: Center(
+                            child: LocaleSwitcher.menu(
+                              title: loc.chooseLanguage,
+                              useNLettersInsteadOfIcon: showNletters,
+                              showLeading: showLeading,
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                            child: Row(
+                          children: [
+                            Text(loc.showIcons),
+                            Switch(
+                              value: showLeading,
+                              onChanged: (val) {
+                                setState(() {
+                                  showLeading = !showLeading;
+                                });
+                              },
+                            ),
+                          ],
+                        )),
+                      ],
+                    ),
+                    TableRow(
+                      children: <Widget>[
+                        TableCell(
+                          child: SizedBox(
+                            width: 400,
+                            // =============== THIS LINE ===============
+                            child: LocaleSwitcher.toggle(
+                              title: loc.chooseLanguage,
+                              numberOfShown: 2,
+                              useNLettersInsteadOfIcon: showNletters,
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                          child: Row(
+                            children: [
+                              Text(loc.showIcons),
+                              Switch(
+                                value: (showNletters == 0),
+                                onChanged: (val) {
+                                  setState(() {
+                                    if (val) {
+                                      showNletters = 0;
+                                    } else {
+                                      showNletters = 2;
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
             ),
-            const Divider(),
-            SizedBox(
-              width: 400,
-              // =============== THIS LINE ===============
-              child: LocaleSwitcher.toggle(
-                title: loc.chooseLanguage,
-                numberOfShown: 2,
-                useNLettersInsteadOfIcon: showNletters,
-              ),
-            ),
-            const Divider(),
-            // OR LocaleSwitcher.custom(...)
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Use $showNletters letters instead icon: "),
-                IconButton(
-                    onPressed: () => setState(() {
-                          showNletters++;
-                        }),
-                    icon: const Icon(Icons.plus_one)),
-                IconButton(
-                    onPressed: () => setState(() {
-                          showNletters--;
-                        }),
-                    icon: const Icon(Icons.exposure_minus_1))
-              ],
-            ),
-            const Divider(),
-            const CounterWidget(),
-          ],
-        ),
+          ),
+          const CounterWidget(),
+        ],
       ),
     );
   }

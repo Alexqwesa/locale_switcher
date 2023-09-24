@@ -3,5 +3,6 @@
   "example": "Ein Beispiel für die Verwendung von locale_switcher",
   "chooseLanguage": "Bitte wählen Sie die Sprache aus",
   "increment": "Erhöhen",
-  "counterDescription": "Sie haben den Knopf so oft gedrückt:"
+  "counterDescription": "Sie haben den Knopf so oft gedrückt:",
+  "showIcons": "Symbole anzeigen: "
 }

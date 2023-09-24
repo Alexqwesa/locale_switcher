@@ -87,6 +87,9 @@ class LocaleSwitcher extends StatelessWidget {
   /// If null or 0 - used Icon, otherwise first N letters of language code.
   final int useNLettersInsteadOfIcon;
 
+  /// Show leading icon in drop down menu
+  final bool showLeading;
+
   /// A Widget to switch locale of App.
   const LocaleSwitcher._({
     super.key,
@@ -105,6 +108,7 @@ class LocaleSwitcher extends StatelessWidget {
     this.useStaticIcon,
     this.iconRadius,
     this.useNLettersInsteadOfIcon = 0,
+    this.showLeading = true,
   }) : _type = type;
 
   /// A Widget to switch locale of App with [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
@@ -146,6 +150,7 @@ class LocaleSwitcher extends StatelessWidget {
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
     EdgeInsets padding = const EdgeInsets.all(8),
     int? useNLettersInsteadOfIcon,
+    bool showLeading = true,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -156,6 +161,7 @@ class LocaleSwitcher extends StatelessWidget {
       padding: padding,
       type: _Switcher.menu,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      showLeading: showLeading,
     );
   }
 
@@ -300,7 +306,9 @@ class LocaleSwitcher extends StatelessWidget {
           _Switcher.menu => DropDownMenuLanguageSwitch(
               locales: locales,
               title: title,
-              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon),
+              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+              showLeading: showLeading,
+            ),
           _Switcher.grid => GridOfLanguages(
               gridDelegate: gridDelegate,
               additionalCallBack: additionalCallBack,
