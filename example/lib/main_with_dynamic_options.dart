@@ -73,75 +73,93 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Center(
               child: Table(
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: IntrinsicColumnWidth(),
-                    1: FixedColumnWidth(300),
-                  },
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  children: <TableRow>[
-                    TableRow(
-                      children: <Widget>[
-                        TableCell(
-                          // =============== THIS LINE ===============
-                          child: Center(
-                            child: LocaleSwitcher.menu(
-                              title: loc.chooseLanguage,
-                              useNLettersInsteadOfIcon: showNletters,
-                              showLeading: showLeading,
-                            ),
+                columnWidths: const <int, TableColumnWidth>{
+                  0: IntrinsicColumnWidth(),
+                  1: FixedColumnWidth(300),
+                },
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: <TableRow>[
+                  TableRow(
+                    children: <Widget>[
+                      TableCell(
+                        // =============== THIS LINE ===============
+                        child: Center(
+                          child: LocaleSwitcher.menu(
+                            title: loc.chooseLanguage,
+                            useNLettersInsteadOfIcon: showNletters,
+                            showLeading: showLeading,
                           ),
                         ),
-                        TableCell(
-                            child: Row(
+                      ),
+                      TableCell(
+                          child: Row(
+                        children: [
+                          Text(loc.showIcons),
+                          Switch(
+                            value: showLeading,
+                            onChanged: (val) {
+                              setState(() {
+                                showLeading = !showLeading;
+                              });
+                            },
+                          ),
+                        ],
+                      )),
+                    ],
+                  ),
+                  TableRow(
+                    children: <Widget>[
+                      TableCell(
+                        child: SizedBox(
+                          width: 400,
+                          // =============== THIS LINE ===============
+                          child: LocaleSwitcher.toggle(
+                            title: loc.chooseLanguage,
+                            numberOfShown: 2,
+                            useNLettersInsteadOfIcon: showNletters,
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Row(
                           children: [
                             Text(loc.showIcons),
                             Switch(
-                              value: showLeading,
+                              value: (showNletters == 0),
                               onChanged: (val) {
                                 setState(() {
-                                  showLeading = !showLeading;
+                                  if (val) {
+                                    showNletters = 0;
+                                  } else {
+                                    showNletters = 2;
+                                  }
                                 });
                               },
                             ),
                           ],
-                        )),
-                      ],
-                    ),
-                    TableRow(
-                      children: <Widget>[
-                        TableCell(
-                          child: SizedBox(
-                            width: 400,
-                            // =============== THIS LINE ===============
-                            child: LocaleSwitcher.toggle(
-                              title: loc.chooseLanguage,
-                              numberOfShown: 2,
-                              useNLettersInsteadOfIcon: showNletters,
-                            ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: <Widget>[
+                      TableCell(
+                        child: SizedBox(
+                          width: 400,
+                          // =============== THIS LINE ===============
+                          child: LocaleSwitcher.segmentedButton(
+                            useNLettersInsteadOfIcon: showNletters,
+                            numberOfShown: 2,
                           ),
                         ),
-                        TableCell(
-                          child: Row(
-                            children: [
-                              Text(loc.showIcons),
-                              Switch(
-                                value: (showNletters == 0),
-                                onChanged: (val) {
-                                  setState(() {
-                                    if (val) {
-                                      showNletters = 0;
-                                    } else {
-                                      showNletters = 2;
-                                    }
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
+                      ),
+                      const TableCell(
+                        child: SizedBox(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const CounterWidget(),

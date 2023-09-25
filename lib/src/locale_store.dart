@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -138,6 +139,8 @@ abstract class LocaleStore {
     if (langCode == systemLocale || langCode == '') {
       newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
       // languageCode.value = systemLocale;
+    } else if (langCode == showOtherLocales) {
+      dev.log('Error wrong locale name: $showOtherLocales');
     } else {
       newLocale = Locale(langCode);
       // languageCode.value = newLocale.languageCode;

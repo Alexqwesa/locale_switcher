@@ -35,6 +35,7 @@ functionality of localization systems, such as: [intl](https://pub.dev/packages/
 a widget to switch locale:
     - show a list of locales and special option to use system locale,
     - constructor [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html),
+    - constructor [LocaleSwitcher.segmentedButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.segmentedButton.html),
     - constructor [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html),
     - constructor [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
     - constructor [LocaleSwitcher.iconButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.iconButton.html) - button/indicator which open popup window to select locale,
@@ -101,13 +102,17 @@ nullable-getter: false
 - [Example Code (recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
 
 
-Another example code: [LocaleSwitcher used without LocaleManager(not recommended)]()
+Another example code: [LocaleSwitcher used without 
+LocaleManager(not recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_without_locale_manager.dart).
+
+Example with dynamic option switch: 
+[here](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart).
 
 ## TODO:
 
 - [ ] Test with other localization system (currently: tested only intl)
 - [ ] Support slang
-- [ ] noIcon option
+- [ ] Rectangle flags
 - [ ] reduce assets: use flutter_svg: format .vec? and code_gen to add assets
 
 ## FAQ

@@ -4,24 +4,13 @@ import 'package:locale_switcher/locale_switcher.dart';
 
 class ToggleLanguageSwitch extends StatelessWidget {
   final int useNLettersInsteadOfIcon;
+  final List<String> locales;
 
   const ToggleLanguageSwitch({
     super.key,
-    required this.padding,
-    required this.crossAxisAlignment,
-    required this.titlePositionTop,
-    required this.titlePadding,
-    required this.title,
     required this.locales,
     this.useNLettersInsteadOfIcon = 0,
   });
-
-  final EdgeInsets padding;
-  final CrossAxisAlignment crossAxisAlignment;
-  final bool titlePositionTop;
-  final EdgeInsets titlePadding;
-  final String? title;
-  final List<String> locales;
 
   @override
   Widget build(BuildContext context) {
@@ -30,54 +19,28 @@ class ToggleLanguageSwitch extends StatelessWidget {
           .add(showOtherLocales); // AnimatedToggleSwitch crash with one value
     }
 
-    return Padding(
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: crossAxisAlignment,
-        children: [
-          if (titlePositionTop)
-            Padding(
-              padding: titlePadding,
-              child: Center(child: Text(title ?? '')),
-            ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (!titlePositionTop)
-                Padding(
-                  padding: titlePadding,
-                  child: Center(child: Text(title ?? '')),
-                ),
-              Expanded(
-                child: AnimatedToggleSwitch<String>.rolling(
-                  allowUnlistedValues: true,
-                  current: LocaleManager.languageCode.value,
-                  values: locales,
-                  loading: false,
-                  onChanged: (langCode) async {
-                    if (langCode == showOtherLocales) {
-                      showSelectLocaleDialog(context);
-                    } else {
-                      LocaleManager.languageCode.value = langCode;
-                    }
-                  },
-                  style: ToggleStyle(
-                    backgroundColor: Colors.black12,
-                    indicatorColor:
-                        Theme.of(context).colorScheme.primaryContainer,
-                  ),
-                  iconBuilder: (lang, foreground) => getIconForLanguage(
-                    lang,
-                    false,
-                    null,
-                    useNLettersInsteadOfIcon,
-                    // TextStyle(color: Theme.of(context).colorScheme.primary),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+    return AnimatedToggleSwitch<String>.rolling(
+      allowUnlistedValues: true,
+      current: LocaleManager.languageCode.value,
+      values: locales,
+      loading: false,
+      onChanged: (langCode) async {
+        if (langCode == showOtherLocales) {
+          showSelectLocaleDialog(context);
+        } else {
+          LocaleManager.languageCode.value = langCode;
+        }
+      },
+      style: ToggleStyle(
+        backgroundColor: Colors.black12,
+        indicatorColor: Theme.of(context).colorScheme.primaryContainer,
+      ),
+      iconBuilder: (lang, foreground) => getIconForLanguage(
+        lang,
+        false,
+        null,
+        useNLettersInsteadOfIcon,
+        // TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
     );
   }

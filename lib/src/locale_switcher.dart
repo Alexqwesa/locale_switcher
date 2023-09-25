@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_button.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_lang_switch.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/toggle_language_switch.dart';
 
 const showOtherLocales = 'show_other_locales';
@@ -14,6 +16,7 @@ enum _Switcher {
   custom,
   grid,
   iconButton,
+  segmentedButton,
 }
 
 typedef LocaleSwitchBuilder = Widget Function(List<String>);
@@ -224,7 +227,7 @@ class LocaleSwitcher extends StatelessWidget {
         builder: builder);
   }
 
-  /// A Widget to switch locale of App with [GridView](https://api.flutter.dev/flutter/widgets/GridView-class.html).
+  /// A Widget to switch locale of App with [IconButton](https://api.flutter.dev/flutter/material/IconButton-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
   /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - it is an icon in AppBar.
@@ -250,6 +253,38 @@ class LocaleSwitcher extends StatelessWidget {
       useStaticIcon: useStaticIcon,
       iconRadius: iconRadius,
       type: _Switcher.iconButton,
+      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      // builder: builder,
+    );
+  }
+
+  /// A Widget to switch locale of App with [SegmentedButton](https://api.flutter.dev/flutter/material/SegmentedButton-class.html).
+  ///
+  /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
+  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
+  factory LocaleSwitcher.segmentedButton({
+    Key? key,
+    // double? iconRadius = 32,
+    // required LocaleSwitchBuilder builder,
+    String? title = 'Choose language:',
+    int numberOfShown = 4,
+    bool showOsLocale = true,
+    bool titlePositionTop = true,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.stretch,
+    EdgeInsets padding = const EdgeInsets.all(8),
+    EdgeInsets titlePadding = const EdgeInsets.all(4),
+    int? useNLettersInsteadOfIcon,
+  }) {
+    return LocaleSwitcher._(
+      key: key,
+      title: title,
+      showOsLocale: showOsLocale,
+      numberOfShown: numberOfShown,
+      titlePositionTop: titlePositionTop,
+      crossAxisAlignment: crossAxisAlignment,
+      padding: padding,
+      titlePadding: titlePadding,
+      type: _Switcher.segmentedButton,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       // builder: builder,
     );
@@ -313,14 +348,16 @@ class LocaleSwitcher extends StatelessWidget {
               gridDelegate: gridDelegate,
               additionalCallBack: additionalCallBack,
             ),
-          _Switcher.toggle => ToggleLanguageSwitch(
+          _Switcher.toggle => TitleOfLangSwitch(
               padding: padding,
               crossAxisAlignment: crossAxisAlignment,
               titlePositionTop: titlePositionTop,
               titlePadding: titlePadding,
               title: title,
-              locales: locales,
-              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+              child: ToggleLanguageSwitch(
+                locales: locales,
+                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+              ),
             ),
           _Switcher.iconButton => SelectLocaleButton(
               radius: iconRadius ?? 32,
@@ -329,6 +366,16 @@ class LocaleSwitcher extends StatelessWidget {
               useStaticIcon: useStaticIcon,
               toolTipPrefix: toolTipPrefix ?? '',
               useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+            ),
+          _Switcher.segmentedButton => TitleOfLangSwitch(
+              padding: padding,
+              crossAxisAlignment: crossAxisAlignment,
+              titlePositionTop: titlePositionTop,
+              titlePadding: titlePadding,
+              title: title,
+              child: SegmentedButtonSwitch(
+                  locales: locales,
+                  useNLettersInsteadOfIcon: useNLettersInsteadOfIcon),
             ),
         };
       },
