@@ -4,13 +4,14 @@ import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
 /// Return Icon widget for [langCode].
-Widget getIconForLanguage(String langCode,
-    [bool? foreground,
-    double? radius,
-    int useNLettersInsteadOfIcon = 0,
-    TextStyle? textStyle,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
-    ]) {
+Widget getIconForLanguage(
+  String langCode, [
+  bool? foreground,
+  double? radius,
+  int useNLettersInsteadOfIcon = 0,
+  TextStyle? textStyle,
+  ShapeBorder? shape = const CircleBorder(eccentricity: 0),
+]) {
   if (langCode == showOtherLocales) {
     return LocaleSwitcher.iconButton(
       useStaticIcon:
@@ -45,9 +46,9 @@ Widget getIconForLanguage(String langCode,
                   )),
                 )),
           )
-        : CircleFlag(
-            shape: shape,
+          : CircleFlag(
             langCode,
+            shape: shape,
             size: radius ?? 48,
           );
   }

@@ -112,7 +112,7 @@ Example with dynamic option switch:
 
 - [ ] Test with other localization system (currently: tested only intl)
 - [ ] Support slang
-- [x] Rectangle flags
+- [ ] Rectangle and oval flags, not just square and circle
 - [ ] reduce assets: code_gen to add assets
 - [ ] Upstream: use format .vec
 

@@ -66,122 +66,147 @@ class _MyHomePageState extends State<MyHomePage> {
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(
             useNLettersInsteadOfIcon: showNletters,
-            shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
+            shape: circleOrSquare ? const CircleBorder(eccentricity: 0) : null,
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Center(
-              child: Table(
-                columnWidths: const <int, TableColumnWidth>{
-                  0: IntrinsicColumnWidth(),
-                  1: FixedColumnWidth(300),
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: <TableRow>[
-                  TableRow(
-                    children: <Widget>[
-                      TableCell(
-                        // =============== THIS LINE ===============
-                        child: Center(
-                          child: LocaleSwitcher.menu(
-                            title: loc.chooseLanguage,
-                            useNLettersInsteadOfIcon: showNletters,
-                            showLeading: showLeading,
-                            shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
-                          ),
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(
+            height: 600,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Table(
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: FixedColumnWidth(350),
+                        1: FixedColumnWidth(450),
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: <TableRow>[
+                        TableRow(
+                          children: <Widget>[
+                            TableCell(
+                              // =============== THIS LINE ===============
+                              child: Center(
+                                child: LocaleSwitcher.menu(
+                                  title: loc.chooseLanguage,
+                                  useNLettersInsteadOfIcon: showNletters,
+                                  showLeading: showLeading,
+                                  shape: circleOrSquare
+                                      ? const CircleBorder(eccentricity: 0)
+                                      : null,
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                                child: SizedBox(
+                              height: 130,
+                              child: Row(
+                                children: [
+                                  Text(loc.showIcons),
+                                  Switch(
+                                    value: showLeading,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        showLeading = val;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )),
+                          ],
                         ),
-                      ),
-                      TableCell(
-                          child: Row(
-                        children: [
-                          Text(loc.showIcons),
-                          Switch(
-                            value: showLeading,
-                            onChanged: (val) {
-                              setState(() {
-                                showLeading = !showLeading;
-                              });
-                            },
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  TableRow(
-                    children: <Widget>[
-                      TableCell(
-                        child: SizedBox(
-                          width: 400,
-                          // =============== THIS LINE ===============
-                          child: LocaleSwitcher.toggle(
-                            title: loc.chooseLanguage,
-                            numberOfShown: 2,
-                            useNLettersInsteadOfIcon: showNletters,
-                            // shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
-                          ),
-                        ),
-                      ),
-                      TableCell(
-                        child: Row(
-                          children: [
-                            Text(loc.showIcons),
-                            Switch(
-                              value: (showNletters == 0),
-                              onChanged: (val) {
-                                setState(() {
-                                  if (val) {
-                                    showNletters = 0;
-                                  } else {
-                                    showNletters = 2;
-                                  }
-                                });
-                              },
+                        TableRow(
+                          children: <Widget>[
+                            TableCell(
+                              child: SizedBox(
+                                width: 400,
+                                height: 130,
+                                // =============== THIS LINE ===============
+                                child: LocaleSwitcher.toggle(
+                                  title: loc.chooseLanguage,
+                                  numberOfShown: 2,
+                                  useNLettersInsteadOfIcon: showNletters,
+                                  // shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: SizedBox(
+                                height: 130,
+                                child: Row(
+                                  children: [
+                                    Text(loc.showIcons),
+                                    Switch(
+                                      key: const ValueKey('letterSwitch'),
+                                      value: (showNletters == 0),
+                                      onChanged: (val) {
+                                        setState(() {
+                                          if (val) {
+                                            showNletters = 0;
+                                          } else {
+                                            showNletters = 2;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: <Widget>[
-                      TableCell(
-                        child: SizedBox(
-                          width: 400,
-                          // =============== THIS LINE ===============
-                          child: LocaleSwitcher.segmentedButton(
-                            useNLettersInsteadOfIcon: showNletters,
-                            numberOfShown: 2,
-                            shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
-                          ),
-                        ),
-                      ),
-                      TableCell(
-                        child: Row(
-                          children: [
-                            Text(loc.circleOrSquare),
-                            Switch(
-                              value: !circleOrSquare,
-                              onChanged: (val) {
-                                setState(() {
-                                  circleOrSquare = !val;
-                                });
-                              },
+                        TableRow(
+                          children: <Widget>[
+                            TableCell(
+                              child: SizedBox(
+                                width: 400,
+                                height: 130,
+                                // =============== THIS LINE ===============
+                                child: LocaleSwitcher.segmentedButton(
+                                  useNLettersInsteadOfIcon: showNletters,
+                                  numberOfShown: 2,
+                                  shape: circleOrSquare
+                                      ? const CircleBorder(eccentricity: 0)
+                                      : null,
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: SizedBox(
+                                height: 130,
+                                child: Row(
+                                  children: [
+                                    Text(loc.circleOrSquare),
+                                    Switch(
+                                      value: !circleOrSquare,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          circleOrSquare = !val;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+                const CounterWidget(),
+              ],
             ),
           ),
-          const CounterWidget(),
-        ],
+        ),
       ),
     );
   }

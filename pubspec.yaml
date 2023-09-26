@@ -12,8 +12,8 @@ environment:
 dependencies:
   animated_toggle_switch: ^0.8.0
   circle_flags:
-#    path: ../flutter_circle_flags
-    git: https://github.com/cedvdb/flutter_circle_flags.git
+    path: ../flutter_circle_flags
+#    git: https://github.com/cedvdb/flutter_circle_flags.git
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.1
