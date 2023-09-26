@@ -8,7 +8,9 @@ Widget getIconForLanguage(String langCode,
     [bool? foreground,
     double? radius,
     int useNLettersInsteadOfIcon = 0,
-    TextStyle? textStyle]) {
+    TextStyle? textStyle,
+    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
+    ]) {
   if (langCode == showOtherLocales) {
     return LocaleSwitcher.iconButton(
       useStaticIcon:
@@ -26,6 +28,7 @@ Widget getIconForLanguage(String langCode,
       radius: radius,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
       textStyle: textStyle,
+      shape: shape,
     );
   } else {
     return (useNLettersInsteadOfIcon > 0)
@@ -43,6 +46,7 @@ Widget getIconForLanguage(String langCode,
                 )),
           )
         : CircleFlag(
+            shape: shape,
             langCode,
             size: radius ?? 48,
           );

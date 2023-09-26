@@ -52,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool showLeading = true;
 
+  bool circleOrSquare = true;
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context); // localization shortcut
@@ -64,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(
             useNLettersInsteadOfIcon: showNletters,
+            shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
           ),
         ],
       ),
@@ -88,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             title: loc.chooseLanguage,
                             useNLettersInsteadOfIcon: showNletters,
                             showLeading: showLeading,
+                            shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
                           ),
                         ),
                       ),
@@ -117,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             title: loc.chooseLanguage,
                             numberOfShown: 2,
                             useNLettersInsteadOfIcon: showNletters,
+                            // shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
                           ),
                         ),
                       ),
@@ -150,11 +155,24 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: LocaleSwitcher.segmentedButton(
                             useNLettersInsteadOfIcon: showNletters,
                             numberOfShown: 2,
+                            shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
                           ),
                         ),
                       ),
-                      const TableCell(
-                        child: SizedBox(),
+                      TableCell(
+                        child: Row(
+                          children: [
+                            Text(loc.circleOrSquare),
+                            Switch(
+                              value: !circleOrSquare,
+                              onChanged: (val) {
+                                setState(() {
+                                  circleOrSquare = !val;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

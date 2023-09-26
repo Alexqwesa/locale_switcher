@@ -4,5 +4,6 @@
   "chooseLanguage": "Please choose language",
   "increment": "Increment",
   "counterDescription": "You have pushed the button this many times:",
-  "showIcons": "Show icons: "
+  "showIcons": "Show icons: ",
+ "circleOrSquare" : "Circle or square: "
 }

@@ -6,10 +6,13 @@ class ToggleLanguageSwitch extends StatelessWidget {
   final int useNLettersInsteadOfIcon;
   final List<String> locales;
 
+  final ShapeBorder? shape;
+
   const ToggleLanguageSwitch({
     super.key,
     required this.locales,
     this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
   });
 
   @override
@@ -40,7 +43,8 @@ class ToggleLanguageSwitch extends StatelessWidget {
         false,
         null,
         useNLettersInsteadOfIcon,
-        // TextStyle(color: Theme.of(context).colorScheme.primary),
+        null,
+        shape,
       ),
     );
   }

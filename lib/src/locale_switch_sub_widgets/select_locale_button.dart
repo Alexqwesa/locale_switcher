@@ -18,6 +18,8 @@ class SelectLocaleButton extends StatelessWidget {
 
   final int useNLettersInsteadOfIcon;
 
+  final ShapeBorder? shape;
+
   const SelectLocaleButton({
     super.key,
     this.updateIconOnChange = true,
@@ -26,6 +28,7 @@ class SelectLocaleButton extends StatelessWidget {
     this.useStaticIcon,
     this.popUpWindowTitle = "",
     this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
   });
 
   @override
@@ -41,6 +44,7 @@ class SelectLocaleButton extends StatelessWidget {
                 langCode: LocaleStore.languageCode.value,
                 radius: radius,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                shape: shape,
               ),
           // tooltip: LocaleStore.languageToCountry[showOtherLocales]?[1] ??
           //     "Other locales",

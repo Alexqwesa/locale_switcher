@@ -7,10 +7,13 @@ class GridOfLanguages extends StatelessWidget {
   final SliverGridDelegate? gridDelegate;
   final Function(BuildContext)? additionalCallBack;
 
+  final ShapeBorder? shape;
+
   const GridOfLanguages({
     super.key,
     this.gridDelegate,
     this.additionalCallBack,
+    this.shape = const CircleBorder(eccentricity: 0),
   });
 
   @override
@@ -40,7 +43,8 @@ class GridOfLanguages extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: LangIconWithToolTip(langCode: langCode),
+                      child:
+                          LangIconWithToolTip(langCode: langCode, shape: shape),
                     ),
                   ),
                   Padding(

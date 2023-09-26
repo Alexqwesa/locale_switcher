@@ -12,6 +12,8 @@ class LangIconWithToolTip extends StatelessWidget {
 
   final TextStyle? textStyle;
 
+  final ShapeBorder? shape;
+
   const LangIconWithToolTip({
     super.key,
     required this.langCode,
@@ -19,6 +21,7 @@ class LangIconWithToolTip extends StatelessWidget {
     this.radius,
     this.useNLettersInsteadOfIcon = 0,
     this.textStyle,
+    this.shape = const CircleBorder(eccentricity: 0),
   });
 
   final String langCode;
@@ -47,9 +50,13 @@ class LangIconWithToolTip extends StatelessWidget {
               : Tooltip(
                   message: toolTipPrefix + lang[1],
                   child: lang.length <= 2
-                      ? CircleFlag(
-                          (lang[0] as String).toLowerCase(),
-                          size: radius ?? 48,
+                      ? ClipRect(
+                          child: CircleFlag(
+                            (lang[0] as String).toLowerCase(),
+                            // ovalShape: false,
+                            shape: shape,
+                            size: radius ?? 48,
+                          ),
                         )
                       : ClipOval(child: lang[2]),
                 ),

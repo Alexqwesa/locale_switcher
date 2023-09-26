@@ -9,11 +9,14 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   final double? radius;
 
+  final ShapeBorder? shape;
+
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
     this.useNLettersInsteadOfIcon = 0,
     this.radius = 32,
+    this.shape,
   });
 
   @override
@@ -36,9 +39,21 @@ class SegmentedButtonSwitch extends StatelessWidget {
                 child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
                         getIconForLanguage(
-                            e, null, curRadius, useNLettersInsteadOfIcon)
+                          e,
+                          null,
+                          curRadius,
+                          useNLettersInsteadOfIcon,
+                          null,
+                          shape,
+                        )
                     : getIconForLanguage(
-                        e, null, curRadius, useNLettersInsteadOfIcon),
+                        e,
+                        null,
+                        curRadius,
+                        useNLettersInsteadOfIcon,
+                        null,
+                        shape,
+                      ),
               ),
             ),
           );

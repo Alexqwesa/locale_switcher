@@ -112,8 +112,9 @@ Example with dynamic option switch:
 
 - [ ] Test with other localization system (currently: tested only intl)
 - [ ] Support slang
-- [ ] Rectangle flags
-- [ ] reduce assets: use flutter_svg: format .vec? and code_gen to add assets
+- [x] Rectangle flags
+- [ ] reduce assets: code_gen to add assets
+- [ ] Upstream: use format .vec
 
 ## FAQ
 

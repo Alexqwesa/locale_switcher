@@ -93,6 +93,13 @@ class LocaleSwitcher extends StatelessWidget {
   /// Show leading icon in drop down menu
   final bool showLeading;
 
+  /// Shape of flags.
+  ///
+  /// Default: [CircleBorder] for all except [LocaleSwitcher.segmentedButton].
+  ///
+  /// Null for square.
+  final ShapeBorder? shape;
+
   /// A Widget to switch locale of App.
   const LocaleSwitcher._({
     super.key,
@@ -112,6 +119,7 @@ class LocaleSwitcher extends StatelessWidget {
     this.iconRadius,
     this.useNLettersInsteadOfIcon = 0,
     this.showLeading = true,
+    this.shape = const CircleBorder(eccentricity: 0),
   }) : _type = type;
 
   /// A Widget to switch locale of App with [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
@@ -127,6 +135,7 @@ class LocaleSwitcher extends StatelessWidget {
     EdgeInsets padding = const EdgeInsets.all(8),
     EdgeInsets titlePadding = const EdgeInsets.all(4),
     int? useNLettersInsteadOfIcon,
+    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -139,6 +148,7 @@ class LocaleSwitcher extends StatelessWidget {
       titlePadding: titlePadding,
       type: _Switcher.toggle,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      shape: shape,
     );
   }
 
@@ -154,6 +164,7 @@ class LocaleSwitcher extends StatelessWidget {
     EdgeInsets padding = const EdgeInsets.all(8),
     int? useNLettersInsteadOfIcon,
     bool showLeading = true,
+    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -165,6 +176,7 @@ class LocaleSwitcher extends StatelessWidget {
       type: _Switcher.menu,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       showLeading: showLeading,
+      shape: shape,
     );
   }
 
@@ -179,6 +191,7 @@ class LocaleSwitcher extends StatelessWidget {
     SliverGridDelegate? gridDelegate,
     Function(BuildContext)? additionalCallBack,
     int? useNLettersInsteadOfIcon,
+    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -188,6 +201,7 @@ class LocaleSwitcher extends StatelessWidget {
       gridDelegate: gridDelegate,
       additionalCallBack: additionalCallBack,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      shape: shape,
     );
   }
 
@@ -243,6 +257,7 @@ class LocaleSwitcher extends StatelessWidget {
     int numberOfShown = 200,
     bool showOsLocale = true,
     int? useNLettersInsteadOfIcon,
+    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -254,6 +269,7 @@ class LocaleSwitcher extends StatelessWidget {
       iconRadius: iconRadius,
       type: _Switcher.iconButton,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      shape: shape,
       // builder: builder,
     );
   }
@@ -274,6 +290,7 @@ class LocaleSwitcher extends StatelessWidget {
     EdgeInsets padding = const EdgeInsets.all(8),
     EdgeInsets titlePadding = const EdgeInsets.all(4),
     int? useNLettersInsteadOfIcon,
+    ShapeBorder? shape,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -286,6 +303,7 @@ class LocaleSwitcher extends StatelessWidget {
       titlePadding: titlePadding,
       type: _Switcher.segmentedButton,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      shape: shape,
       // builder: builder,
     );
   }
@@ -343,10 +361,12 @@ class LocaleSwitcher extends StatelessWidget {
               title: title,
               useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
               showLeading: showLeading,
+              shape: shape,
             ),
           _Switcher.grid => GridOfLanguages(
               gridDelegate: gridDelegate,
               additionalCallBack: additionalCallBack,
+              shape: shape,
             ),
           _Switcher.toggle => TitleOfLangSwitch(
               padding: padding,
@@ -357,6 +377,7 @@ class LocaleSwitcher extends StatelessWidget {
               child: ToggleLanguageSwitch(
                 locales: locales,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                shape: shape,
               ),
             ),
           _Switcher.iconButton => SelectLocaleButton(
@@ -366,6 +387,7 @@ class LocaleSwitcher extends StatelessWidget {
               useStaticIcon: useStaticIcon,
               toolTipPrefix: toolTipPrefix ?? '',
               useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+              shape: shape,
             ),
           _Switcher.segmentedButton => TitleOfLangSwitch(
               padding: padding,
@@ -374,8 +396,10 @@ class LocaleSwitcher extends StatelessWidget {
               titlePadding: titlePadding,
               title: title,
               child: SegmentedButtonSwitch(
-                  locales: locales,
-                  useNLettersInsteadOfIcon: useNLettersInsteadOfIcon),
+                locales: locales,
+                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                shape: shape,
+              ),
             ),
         };
       },

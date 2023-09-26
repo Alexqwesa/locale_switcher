@@ -4,5 +4,6 @@
   "chooseLanguage": "Bitte wählen Sie die Sprache aus",
   "increment": "Erhöhen",
   "counterDescription": "Sie haben den Knopf so oft gedrückt:",
-  "showIcons": "Symbole anzeigen: "
+  "showIcons": "Symbole anzeigen: ",
+  "circleOrSquare" : "Kreis oder Quadrat: "
 }

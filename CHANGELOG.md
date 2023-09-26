@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.5
+
+* new option shape for LocaleSwitcher.
+
 ## 0.9.4
 
 * new LocaleSwitcher.segmentedButton,

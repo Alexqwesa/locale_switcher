@@ -9,12 +9,15 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   final bool showLeading;
 
+  final ShapeBorder? shape;
+
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
     this.title,
     this.useNLettersInsteadOfIcon = 0,
     this.showLeading = true,
+    this.shape = const CircleBorder(eccentricity: 0),
   });
 
   final List<String> locales;
@@ -38,9 +41,21 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                               2
                           ? LocaleStore.languageToCountry[e]![2] ??
                               getIconForLanguage(
-                                  e, null, radius, useNLettersInsteadOfIcon)
+                                e,
+                                null,
+                                radius,
+                                useNLettersInsteadOfIcon,
+                                null,
+                                shape,
+                              )
                           : getIconForLanguage(
-                              e, null, radius, useNLettersInsteadOfIcon),
+                              e,
+                              null,
+                              radius,
+                              useNLettersInsteadOfIcon,
+                              null,
+                              shape,
+                            ),
                     ),
                   )
                 : null,
@@ -53,8 +68,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: getIconForLanguage(LocaleStore.languageCode.value, null,
-                  32, useNLettersInsteadOfIcon),
+              child: getIconForLanguage(
+                LocaleStore.languageCode.value,
+                null,
+                32,
+                useNLettersInsteadOfIcon,
+                null,
+                shape,
+              ),
             )
           : null,
       // controller: colorController,
