@@ -1,3 +1,4 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -64,8 +65,8 @@ class MyHomePage extends StatelessWidget {
             SizedBox(
               width: 400,
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.toggle(
-                title: loc.chooseLanguage,
+              child: LocaleSwitcher.custom(
+                builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
               ),
             ),
@@ -77,6 +78,33 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget animatedToggleSwitchBuilder(
+    List<String> langCodes, BuildContext context) {
+  if (langCodes.length <= 1) {
+    // AnimatedToggleSwitch crash with one value
+    langCodes.add(showOtherLocales);
+  }
+
+  return AnimatedToggleSwitch<String>.rolling(
+    values: langCodes,
+    current: LocaleManager.languageCode.value,
+    onChanged: (langCode) {
+      if (langCode == showOtherLocales) {
+        showSelectLocaleDialog(context);
+      } else {
+        LocaleManager.languageCode.value = langCode;
+      }
+    },
+    iconBuilder: LangIconWithToolTip.forIconBuilder,
+    allowUnlistedValues: true,
+    loading: false,
+    style: ToggleStyle(
+      backgroundColor: Colors.black12,
+      indicatorColor: Theme.of(context).colorScheme.primaryContainer,
+    ),
+  );
 }
 
 ///

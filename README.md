@@ -34,13 +34,14 @@ functionality of localization systems, such as: [intl](https://pub.dev/packages/
 - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) - 
 a widget to switch locale:
     - show a list of locales and special option to use system locale,
-    - constructor [LocaleSwitcher.toggle](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.toggle.html),
     - constructor [LocaleSwitcher.segmentedButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.segmentedButton.html),
     - constructor [LocaleSwitcher.menu](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.menu.html),
     - constructor [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
     - constructor [LocaleSwitcher.iconButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.iconButton.html) - button/indicator which open popup window to select locale,
 
-- Some other helpers...
+- Some other helpers:
+  - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
+  - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
 
 ## Usage
 

@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   animated_toggle_switch:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: animated_toggle_switch
       sha256: "19afc84373ad0fca147869e1b984afb3778ea8080f8d0af4fd1ff604d41b2635"

@@ -10,7 +10,6 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
-  animated_toggle_switch: ^0.8.0
   circle_flags:
     path: ../flutter_circle_flags
 #    git: https://github.com/cedvdb/flutter_circle_flags.git
@@ -25,6 +24,7 @@ dependencies:
   #cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  animated_toggle_switch:
   flutter_test:
     sdk: flutter
   #  build_runner:

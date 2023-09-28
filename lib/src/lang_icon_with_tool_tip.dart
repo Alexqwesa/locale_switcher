@@ -29,6 +29,16 @@ class LangIconWithToolTip extends StatelessWidget {
   /// If null: will be shown flag of country assigned to language or ...
   final Widget? child;
 
+  /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
+  const LangIconWithToolTip.forIconBuilder(this.langCode, bool _,{
+    super.key,
+    this.toolTipPrefix = '',
+    this.radius,
+    this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
+    this.child,
+  });
+
   const LangIconWithToolTip({
     super.key,
     required this.langCode,

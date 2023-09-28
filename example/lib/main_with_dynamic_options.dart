@@ -1,3 +1,4 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -127,12 +128,41 @@ class _MyHomePageState extends State<MyHomePage> {
                             TableCell(
                               child: SizedBox(
                                 width: 400,
-                                height: 130,
                                 // =============== THIS LINE ===============
-                                child: LocaleSwitcher.toggle(
-                                  title: loc.chooseLanguage,
+                                child: LocaleSwitcher.custom(
                                   numberOfShown: 2,
-                                  useNLettersInsteadOfIcon: showNletters,
+                                  builder: (langCodes, context) {
+                                    if (langCodes.length <= 1) {
+                                      // AnimatedToggleSwitch crash with one value
+                                      langCodes.add(showOtherLocales);
+                                    }
+
+                                    return AnimatedToggleSwitch<String>.rolling(
+                                      values: langCodes,
+                                      current: LocaleManager.languageCode.value,
+                                      onChanged: (langCode) {
+                                        if (langCode == showOtherLocales) {
+                                          showSelectLocaleDialog(context);
+                                        } else {
+                                          LocaleManager.languageCode.value =
+                                              langCode;
+                                        }
+                                      },
+                                      iconBuilder: (lang, foreground) =>
+                                          LangIconWithToolTip(
+                                        langCode: lang,
+                                        useNLettersInsteadOfIcon: showNletters,
+                                      ),
+                                      allowUnlistedValues: true,
+                                      loading: false,
+                                      style: ToggleStyle(
+                                        backgroundColor: Colors.black12,
+                                        indicatorColor: Theme.of(context)
+                                            .colorScheme
+                                            .primaryContainer,
+                                      ),
+                                    );
+                                  },
                                   // shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
                                 ),
                               ),

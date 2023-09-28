@@ -34,7 +34,7 @@ void main() {
       expect(find.byType(CircleFlag), findsNWidgets(9)); // 1+1+3+2+2
 
       // await safeTapByKey(tester, 'letterSwitch');
-      await tester.tap(find.byKey(const ValueKey('letterSwitch')));
+      await safeTapByKey(tester, 'letterSwitch');
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
       expect(find.byType(CircleFlag),  findsNWidgets(3)); // ???? dialog?
@@ -42,7 +42,7 @@ void main() {
 
       // Verify that vi locale is loaded
       final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
-      expect(viFlag, findsNWidgets(2));
+      expect(viFlag, findsNWidgets(5));
       await tester.tap(viFlag.at(1));
       expect(LocaleManager.locale.value.languageCode, "vi");
       expect(LocaleStore.languageCode.value, "vi");

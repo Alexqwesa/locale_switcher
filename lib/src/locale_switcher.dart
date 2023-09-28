@@ -6,12 +6,10 @@ import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.
 import 'package:locale_switcher/src/locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_button.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_lang_switch.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/toggle_language_switch.dart';
 
 const showOtherLocales = 'show_other_locales_button';
 
 enum _Switcher {
-  toggle,
   menu,
   custom,
   grid,
@@ -19,7 +17,7 @@ enum _Switcher {
   segmentedButton,
 }
 
-typedef LocaleSwitchBuilder = Widget Function(List<String>);
+typedef LocaleSwitchBuilder = Widget Function(List<String>, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
@@ -59,14 +57,14 @@ class LocaleSwitcher extends StatelessWidget {
   ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
   ///       loading: false,
-  ///       onChanged: (langCode) async {
+  ///       onChanged: (langCode) {
   ///         if (langCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
   ///           LocaleManager.languageCode.value = langCode;
   ///         }
   ///       },
-  ///       iconBuilder: getIconForLanguage,
+  ///       iconBuilder: LangIconWithToolTip.forIconBuilder,
   ///     );
   ///   })
   /// ```
@@ -110,7 +108,7 @@ class LocaleSwitcher extends StatelessWidget {
     this.crossAxisAlignment = CrossAxisAlignment.stretch,
     this.padding = const EdgeInsets.all(8),
     this.titlePadding = const EdgeInsets.all(4),
-    type = _Switcher.toggle,
+    type = _Switcher.segmentedButton,
     this.builder,
     this.gridDelegate,
     this.additionalCallBack,
@@ -121,36 +119,6 @@ class LocaleSwitcher extends StatelessWidget {
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
   }) : _type = type;
-
-  /// A Widget to switch locale of App with [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
-  ///
-  /// Example: [online app](https://alexqwesa.github.io/locale_switcher/), [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
-  factory LocaleSwitcher.toggle({
-    Key? key,
-    String? title = 'Choose language:',
-    int numberOfShown = 4,
-    bool showOsLocale = true,
-    bool titlePositionTop = true,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.stretch,
-    EdgeInsets padding = const EdgeInsets.all(8),
-    EdgeInsets titlePadding = const EdgeInsets.all(4),
-    int? useNLettersInsteadOfIcon,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      title: title,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      titlePositionTop: titlePositionTop,
-      crossAxisAlignment: crossAxisAlignment,
-      padding: padding,
-      titlePadding: titlePadding,
-      type: _Switcher.toggle,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      shape: shape,
-    );
-  }
 
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
   ///
@@ -215,14 +183,14 @@ class LocaleSwitcher extends StatelessWidget {
   ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
   ///       loading: false,
-  ///       onChanged: (langCode) async {
+  ///       onChanged: (langCode) {
   ///         if (langCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
   ///           LocaleManager.languageCode.value = langCode;
   ///         }
   ///       },
-  ///       iconBuilder: getIconForLanguage,
+  ///       iconBuilder: LangIconWithToolTip.forIconBuilder,
   ///     );
   ///   })
   /// ```
@@ -231,16 +199,12 @@ class LocaleSwitcher extends StatelessWidget {
     required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
     bool showOsLocale = true,
-    int? useNLettersInsteadOfIcon,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
       key: key,
       title: null,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      shape: shape,
       type: _Switcher.custom,
       builder: builder,
     );
@@ -360,7 +324,7 @@ class LocaleSwitcher extends StatelessWidget {
         }
 
         return switch (_type) {
-          _Switcher.custom => builder!(locales),
+          _Switcher.custom => builder!(locales, context),
           _Switcher.menu => DropDownMenuLanguageSwitch(
               locales: locales,
               title: title,
@@ -372,18 +336,6 @@ class LocaleSwitcher extends StatelessWidget {
               gridDelegate: gridDelegate,
               additionalCallBack: additionalCallBack,
               shape: shape,
-            ),
-          _Switcher.toggle => TitleOfLangSwitch(
-              padding: padding,
-              crossAxisAlignment: crossAxisAlignment,
-              titlePositionTop: titlePositionTop,
-              titlePadding: titlePadding,
-              title: title,
-              child: ToggleLanguageSwitch(
-                locales: locales,
-                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                shape: shape,
-              ),
             ),
           _Switcher.iconButton => SelectLocaleButton(
               radius: iconRadius ?? 32,

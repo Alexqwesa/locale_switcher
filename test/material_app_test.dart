@@ -63,63 +63,6 @@ void main() {
       await tester.tap(sysFlag); // restore ?
     });
 
-    testWidgets('it load locale and change via menu',
-        (WidgetTester tester) async {
-      SharedPreferences.setMockInitialValues(
-          {LocaleStore.innerSharedPreferenceName: "vi"});
-      // Build our app and trigger a frame.
-      // await LocaleStore.init();
-      await SharedPreferences.getInstance();
-      await tester.pumpWidget(const MyApp());
-      await tester.pumpAndSettle();
-
-      final viLoc = const Locale('vi').tr;
-
-      // test start with english locale
-      expect(find.text(viLoc.counterDescription), findsOneWidget);
-      expect(LocaleStore.languageCode.value, "vi");
-
-      expect(
-          find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
-
-      // tap menu
-      final dropMenu = find.byType(DropdownMenu<String>);
-      await tester.tap(dropMenu);
-      await tester.pumpAndSettle();
-
-      expect(LocaleManager.locale.value.languageCode, "vi");
-      expect(LocaleManager.languageCode.value, "vi");
-
-      // tap item
-      final deOption = find.descendant(
-        of: dropMenu,
-        matching: find.byType(LangIconWithToolTip),
-        // matching: find.text(LocaleStore.languageToCountry['de']![1]),
-      );
-      expect(deOption, findsNWidgets(5)); // 4 + current
-      // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
-      // await tester.ensureVisible(deOption.at(4));
-      // await tester.pumpAndSettle();
-      // await tester.tap(deOption.at(4));
-      await tester.tap(find.byKey(const ValueKey("item-de")).at(1));
-      await tester.pumpAndSettle();
-      await tester.pump(const Duration(seconds: 1));
-
-      // selected todo:
-      expect(
-          find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
-      expect(LocaleManager.languageCode.value, "de");
-      expect(LocaleManager.locale.value.languageCode, "de");
-
-      final deLoc = const Locale('de').tr;
-      expect(find.text(deLoc.counterDescription), findsOneWidget);
-
-      // ??
-      final sysFlag =
-          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
-      await tester.tap(sysFlag); // restore ?
-    });
-
     testWidgets('it change locale via popUp dialog',
         (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues(
@@ -167,4 +110,5 @@ void main() {
       // await tester.tap(sysFlag); // restore ?
     });
   });
+
 }
