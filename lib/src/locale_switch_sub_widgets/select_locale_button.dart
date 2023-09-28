@@ -39,7 +39,6 @@ class SelectLocaleButton extends StatelessWidget {
         return IconButton(
           icon: useStaticIcon ??
               LangIconWithToolTip(
-                // langCode: LocaleManager.locale.value.languageCode,
                 toolTipPrefix: toolTipPrefix,
                 langCode: LocaleStore.languageCode.value,
                 radius: radius,

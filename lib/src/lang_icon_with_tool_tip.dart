@@ -1,18 +1,33 @@
 import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
-/// Just icon, no action assigned.
+/// Icon representing the language.
+///
+/// For special values like [showOtherLocales] it will provide custom widget.
+///
+/// You can use [LocaleManager.reassignFlags] to change global defaults.
+/// or just provide your own [child] widget.
 class LangIconWithToolTip extends StatelessWidget {
   final String toolTipPrefix;
 
   final double? radius;
 
+  /// If zero - used Icon, otherwise first N letters of language code.
+  ///
+  /// Have no effect if [child] is not null.
   final int useNLettersInsteadOfIcon;
 
-  final TextStyle? textStyle;
-
+  /// Clip the flag by [ShapeBorder], default: [CircleBorder].
+  ///
+  /// If null, return square flag.
   final ShapeBorder? shape;
+
+  /// OPTIONAL: your custom widget here,
+  ///
+  /// If null: will be shown flag of country assigned to language or ...
+  final Widget? child;
 
   const LangIconWithToolTip({
     super.key,
@@ -20,46 +35,65 @@ class LangIconWithToolTip extends StatelessWidget {
     this.toolTipPrefix = '',
     this.radius,
     this.useNLettersInsteadOfIcon = 0,
-    this.textStyle,
     this.shape = const CircleBorder(eccentricity: 0),
+    this.child,
   });
 
   final String langCode;
 
   @override
   Widget build(BuildContext context) {
-    final lang = LocaleStore.languageToCountry[langCode]!; // todo: use ??
+    if (langCode == showOtherLocales) {
+      return LocaleSwitcher.iconButton(
+        useStaticIcon:
+            ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
+                ? LocaleStore.languageToCountry[showOtherLocales]![2]
+                : const Icon(Icons.expand_more),
+      );
+    }
+
+    final lang = LocaleStore.languageToCountry[langCode] ??
+        [langCode, 'Unknown language code: $langCode'];
+
+    final Widget defaultChild = child ??
+        ((useNLettersInsteadOfIcon > 0 && langCode != LocaleStore.systemLocale)
+            ? ClipOval(
+                // text
+                child: SizedBox(
+                    width: radius ?? 48,
+                    height: radius ?? 48,
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: FittedBox(
+                          child: Text(
+                        langCode.toUpperCase(),
+                        semanticsLabel: lang[1],
+                      )),
+                    )),
+              )
+            : lang.length <= 2
+                ? CircleFlag(
+                    (lang[0] as String).toLowerCase(),
+                    // ovalShape: false,
+                    shape: shape,
+                    size: radius ?? 48,
+                  )
+                : (shape != null)
+                    ? ClipPath(
+                        child: lang[2],
+                        clipper: ShapeBorderClipper(
+                          shape: shape!,
+                          textDirection: Directionality.maybeOf(context),
+                        ),
+                      )
+                    : lang[2]);
 
     return FittedBox(
-      child:
-          (useNLettersInsteadOfIcon > 0 && langCode != LocaleStore.systemLocale)
-              ? ClipOval(
-                  child: SizedBox(
-                      width: radius ?? 48,
-                      height: radius ?? 48,
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: FittedBox(
-                            child: Text(
-                          langCode.toUpperCase(),
-                          semanticsLabel: lang[1],
-                          style: textStyle,
-                        )),
-                      )),
-                )
-              : Tooltip(
-                  message: toolTipPrefix + lang[1],
-                  child: lang.length <= 2
-                      ? ClipRect(
-                          child: CircleFlag(
-                            (lang[0] as String).toLowerCase(),
-                            // ovalShape: false,
-                            shape: shape,
-                            size: radius ?? 48,
-                          ),
-                        )
-                      : ClipOval(child: lang[2]),
-                ),
+      child: Tooltip(
+          message: toolTipPrefix + lang[1],
+          waitDuration: const Duration(milliseconds: 50),
+          preferBelow: true,
+          child: defaultChild),
     );
   }
 }

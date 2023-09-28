@@ -38,21 +38,17 @@ class SegmentedButtonSwitch extends StatelessWidget {
               child: FittedBox(
                 child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
-                        getIconForLanguage(
-                          e,
-                          null,
-                          curRadius,
-                          useNLettersInsteadOfIcon,
-                          null,
-                          shape,
+                        LangIconWithToolTip(
+                          langCode: e,
+                          radius: curRadius,
+                          useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                          shape: shape,
                         )
-                    : getIconForLanguage(
-                        e,
-                        null,
-                        curRadius,
-                        useNLettersInsteadOfIcon,
-                        null,
-                        shape,
+                    : LangIconWithToolTip(
+                        langCode: e,
+                        radius: curRadius,
+                        useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                        shape: shape,
                       ),
               ),
             ),

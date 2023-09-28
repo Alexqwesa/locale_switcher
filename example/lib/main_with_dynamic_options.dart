@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Center(
                     child: Table(
                       columnWidths: const <int, TableColumnWidth>{
-                        0: FixedColumnWidth(350),
+                        0: FixedColumnWidth(400),
                         1: FixedColumnWidth(450),
                       },
                       defaultVerticalAlignment:

@@ -8,7 +8,7 @@ import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_butt
 import 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_lang_switch.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/toggle_language_switch.dart';
 
-const showOtherLocales = 'show_other_locales';
+const showOtherLocales = 'show_other_locales_button';
 
 enum _Switcher {
   toggle,
@@ -229,16 +229,21 @@ class LocaleSwitcher extends StatelessWidget {
   factory LocaleSwitcher.custom({
     Key? key,
     required LocaleSwitchBuilder builder,
-    int numberOfShown = 200,
+    int numberOfShown = 4,
     bool showOsLocale = true,
+    int? useNLettersInsteadOfIcon,
+    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
-        key: key,
-        title: null,
-        showOsLocale: showOsLocale,
-        numberOfShown: numberOfShown,
-        type: _Switcher.custom,
-        builder: builder);
+      key: key,
+      title: null,
+      showOsLocale: showOsLocale,
+      numberOfShown: numberOfShown,
+      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
+      shape: shape,
+      type: _Switcher.custom,
+      builder: builder,
+    );
   }
 
   /// A Widget to switch locale of App with [IconButton](https://api.flutter.dev/flutter/material/IconButton-class.html).

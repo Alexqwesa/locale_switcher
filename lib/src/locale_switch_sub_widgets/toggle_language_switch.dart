@@ -23,10 +23,8 @@ class ToggleLanguageSwitch extends StatelessWidget {
     }
 
     return AnimatedToggleSwitch<String>.rolling(
-      allowUnlistedValues: true,
-      current: LocaleManager.languageCode.value,
       values: locales,
-      loading: false,
+      current: LocaleManager.languageCode.value,
       onChanged: (langCode) async {
         if (langCode == showOtherLocales) {
           showSelectLocaleDialog(context);
@@ -34,17 +32,16 @@ class ToggleLanguageSwitch extends StatelessWidget {
           LocaleManager.languageCode.value = langCode;
         }
       },
+      iconBuilder: (lang, foreground) => LangIconWithToolTip(
+        langCode: lang,
+        useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+        shape: shape,
+      ),
+      allowUnlistedValues: true,
+      loading: false,
       style: ToggleStyle(
         backgroundColor: Colors.black12,
         indicatorColor: Theme.of(context).colorScheme.primaryContainer,
-      ),
-      iconBuilder: (lang, foreground) => getIconForLanguage(
-        lang,
-        false,
-        null,
-        useNLettersInsteadOfIcon,
-        null,
-        shape,
       ),
     );
   }

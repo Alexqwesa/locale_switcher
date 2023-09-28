@@ -36,27 +36,24 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                     height: radius,
                     key: ValueKey('item-$e'),
                     child: FittedBox(
-                      child: (LocaleStore.languageToCountry[e] ?? const [])
-                                  .length >
-                              2
-                          ? LocaleStore.languageToCountry[e]![2] ??
-                              getIconForLanguage(
-                                e,
-                                null,
-                                radius,
-                                useNLettersInsteadOfIcon,
-                                null,
-                                shape,
-                              )
-                          : getIconForLanguage(
-                              e,
-                              null,
-                              radius,
-                              useNLettersInsteadOfIcon,
-                              null,
-                              shape,
-                            ),
-                    ),
+                        child: (LocaleStore.languageToCountry[e] ?? const [])
+                                    .length >
+                                2
+                            ? LocaleStore.languageToCountry[e]![2] ??
+                                LangIconWithToolTip(
+                                  langCode: e,
+                                  radius: radius,
+                                  useNLettersInsteadOfIcon:
+                                      useNLettersInsteadOfIcon,
+                                  shape: shape,
+                                )
+                            : LangIconWithToolTip(
+                                langCode: e,
+                                radius: radius,
+                                useNLettersInsteadOfIcon:
+                                    useNLettersInsteadOfIcon,
+                                shape: shape,
+                              )),
                   )
                 : null,
           ),
@@ -68,13 +65,11 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: getIconForLanguage(
-                LocaleStore.languageCode.value,
-                null,
-                32,
-                useNLettersInsteadOfIcon,
-                null,
-                shape,
+              child: LangIconWithToolTip(
+                langCode: LocaleStore.languageCode.value,
+                radius: 32,
+                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                shape: shape,
               ),
             )
           : null,
