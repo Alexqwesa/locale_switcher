@@ -12,7 +12,7 @@ import 'package:locale_switcher/src/locale_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_relative_lib_imports
-import '../example/lib/main.dart';
+import '../example/lib/main_with_counter.dart';
 
 void main() {
   group('Material tests loads', () {
