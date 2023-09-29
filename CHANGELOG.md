@@ -1,13 +1,11 @@
 # Changelog
 
-## 0.9.6
-
-* remove `LocaleSwitcher.toggle` and it dependency`animated_toggle_switch`, 
-* instead of `LocaleSwitcher.toggle` use `LocaleSwitcher.custom` with `animated_toggle_switch` as shown in example.
-
 ## 0.9.5
 
-* new option shape for LocaleSwitcher.
+* remove `LocaleSwitcher.toggle` and it dependency`animated_toggle_switch`, 
+* instead of `LocaleSwitcher.toggle` use `LocaleSwitcher.custom` with `animated_toggle_switch` as shown in example,
+* new option `shape` for `LocaleSwitcher`,
+* use generated icon resources, preparing to use build_runner.
 
 ## 0.9.4
 

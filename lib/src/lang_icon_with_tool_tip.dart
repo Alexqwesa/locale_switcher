@@ -1,6 +1,6 @@
-import 'package:circle_flags/circle_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
 /// Icon representing the language.
@@ -30,7 +30,9 @@ class LangIconWithToolTip extends StatelessWidget {
   final Widget? child;
 
   /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
-  const LangIconWithToolTip.forIconBuilder(this.langCode, bool _,{
+  const LangIconWithToolTip.forIconBuilder(
+    this.langCode,
+    bool _, {
     super.key,
     this.toolTipPrefix = '',
     this.radius,
@@ -83,7 +85,7 @@ class LangIconWithToolTip extends StatelessWidget {
               )
             : lang.length <= 2
                 ? CircleFlag(
-                    (lang[0] as String).toLowerCase(),
+                    Flags.instance[(lang[0] as String).toLowerCase()],
                     // ovalShape: false,
                     shape: shape,
                     size: radius ?? 48,

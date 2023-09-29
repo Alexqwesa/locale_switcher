@@ -10,30 +10,27 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
-  circle_flags:
-    path: ../flutter_circle_flags
-#    git: https://github.com/cedvdb/flutter_circle_flags.git
+  flutter_svg: ^2.0.7
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.1
 
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   #cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  animated_toggle_switch:
+  animated_toggle_switch: # for tests and examples
+  build_runner:
+#  flutter_gen_core:
   flutter_test:
     sdk: flutter
   #  build_runner:
   flutter_lints: ^2.0.0
-  flutter_localizations:
+  flutter_localizations:  # for tests and examples
     sdk: flutter
-  intl:
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  intl:                   # for tests and examples
+#  source_gen:
+  circle_flags:
+    path: ../flutter_circle_flags
 
 # The following section is specific to Flutter packages.
 flutter:
