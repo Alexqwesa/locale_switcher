@@ -71,8 +71,14 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            // OR LocaleSwitcher.custom(...)
-            const CounterWidget(),
+            SizedBox(
+              width: 450,
+              // =============== THIS LINE ===============
+              child: LocaleSwitcher.segmentedButton(
+                numberOfShown: 2,
+                title: loc.chooseLanguage,
+              ),
+            ),
           ],
         ),
       ),
@@ -105,54 +111,4 @@ Widget animatedToggleSwitchBuilder(
       indicatorColor: Theme.of(context).colorScheme.primaryContainer,
     ),
   );
-}
-
-///
-/// BELOW IS JUST SOME RANDOM CODE - YOU DON'T NEED IT!!!!!!
-///
-class CounterWidget extends StatefulWidget {
-  const CounterWidget({super.key});
-
-  @override
-  State<CounterWidget> createState() => _CounterWidgetState();
-}
-
-class _CounterWidgetState extends State<CounterWidget> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Text(
-            loc.counterDescription,
-            textAlign: TextAlign.center,
-            softWrap: false,
-            overflow: TextOverflow.fade,
-          ),
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          FloatingActionButton(
-            onPressed: _incrementCounter,
-            tooltip: loc.increment,
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
-    );
-  }
 }

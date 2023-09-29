@@ -29,8 +29,8 @@ dev_dependencies:
     sdk: flutter
   intl:                   # for tests and examples
 #  source_gen:
-  circle_flags:
-    path: ../flutter_circle_flags
+#  circle_flags:
+#    path: ../flutter_circle_flags
 
 # The following section is specific to Flutter packages.
 flutter:
