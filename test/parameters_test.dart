@@ -5,7 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:circle_flags/circle_flags.dart';
+import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -37,7 +37,7 @@ void main() {
       await safeTapByKey(tester, 'letterSwitch');
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
-      expect(find.byType(CircleFlag),  findsNWidgets(3)); // ???? dialog?
+      expect(find.byType(CircleFlag), findsNWidgets(3)); // ???? dialog?
       expect(find.text("VI"), findsNWidgets(4));
 
       // Verify that vi locale is loaded
@@ -47,7 +47,8 @@ void main() {
       expect(LocaleManager.locale.value.languageCode, "vi");
       expect(LocaleStore.languageCode.value, "vi");
       await tester.pumpAndSettle();
-      expect(find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
+      expect(
+          find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
       expect(find.text(const Locale('en').tr.counterDescription), findsNothing);
 
       // Verify that en locale is loaded
