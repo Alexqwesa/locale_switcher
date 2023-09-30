@@ -24,6 +24,11 @@ This is NOT a localization package, it is just a few useful widgets that extend
 functionality of localization systems, such as: [intl](https://pub.dev/packages/intl), 
 [easy_localization](https://pub.dev/packages/easy_localization), etc...
 
+Note: This package is already small, but if you still want to further reduce its size,
+you can use [locale_switcher_dev](https://pub.dev/packages/locale_switcher) package,
+which allow you to control what flags are included (or none) 
+and which packages it depend on (or none).
+
 ## Features
 
 - [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html) widget:
@@ -114,8 +119,7 @@ Example with dynamic option switch:
 - [ ] Test with other localization system (currently: tested only intl)
 - [ ] Support slang
 - [ ] Rectangle and oval flags, not just square and circle
-- [ ] reduce assets: code_gen to add assets
-- [ ] Upstream: use format .vec
+- [ ] reduce assets: `build` to add assets
 
 ## FAQ
 

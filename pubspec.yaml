@@ -4,7 +4,7 @@ repository: https://github.com/Alexqwesa/locale_switcher
 homepage: https://github.com/Alexqwesa/locale_switcher
 #author: Alexqwesa <alexo.veto@gmail.com>
 
-version: 0.9.5
+version: 0.9.6
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -19,18 +19,12 @@ dependencies:
 
 dev_dependencies:
   animated_toggle_switch: # for tests and examples
-  build_runner:
-#  flutter_gen_core:
   flutter_test:
     sdk: flutter
-  #  build_runner:
   flutter_lints: ^2.0.0
   flutter_localizations:  # for tests and examples
     sdk: flutter
   intl:                   # for tests and examples
-#  source_gen:
-#  circle_flags:
-#    path: ../flutter_circle_flags
 
 # The following section is specific to Flutter packages.
 flutter:

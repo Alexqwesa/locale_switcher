@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.6
+
+* created package `locale_switcher_dev` which can generate this package dynamically. 
+which required a few more lines to set up, but allow you to control 
+what flags are included (or none) and which packages it depend on (or none).
+
 ## 0.9.5
 
 * remove `LocaleSwitcher.toggle` and it dependency`animated_toggle_switch`, 
