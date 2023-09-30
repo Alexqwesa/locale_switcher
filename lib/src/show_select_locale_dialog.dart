@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/locale_switcher.dart';
+import '../locale_switcher.dart';
 
 /// Show popup dialog to select Language.
 Future<void> showSelectLocaleDialog(

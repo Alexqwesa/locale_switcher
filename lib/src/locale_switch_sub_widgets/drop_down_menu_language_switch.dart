@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/locale_store.dart';
+import '../../locale_switcher.dart';
+import '../locale_store.dart';
 
 class DropDownMenuLanguageSwitch extends StatelessWidget {
   final String? title;

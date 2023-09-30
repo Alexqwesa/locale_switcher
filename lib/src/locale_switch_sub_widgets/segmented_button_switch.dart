@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/locale_switcher.dart';
 
+import '../../locale_switcher.dart';
 import '../locale_store.dart';
 
 class SegmentedButtonSwitch extends StatelessWidget {

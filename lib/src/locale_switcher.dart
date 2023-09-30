@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/src/locale_store.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/segmented_button_switch.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_button.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_lang_switch.dart';
+import 'locale_store.dart';
+import 'locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
+import 'locale_switch_sub_widgets/grid_of_languages.dart';
+import 'locale_switch_sub_widgets/segmented_button_switch.dart';
+import 'locale_switch_sub_widgets/select_locale_button.dart';
+import 'locale_switch_sub_widgets/title_of_lang_switch.dart';
 
 const showOtherLocales = 'show_other_locales_button';
 

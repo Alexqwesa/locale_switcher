@@ -1,11 +1,12 @@
-import 'package:locale_switcher/src/generated/asset_strings.dart';
+// ignore_for_file: avoid_relative_lib_imports
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/locale_store.dart';
 
-// ignore: avoid_relative_lib_imports
 import '../example/lib/main_without_locale_manager.dart';
+import '../lib/locale_switcher.dart';
+import '../lib/src/generated/asset_strings.dart';
+import '../lib/src/locale_store.dart';
 
 void main() {
   {

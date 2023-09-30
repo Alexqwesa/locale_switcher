@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/locale_switcher.dart';
+import '../locale_switcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // extension AppLocalizationsExt on BuildContext {

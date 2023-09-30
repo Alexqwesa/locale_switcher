@@ -5,14 +5,15 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+// ignore_for_file: avoid_relative_lib_imports
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/locale_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: avoid_relative_lib_imports
 import '../example/lib/main_with_counter.dart';
+import '../lib/locale_switcher.dart';
+import '../lib/src/locale_store.dart';
 
 void main() {
   group('Material tests loads', () {

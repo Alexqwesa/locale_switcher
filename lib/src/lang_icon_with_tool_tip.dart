@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/generated/asset_strings.dart';
-import 'package:locale_switcher/src/locale_store.dart';
+import 'locale_switcher.dart';
+import 'generated/asset_strings.dart';
+import 'locale_store.dart';
 
 /// Icon representing the language.
 ///
