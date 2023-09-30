@@ -22,3 +22,4 @@ build/
 docs/
 /lib/generated_plugin_registrant.dart
 desiredFileName.txt
+/example/lib/src/packages/**
