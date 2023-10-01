@@ -8,7 +8,7 @@ class PackBuilder implements Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => {
-        r'$package$': const ['lib/src/builders/generated_pack.dart']
+        r'$package$': const ['lib/src/builders/pack/generated_pack.dart']
       };
 
   @override
@@ -18,7 +18,7 @@ class PackBuilder implements Builder {
     }
 
     final outFile = AssetId(
-        buildStep.inputId.package, 'lib/src/builders/generated_pack.dart');
+        buildStep.inputId.package, 'lib/src/builders/pack/generated_pack.dart');
 
     print("Writing generated pack ${outFile.path}");
 
