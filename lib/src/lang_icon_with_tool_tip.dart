@@ -67,8 +67,14 @@ class LangIconWithToolTip extends StatelessWidget {
     final lang = LocaleStore.languageToCountry[langCode] ??
         [langCode, 'Unknown language code: $langCode'];
 
+    var nLetters = useNLettersInsteadOfIcon;
+    if (nLetters == 0 &&
+        Flags.instance[(lang[0] as String).toLowerCase()] == null) {
+      nLetters = 2;
+    }
+
     final Widget defaultChild = child ??
-        ((useNLettersInsteadOfIcon > 0 && langCode != LocaleStore.systemLocale)
+        ((nLetters > 0 && langCode != LocaleStore.systemLocale)
             ? ClipOval(
                 // text
                 child: SizedBox(
@@ -83,9 +89,9 @@ class LangIconWithToolTip extends StatelessWidget {
                       )),
                     )),
               )
-            : lang.length <= 2
+            : lang.length <= 2 // i.e. no custom image
                 ? CircleFlag(
-                    Flags.instance[(lang[0] as String).toLowerCase()],
+                    Flags.instance[(lang[0] as String).toLowerCase()]!,
                     // ovalShape: false,
                     shape: shape,
                     size: radius ?? 48,
