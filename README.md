@@ -25,7 +25,7 @@ functionality of localization systems, such as: [intl](https://pub.dev/packages/
 [easy_localization](https://pub.dev/packages/easy_localization), etc...
 
 Note: This package is already small, but if you still want to further reduce its size,
-you can use [locale_switcher_dev](https://pub.dev/packages/locale_switcher) package,
+you can use [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev) package,
 which allow you to control what flags are included (or none) 
 and which packages it depend on (or none).
 
