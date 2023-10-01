@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// A flag of a country, rounded by default.
 ///
@@ -356,6 +356,7 @@ final countryCodeToContent = {
 
 class Flag {
   final String svgString;
+
   const Flag(this.svgString);
 
   SvgPicture get svg => SvgPicture(SvgStringLoader(svgString));
@@ -366,8 +367,7 @@ class Flags {
 
   static const instance = Flags._();
 
-  Flag operator [](String key) =>
-      countryCodeToContent[key] ?? countryCodeToContent['xx']!;
+  Flag? operator [](String key) => countryCodeToContent[key];
 
   Iterable<String> get values => countryCodeToContent.keys;
 
