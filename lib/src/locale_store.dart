@@ -141,13 +141,14 @@ abstract class LocaleStore {
       newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
       // languageCode.value = systemLocale;
     } else if (langCode == showOtherLocales) {
+      newLocale = locale.value; // on error: leave current
       dev.log('Error wrong locale name: $showOtherLocales');
     } else {
       newLocale = Locale(langCode);
       // languageCode.value = newLocale.languageCode;
     }
 
-    _pref?.setString(innerSharedPreferenceName, languageCode.value);
+    _pref?.write(innerSharedPreferenceName, languageCode.value);
     locale.value = newLocale;
   }
 
@@ -166,7 +167,24 @@ abstract class LocaleStore {
         __observer!,
       );
 
-      languageCode.addListener(() => _setLocale(languageCode.value));
+      // locale and languageCode always in sync:
+      languageCode.addListener(() {
+        if (locale.value.languageCode != languageCode.value) {
+          _setLocale(languageCode.value);
+        }
+      });
+      locale.addListener(() {
+        if (languageCode.value == systemLocale) {
+          if (locale.value !=
+              TestablePlatformDispatcher.platformDispatcher.locale) {
+            languageCode.value = locale.value.languageCode;
+          }
+        } else {
+          if (locale.value.languageCode != languageCode.value) {
+            languageCode.value = locale.value.languageCode;
+          }
+        }
+      });
     }
   }
 
@@ -196,7 +214,7 @@ abstract class LocaleStore {
     //
     String langCode = systemLocale;
     if (_pref != null) {
-      langCode = _pref!.getString(innerSharedPreferenceName) ?? langCode;
+      langCode = _pref!.read(innerSharedPreferenceName) ?? langCode;
     }
     languageCode.value = langCode;
   }
