@@ -47,7 +47,8 @@ class PackageBuilder implements Builder {
       if (ls case {'shared_preferences': final shared_preferences}) {
         if (!shared_preferences) {
           pref = '';
-          package['src']['preference_repository'] = package['src']['preference_repository_stub'];
+          package['src']['preference_repository'] =
+              package['src']['preference_repository_stub'];
         }
       }
       deps += pref;

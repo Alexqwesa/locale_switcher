@@ -23,5 +23,15 @@ docs/
 /lib/generated_plugin_registrant.dart
 desiredFileName.txt
 /example/lib/src/packages/**
-lib/**
-!lib/src/builders
+# lib/**
+lib/locale_switcher.dart
+lib/src/locale_switcher.dart
+lib/src/generated/**
+lib/src/l10n/**
+lib/src/lang_icon_with_tool_tip.dart
+lib/src/locale_manager.dart
+lib/src/locale_store.dart
+lib/src/locale_switch_sub_widgets/**
+lib/src/preference_repository*
+lib/src/show_select_locale_dialog.dart
+!lib/src/builders/**
