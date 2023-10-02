@@ -48,7 +48,8 @@ a widget to switch locale:
   - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
   - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
 
-- Can be generated via [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev) package,
+- Can be generated via [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev) 
+package, in this case you control:
   - what flags are included (or none),
   - which packages it depend on (or none).
 
@@ -128,7 +129,8 @@ Example with dynamic option switch:
 
 #### - How to change order of languages?
 
-Languages are shown in the same order as they listed in [l10n.yaml](example/l10n.yaml).
+Languages are shown in the same order as they listed in [l10n.yaml](example/l10n.yaml), 
+or dynamically via  [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html).
 
 #### - How to change flag of language?
 
