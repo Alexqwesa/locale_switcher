@@ -11,9 +11,7 @@ void writeMapAsFiles(Map<String, dynamic> package, {path = 'lib/'}) {
   for (final key in package.keys) {
     if (package[key].runtimeType == String) {
       File(join(path, '$key.dart')).writeAsStringSync(package[key]);
-    } else if (package[key].runtimeType == (<String, dynamic>{}).runtimeType) {
-      writeMapAsFiles(package[key], path: join(path, key));
-    } else if (package[key].runtimeType == Map<String, dynamic>) {
+    } else if (package[key] is Map) {
       writeMapAsFiles(package[key], path: join(path, key));
     } else {
       throw StateError('unknown key = $key');

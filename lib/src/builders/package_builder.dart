@@ -44,8 +44,8 @@ class PackageBuilder implements Builder {
       }
 
       var pref = '''  shared_preferences: ^2.2.1 \n''';
-      if (ls case {'shared_preferences': final shared_preferences}) {
-        if (!shared_preferences) {
+      if (ls case {'shared_preferences': final sharedPreferences}) {
+        if (!sharedPreferences) {
           pref = '';
           package['src']['preference_repository'] =
               package['src']['preference_repository_stub'];
@@ -53,9 +53,9 @@ class PackageBuilder implements Builder {
       }
       deps += pref;
 
-      if (ls case {'package_path': String package_path}) {
-        if (package_path.isNotEmpty) {
-          path = package_path;
+      if (ls case {'package_path': String packagePath}) {
+        if (packagePath.isNotEmpty) {
+          path = packagePath;
         }
       }
     }
@@ -69,7 +69,7 @@ class PackageBuilder implements Builder {
       join(path, 'lib', 'src', 'generated', 'asset_strings.dart'),
     );
 
-    final fileHeader = '''
+    const fileHeader = '''
 name: locale_switcher
 description: A small widget for switching the locale of your application.
 
