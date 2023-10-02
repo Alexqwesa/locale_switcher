@@ -48,6 +48,10 @@ a widget to switch locale:
   - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
   - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
 
+- Can be generated via [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev) package,
+  - what flags are included (or none),
+  - which packages it depend on (or none).
+
 ## Usage
 
 1) Wrap `MaterialApp` or `CupertinoApp` with [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html):
@@ -119,7 +123,6 @@ Example with dynamic option switch:
 - [ ] Test with other localization system (currently: tested only intl)
 - [ ] Support slang
 - [ ] Rectangle and oval flags, not just square and circle
-- [ ] reduce assets: `build` to add assets
 
 ## FAQ
 

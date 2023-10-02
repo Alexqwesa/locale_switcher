@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.7
+
+* fix docs,
+* sync with `locale_switcher_dev`.
+
 ## 0.9.6
 
 * created package `locale_switcher_dev` which can generate this package dynamically. 
