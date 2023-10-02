@@ -148,7 +148,7 @@ abstract class LocaleStore {
       // languageCode.value = newLocale.languageCode;
     }
 
-    _pref?.write(innerSharedPreferenceName, languageCode.value);
+    PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
     locale.value = newLocale;
   }
 
@@ -214,7 +214,7 @@ abstract class LocaleStore {
     //
     String langCode = systemLocale;
     if (_pref != null) {
-      langCode = _pref!.read(innerSharedPreferenceName) ?? langCode;
+      langCode = PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
     }
     languageCode.value = langCode;
   }

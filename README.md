@@ -148,6 +148,8 @@ Example with dynamic option switch:
 - [ ] Option to use .svg.vec instead of .svg
 - [ ] LocaleSwitcher: callback to all constructors
 
+[//]: # (- [ ] detect cupertino/material in dev package)
+
 ## FAQ
 
 #### - How to change order of languages?

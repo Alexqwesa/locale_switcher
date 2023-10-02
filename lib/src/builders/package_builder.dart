@@ -51,6 +51,15 @@ class PackageBuilder implements Builder {
               package['src']['preference_repository_stub'];
         }
       }
+
+      if (ls case {'easy_localization': final easy}) {
+        if (easy) {
+          pref = '  easy_localization:';
+          package['src']['preference_repository'] =
+              package['src']['preference_repository_easy_localization'];
+        }
+      }
+
       deps += pref;
 
       if (ls case {'package_path': String packagePath}) {

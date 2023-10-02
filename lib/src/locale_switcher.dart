@@ -335,6 +335,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales.add(showOtherLocales);
         }
+        // todo: add 0.5 second delayed check of app locale ?
 
         return switch (widget._type) {
           _Switcher.custom => widget.builder!(locales, context),
