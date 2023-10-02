@@ -35,3 +35,5 @@ lib/src/locale_switch_sub_widgets/**
 lib/src/preference_repository*
 lib/src/show_select_locale_dialog.dart
 !lib/src/builders/**
+
+examples/**
