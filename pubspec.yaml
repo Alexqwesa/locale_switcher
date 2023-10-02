@@ -4,7 +4,7 @@ repository: https://github.com/Alexqwesa/locale_switcher
 homepage: https://github.com/Alexqwesa/locale_switcher
 #author: Alexqwesa <alexo.veto@gmail.com>
 
-version: 0.9.6
+version: 0.9.7
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -15,11 +15,10 @@ dependencies:
   build_runner: ^2.4.6
   flutter:
     sdk: flutter
+  path: ^1.8.3
   yaml: ^3.1.2
 
-  #cupertino_icons: ^1.0.2
-
-dev_dependencies:  # for tests and examples
+dev_dependencies: # for tests and examples
   animated_toggle_switch:
   flutter_test:
     sdk: flutter

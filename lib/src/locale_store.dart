@@ -3,8 +3,9 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import './preference_repository.dart';
 import '../locale_switcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // extension AppLocalizationsExt on BuildContext {
 //   AppLocalizations get l10n => AppLocalizations.of(this);
@@ -54,7 +55,7 @@ abstract class LocaleStore {
   static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
 
   /// If initialized: locale will be stored in [SharedPreferences].
-  static SharedPreferences? _pref;
+  static get _pref => PreferenceRepository.pref;
 
   static final _locale = ValueNotifier<Locale>(const Locale('en'));
   static final _languageCode = ValueNotifier<String>(systemLocale);
@@ -189,7 +190,7 @@ abstract class LocaleStore {
     // > init shared preference
     //
     innerSharedPreferenceName = sharedPreferenceName;
-    _pref = await SharedPreferences.getInstance();
+    await PreferenceRepository.init();
     //
     // > read locale from sharedPreference
     //

@@ -45,10 +45,10 @@ class PackageBuilder implements Builder {
 
       var pref = '''  shared_preferences: ^2.2.1 \n''';
       if (ls case {'shared_preferences': final shared_preferences}) {
-        // todo:
-        // if (!shared_preferences) {
-        //   pref = '';
-        // }
+        if (!shared_preferences) {
+          pref = '';
+          package['src']['preference_repository'] = package['src']['preference_repository_stub'];
+        }
       }
       deps += pref;
 

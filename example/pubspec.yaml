@@ -20,7 +20,7 @@ dependencies:
 locale_switcher:
   # please note: this is country codes, not language codes!
   flags: [ 'us', 'vn', 'de' ]  # generated package will only have this svg flags
-  # shared_preferences: true # default: true
+  #shared_preferences: false # default: true
 
 dev_dependencies:
   flutter_test:

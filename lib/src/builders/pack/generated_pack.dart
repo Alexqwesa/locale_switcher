@@ -1,4 +1,4 @@
-const package = <String, dynamic>{
+final package = <String, dynamic>{
   'locale_switcher':
       r'''/// # A widget for switching the locale of your application.
 ///
@@ -295,8 +295,9 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import './preference_repository.dart';
 import '../locale_switcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // extension AppLocalizationsExt on BuildContext {
 //   AppLocalizations get l10n => AppLocalizations.of(this);
@@ -346,7 +347,7 @@ abstract class LocaleStore {
   static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
 
   /// If initialized: locale will be stored in [SharedPreferences].
-  static SharedPreferences? _pref;
+  static get _pref => PreferenceRepository.pref;
 
   static final _locale = ValueNotifier<Locale>(const Locale('en'));
   static final _languageCode = ValueNotifier<String>(systemLocale);
@@ -481,7 +482,7 @@ abstract class LocaleStore {
     // > init shared preference
     //
     innerSharedPreferenceName = sharedPreferenceName;
-    _pref = await SharedPreferences.getInstance();
+    await PreferenceRepository.init();
     //
     // > read locale from sharedPreference
     //
@@ -889,6 +890,29 @@ class LocaleSwitcher extends StatelessWidget {
       },
     );
   }
+}
+''',
+    'preference_repository':
+        r'''import 'package:shared_preferences/shared_preferences.dart';
+
+
+class PreferenceRepository {
+  /// If initialized: locale will be stored in [SharedPreferences].
+  static SharedPreferences? pref;
+
+  static Future<void> init() async {
+    pref = await SharedPreferences.getInstance();
+  }
+}
+''',
+    'preference_repository_stub':
+        r'''/// Stub class, in case: shared_preferences: false
+class PreferenceRepository {
+  /// If initialized: locale will be stored in [SharedPreferences].
+  static bool? pref;
+
+  // stub
+  static Future<void> init() async {}
 }
 ''',
     'show_select_locale_dialog': r'''import 'package:flutter/material.dart';

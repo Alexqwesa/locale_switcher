@@ -24,7 +24,7 @@ class PackBuilder implements Builder {
 
     var package = generateMapFromDir(
       'lib/',
-      header: 'const package = <String, dynamic>{',
+      header: 'final package = <String, dynamic>{',
       end: "",
     );
     var srcPack = generateMapFromDir(
@@ -45,7 +45,7 @@ class PackBuilder implements Builder {
 }
 
 String generateMapFromDir(dir,
-    {String end = '};\n', header = 'const mapName = <String, dynamic>{'}) {
+    {String end = '};\n', header = 'final mapName = <String, dynamic>{'}) {
   var newFileContent = header;
   for (final file in [...Directory(dir).listSync()]
     ..sort((a, b) => a.path.compareTo(b.path))) {

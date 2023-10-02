@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.7
+
+* `shared_preferences` is now also optional.
+
 ## 0.9.6
 
 * Initial release, because it share code with package `locale_switcher` - versions 
