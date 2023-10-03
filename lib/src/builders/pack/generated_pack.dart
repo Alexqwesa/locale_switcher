@@ -46,7 +46,7 @@ class LangIconWithToolTip extends StatelessWidget {
 
   /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
   const LangIconWithToolTip.forIconBuilder(
-    this.langCode,
+    this.localeCode,
     bool _, {
     super.key,
     this.toolTipPrefix = '',
@@ -58,7 +58,7 @@ class LangIconWithToolTip extends StatelessWidget {
 
   const LangIconWithToolTip({
     super.key,
-    required this.langCode,
+    required this.localeCode,
     this.toolTipPrefix = '',
     this.radius,
     this.useNLettersInsteadOfIcon = 0,
@@ -66,11 +66,11 @@ class LangIconWithToolTip extends StatelessWidget {
     this.child,
   });
 
-  final String langCode;
+  final String localeCode;
 
   @override
   Widget build(BuildContext context) {
-    if (langCode == showOtherLocales) {
+    if (localeCode == showOtherLocales) {
       return LocaleSwitcher.iconButton(
         useStaticIcon:
             ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
@@ -79,8 +79,8 @@ class LangIconWithToolTip extends StatelessWidget {
       );
     }
 
-    final lang = LocaleStore.languageToCountry[langCode] ??
-        [langCode, 'Unknown language code: $langCode'];
+    final lang = LocaleStore.languageToCountry[localeCode] ??
+        [localeCode, 'Unknown language code: $localeCode'];
 
     var nLetters = useNLettersInsteadOfIcon;
     if (nLetters == 0 &&
@@ -89,7 +89,7 @@ class LangIconWithToolTip extends StatelessWidget {
     }
 
     final Widget defaultChild = child ??
-        ((nLetters > 0 && langCode != LocaleStore.systemLocale)
+        ((nLetters > 0 && localeCode != LocaleStore.systemLocale)
             ? ClipOval(
                 // text
                 child: SizedBox(
@@ -99,7 +99,7 @@ class LangIconWithToolTip extends StatelessWidget {
                       padding: const EdgeInsets.all(2.0),
                       child: FittedBox(
                           child: Text(
-                        langCode.toUpperCase(),
+                        localeCode.toUpperCase(),
                         semanticsLabel: lang[1],
                       )),
                     )),
@@ -175,11 +175,11 @@ class LocaleManager extends StatefulWidget {
   ///
   /// Will automatically update [LocaleManager.locale].
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get languageCode => LocaleStore.languageCode;
+  static ValueNotifier<String> get languageTag => LocaleStore.languageTag;
 
   /// A [ValueListenable] with current locale.
   ///
-  /// Use [LocaleStore.languageCode] to update this notifier.
+  /// Use [LocaleStore.languageTag] to update this notifier.
   static ValueNotifier<Locale> get locale => LocaleStore.locale;
 
   final List<Locale>? _supportedLocales;
@@ -317,18 +317,18 @@ abstract class LocaleStore {
   // todo: use ChangeNotifier to check values.
   // todo: store list of recently used locales
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get languageCode {
+  static ValueNotifier<String> get languageTag {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
       // _locale.value = platformDispatcher.locale;
       // todo: try to read pref here?
     }
-    return _languageCode;
+    return _languageTag;
   }
 
   /// Current [Locale], use [LocaleStore.setLocale] to update it.
   ///
-  /// [LocaleStore.languageCode] contains the real value that stored in [SharedPreferences].
+  /// [LocaleStore.languageTag] contains the real value that stored in [SharedPreferences].
   static ValueNotifier<Locale> get locale {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
@@ -349,7 +349,7 @@ abstract class LocaleStore {
   static get _pref => PreferenceRepository.pref;
 
   static final _locale = ValueNotifier<Locale>(const Locale('en'));
-  static final _languageCode = ValueNotifier<String>(systemLocale);
+  static final _languageTag = ValueNotifier<String>(systemLocale);
 
   static _LocaleObserver? __observer;
 
@@ -426,20 +426,20 @@ abstract class LocaleStore {
   ///
   /// It save locale into [SharedPreferences],
   /// and allow to use [systemLocale].
-  static void _setLocale(String langCode) {
+  static void _setLocale(String localeCode) {
     late Locale newLocale;
-    if (langCode == systemLocale || langCode == '') {
+    if (localeCode == systemLocale || localeCode == '') {
       newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
-      // languageCode.value = systemLocale;
-    } else if (langCode == showOtherLocales) {
+      // languageTag.value = systemLocale;
+    } else if (localeCode == showOtherLocales) {
       newLocale = locale.value; // on error: leave current
       dev.log('Error wrong locale name: $showOtherLocales');
     } else {
-      newLocale = Locale(langCode);
-      // languageCode.value = newLocale.languageCode;
+      newLocale = Locale(localeCode);
+      // languageTag.value = newLocale.languageTag;
     }
 
-    PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
+    PreferenceRepository.write(innerSharedPreferenceName, languageTag.value);
     locale.value = newLocale;
   }
 
@@ -449,8 +449,8 @@ abstract class LocaleStore {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = _LocaleObserver(onChanged: (_) {
         currentSystemLocale =
-            TestablePlatformDispatcher.platformDispatcher.locale.languageCode;
-        if (languageCode.value == systemLocale) {
+            TestablePlatformDispatcher.platformDispatcher.locale.toLanguageTag();
+        if (languageTag.value == systemLocale) {
           locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
         }
       });
@@ -458,21 +458,21 @@ abstract class LocaleStore {
         __observer!,
       );
 
-      // locale and languageCode always in sync:
-      languageCode.addListener(() {
-        if (locale.value.languageCode != languageCode.value) {
-          _setLocale(languageCode.value);
+      // locale and languageTag always in sync:
+      languageTag.addListener(() {
+        if (locale.value.toLanguageTag() != languageTag.value) {
+          _setLocale(languageTag.value);
         }
       });
       locale.addListener(() {
-        if (languageCode.value == systemLocale) {
+        if (languageTag.value == systemLocale) {
           if (locale.value !=
               TestablePlatformDispatcher.platformDispatcher.locale) {
-            languageCode.value = locale.value.languageCode;
+            languageTag.value = locale.value.toLanguageTag();
           }
         } else {
-          if (locale.value.languageCode != languageCode.value) {
-            languageCode.value = locale.value.languageCode;
+          if (locale.value.toLanguageTag() != languageTag.value) {
+            languageTag.value = locale.value.toLanguageTag();
           }
         }
       });
@@ -503,12 +503,12 @@ abstract class LocaleStore {
     //
     // > read locale from sharedPreference
     //
-    String langCode = systemLocale;
+    String localeCode = systemLocale;
     if (_pref != null) {
-      langCode =
-          PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
+      localeCode =
+          PreferenceRepository.read(innerSharedPreferenceName) ?? localeCode;
     }
-    languageCode.value = langCode;
+    languageTag.value = localeCode;
   }
 
   static void setSupportedLocales(
@@ -602,14 +602,14 @@ class LocaleSwitcher extends StatefulWidget {
   /// LocaleSwitcher.custom(
   ///   builder: (locales) {
   ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.languageCode.value,
+  ///       current: LocaleManager.languageTag.value,
   ///       values: locales,
   ///       loading: false,
-  ///       onChanged: (langCode) {
-  ///         if (langCode == showOtherLocales) {
+  ///       onChanged: (localeCode) {
+  ///         if (localeCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.languageCode.value = langCode;
+  ///           LocaleManager.languageTag.value = localeCode;
   ///         }
   ///       },
   ///       iconBuilder: LangIconWithToolTip.forIconBuilder,
@@ -728,14 +728,14 @@ class LocaleSwitcher extends StatefulWidget {
   /// LocaleSwitcher.custom(
   ///   builder: (locales) {
   ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.languageCode.value,
+  ///       current: LocaleManager.languageTag.value,
   ///       values: locales,
   ///       loading: false,
-  ///       onChanged: (langCode) {
-  ///         if (langCode == showOtherLocales) {
+  ///       onChanged: (localeCode) {
+  ///         if (localeCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.languageCode.value = langCode;
+  ///           LocaleManager.languageTag.value = localeCode;
   ///         }
   ///       },
   ///       iconBuilder: LangIconWithToolTip.forIconBuilder,
@@ -868,15 +868,15 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
       if (widget.showOsLocale) LocaleStore.systemLocale,
       ...LocaleStore.supportedLocales
           .take(widget.numberOfShown) // chose most used
-          .map((e) => e.languageCode),
+          .map((e) => e.toLanguageTag()),
     ];
 
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.languageCode,
+      valueListenable: LocaleStore.languageTag,
       builder: (BuildContext context, value, Widget? child) {
         var locales = [...staticLocales];
-        if (!locales.contains(LocaleStore.languageCode.value)) {
-          locales.last = LocaleStore.languageCode.value;
+        if (!locales.contains(LocaleStore.languageTag.value)) {
+          locales.last = LocaleStore.languageTag.value;
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales.add(showOtherLocales);
@@ -939,8 +939,8 @@ class PreferenceRepository {
     return pref?.getString(innerSharedPreferenceName);
   }
 
-  static Future<bool>? write(String innerSharedPreferenceName, languageCode) {
-    return pref?.setString(innerSharedPreferenceName, languageCode);
+  static Future<bool>? write(String innerSharedPreferenceName, languageTag) {
+    return pref?.setString(innerSharedPreferenceName, languageTag);
   }
 
   // stub, only needed for system like: easy_localization
@@ -969,7 +969,7 @@ class PreferenceRepository {
   static String? read(String innerSharedPreferenceName) {
     final context = _lastUsedKey?.currentState?.context;
     if (context != null) {
-      return EasyLocalization.of(context)?.locale.languageCode;
+      return EasyLocalization.of(context)?.locale.toLanguageTag();
     }
 
     // dev.log(
@@ -978,7 +978,7 @@ class PreferenceRepository {
   }
 
   static Future<bool>? write(
-      String innerSharedPreferenceName, languageCode) async {
+      String innerSharedPreferenceName, languageTag) async {
     final context = _lastUsedKey?.currentState?.context;
     if (context != null) {
       await EasyLocalization.of(context)?.setLocale(LocaleStore.locale.value);
@@ -1010,7 +1010,7 @@ class PreferenceRepository {
     return null;
   }
 
-  static Future<bool>? write(String innerSharedPreferenceName, languageCode) {
+  static Future<bool>? write(String innerSharedPreferenceName, languageTag) {
     return null;
   }
 
@@ -1111,14 +1111,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                                 2
                             ? LocaleStore.languageToCountry[e]![2] ??
                                 LangIconWithToolTip(
-                                  langCode: e,
+                                  localeCode: e,
                                   radius: radius,
                                   useNLettersInsteadOfIcon:
                                       useNLettersInsteadOfIcon,
                                   shape: shape,
                                 )
                             : LangIconWithToolTip(
-                                langCode: e,
+                                localeCode: e,
                                 radius: radius,
                                 useNLettersInsteadOfIcon:
                                     useNLettersInsteadOfIcon,
@@ -1131,12 +1131,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<String>(
-      initialSelection: LocaleStore.languageCode.value,
+      initialSelection: LocaleStore.languageTag.value,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
-                langCode: LocaleStore.languageCode.value,
+                localeCode: LocaleStore.languageTag.value,
                 radius: 32,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
@@ -1146,12 +1146,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       // controller: colorController,
       label: const Text('Language'),
       dropdownMenuEntries: localeEntries,
-      onSelected: (String? langCode) {
-        if (langCode != null) {
-          if (langCode == showOtherLocales) {
+      onSelected: (String? localeCode) {
+        if (localeCode != null) {
+          if (localeCode == showOtherLocales) {
             showSelectLocaleDialog(context);
           } else {
-            LocaleManager.languageCode.value = langCode;
+            LocaleManager.languageTag.value = localeCode;
           }
         }
       },
@@ -1182,7 +1182,7 @@ class GridOfLanguages extends StatelessWidget {
   Widget build(BuildContext context) {
     final locales = [
       LocaleStore.systemLocale,
-      ...LocaleStore.supportedLocales.map((e) => e.languageCode),
+      ...LocaleStore.supportedLocales.map((e) => e.toLanguageTag()),
     ];
 
     return GridView(
@@ -1191,13 +1191,13 @@ class GridOfLanguages extends StatelessWidget {
             maxCrossAxisExtent: 200,
           ),
       children: [
-        ...locales.map((langCode) {
-          final lang = LocaleStore.languageToCountry[langCode] ??
-              [langCode, 'Unknown locale'];
+        ...locales.map((localeCode) {
+          final lang = LocaleStore.languageToCountry[localeCode] ??
+              [localeCode, 'Unknown locale'];
           return Card(
             child: InkWell(
               onTap: () {
-                LocaleManager.languageCode.value = langCode;
+                LocaleManager.languageTag.value = localeCode;
                 additionalCallBack?.call(context);
               },
               child: Column(
@@ -1206,7 +1206,7 @@ class GridOfLanguages extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child:
-                          LangIconWithToolTip(langCode: langCode, shape: shape),
+                          LangIconWithToolTip(localeCode: localeCode, shape: shape),
                     ),
                   ),
                   Padding(
@@ -1267,13 +1267,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
                 child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
                         LangIconWithToolTip(
-                          langCode: e,
+                          localeCode: e,
                           radius: curRadius,
                           useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                           shape: shape,
                         )
                     : LangIconWithToolTip(
-                        langCode: e,
+                        localeCode: e,
                         radius: curRadius,
                         useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                         shape: shape,
@@ -1283,13 +1283,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
           );
         },
       ).toList(),
-      selected: {LocaleManager.languageCode.value},
+      selected: {LocaleManager.languageTag.value},
       multiSelectionEnabled: false,
       onSelectionChanged: (Set<String> newSelection) {
         if (newSelection.first == showOtherLocales) {
           showSelectLocaleDialog(context);
         } else {
-          LocaleManager.languageCode.value = newSelection.first;
+          LocaleManager.languageTag.value = newSelection.first;
         }
       },
     );
@@ -1332,13 +1332,13 @@ class SelectLocaleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.languageCode,
+      valueListenable: LocaleStore.languageTag,
       builder: (BuildContext context, value, Widget? child) {
         return IconButton(
           icon: useStaticIcon ??
               LangIconWithToolTip(
                 toolTipPrefix: toolTipPrefix,
-                langCode: LocaleStore.languageCode.value,
+                localeCode: LocaleStore.languageTag.value,
                 radius: radius,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
