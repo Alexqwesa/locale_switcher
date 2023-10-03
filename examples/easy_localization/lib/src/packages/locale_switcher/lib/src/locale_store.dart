@@ -3,9 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import './preference_repository.dart';
-import '../locale_switcher.dart';
+import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/preference_repository.dart';
 
 // extension AppLocalizationsExt on BuildContext {
 //   AppLocalizations get l10n => AppLocalizations.of(this);
@@ -214,7 +213,8 @@ abstract class LocaleStore {
     //
     String langCode = systemLocale;
     if (_pref != null) {
-      langCode = PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
+      langCode =
+          PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
     }
     languageCode.value = langCode;
   }

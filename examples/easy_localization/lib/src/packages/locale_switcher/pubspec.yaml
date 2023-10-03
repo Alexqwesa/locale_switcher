@@ -9,5 +9,5 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.7 
-
+  easy_localization:
 # Supported flags: [us, vn, de] 

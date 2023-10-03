@@ -1,9 +1,9 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+
 import 'generated/locale_keys.g.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,15 +11,15 @@ void main() async {
 
   runApp(
     EasyLocalization(
-        supportedLocales: [
+        supportedLocales: const [
           Locale('en', 'US'),
           Locale('de', 'DE'),
           Locale('vi', 'VN')
         ],
         useOnlyLangCode: true,
-        path:
-            'assets/translations', // <-- change the path of the translation files
-        fallbackLocale: Locale('en', 'US'),
+        path: 'assets/translations',
+        // <-- change the path of the translation files
+        fallbackLocale: const Locale('en', 'US'),
         child: MyApp()),
   );
 }
@@ -32,7 +32,8 @@ class MyApp extends StatelessWidget {
     // ============= THIS 4 LINES ARE REQUIRED =============
     return LocaleManager(
       child: MaterialApp(
-        locale: LocaleManager.locale.value, //context.locale,
+        locale: LocaleManager.locale.value,
+        //context.locale,
         supportedLocales: context.supportedLocales,
         // ...
         localizationsDelegates: context.localizationDelegates,
@@ -56,6 +57,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Localizations.of(context)?.locale;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
