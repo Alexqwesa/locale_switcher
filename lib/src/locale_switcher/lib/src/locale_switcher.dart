@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:locale_switcher_dev/src/preference_repository.dart';
+import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
 import 'locale_switch_sub_widgets/drop_down_menu_language_switch.dart';

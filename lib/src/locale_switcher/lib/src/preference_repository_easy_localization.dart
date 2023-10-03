@@ -2,7 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
-import 'package:locale_switcher_dev/src/locale_store.dart';
+import 'package:locale_switcher/src/locale_store.dart';
 
 /// This class will try to access easy_localization via context.
 class PreferenceRepository {

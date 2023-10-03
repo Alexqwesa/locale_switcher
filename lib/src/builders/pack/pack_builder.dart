@@ -22,18 +22,19 @@ class PackBuilder implements Builder {
 
     print("Writing generated pack ${outFile.path}");
 
+    const packagePath = "lib/src/locale_switcher/";
     var package = generateMapFromDir(
-      'lib/',
+      '${packagePath}lib/',
       header: 'final package = <String, dynamic>{',
       end: "",
     );
     var srcPack = generateMapFromDir(
-      'lib/src/',
+      '${packagePath}lib/src/',
       header: "  'src': <String, dynamic>{",
       end: "",
     );
     var subPack = generateMapFromDir(
-      'lib/src/locale_switch_sub_widgets/',
+      '${packagePath}lib/src/locale_switch_sub_widgets/',
       header: "  'locale_switch_sub_widgets': <String, dynamic>{",
       end: "},\n",
     );
