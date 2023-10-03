@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import '../locale_switcher.dart';
+
+/// Show popup dialog to select Language.
+Future<void> showSelectLocaleDialog(
+  BuildContext context, {
+  String title = 'Select language',
+  double? width,
+  double? height,
+  SliverGridDelegate? gridDelegate,
+}) {
+  final size = MediaQuery.of(context).size;
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: SizedBox(
+          width: width ?? size.width * 0.6,
+          height: height ?? size.height * 0.6,
+          child: LocaleSwitcher.grid(
+            gridDelegate: gridDelegate,
+            additionalCallBack: (context) => Navigator.of(context).pop(),
+          ),
+        ),
+        actions: <Widget>[
+          Row(
+            children: [
+              const Spacer(),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child:
+                    Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              const Spacer(),
+            ],
+          )
+        ],
+      );
+    },
+  );
+}
