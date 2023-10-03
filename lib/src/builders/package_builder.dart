@@ -25,12 +25,12 @@ class PackageBuilder implements Builder {
 
     var path = 'lib/src/packages/locale_switcher/';
     final input = AssetId(buildStep.inputId.package, 'pubspec.yaml');
-    final config = loadYaml(await buildStep.readAsString(input)) as Map?;
+    final pubspecYaml = loadYaml(await buildStep.readAsString(input)) as Map?;
     var deps = '';
     var comments = '';
     var flags = <String>[];
     // final flags = [];
-    if (config case {'locale_switcher': final Map ls}) {
+    if (pubspecYaml case {'locale_switcher': final Map ls}) {
       if (ls case {'flags': final flags_}) {
         if (flags_.runtimeType == YamlList) {
           flags = (flags_ as YamlList)
@@ -70,7 +70,21 @@ class PackageBuilder implements Builder {
     }
     writeMapAsFiles(package, path: join(path, 'lib'));
 
-    final assets = AssetId('locale_switcher_dev',
+    // warning
+
+    if (pubspecYaml case {'dependencies': final Map psDep}) {
+      if (psDep case {'locale_switcher': final psLS}) {
+        if (psLS case {'path': final psLS}) {
+          // good
+        } else {
+          print(
+              "===== Warning: don't forget to use path: for locale_switcher: =====");
+        }
+      }
+    }
+
+    // const packagePath = "lib/src/locale_switcher/";
+    final assets = AssetId('locale_switcher',
         join('lib', 'src', 'generated', 'asset_strings.dart'));
     writeFilteredFile(
       await buildStep.readAsString(assets),
