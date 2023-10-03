@@ -44,8 +44,8 @@ void main() {
       final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
       expect(viFlag, findsNWidgets(5));
       await tester.tap(viFlag.at(1));
-      expect(LocaleManager.locale.value.languageCode, "vi");
-      expect(LocaleStore.languageCode.value, "vi");
+      expect(LocaleManager.locale.value.toLanguageTag(), "vi");
+      expect(LocaleStore.languageTag.value, "vi");
       await tester.pumpAndSettle();
       expect(
           find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
@@ -58,8 +58,8 @@ void main() {
           find.byTooltip(LocaleStore.languageToCountry['system']![1]);
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
-      expect(LocaleManager.locale.value.languageCode, "en");
-      expect(LocaleStore.languageCode.value, "en");
+      expect(LocaleManager.locale.value.toLanguageTag(), "en");
+      expect(LocaleStore.languageTag.value, "en");
 
       await tester.tap(sysFlag.at(1)); // restore ?
     });

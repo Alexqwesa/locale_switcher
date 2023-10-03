@@ -41,14 +41,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                                 2
                             ? LocaleStore.languageToCountry[e]![2] ??
                                 LangIconWithToolTip(
-                                  langCode: e,
+                                  localeCode: e,
                                   radius: radius,
                                   useNLettersInsteadOfIcon:
                                       useNLettersInsteadOfIcon,
                                   shape: shape,
                                 )
                             : LangIconWithToolTip(
-                                langCode: e,
+                                localeCode: e,
                                 radius: radius,
                                 useNLettersInsteadOfIcon:
                                     useNLettersInsteadOfIcon,
@@ -61,12 +61,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<String>(
-      initialSelection: LocaleStore.languageCode.value,
+      initialSelection: LocaleStore.languageTag.value,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
-                langCode: LocaleStore.languageCode.value,
+                localeCode: LocaleStore.languageTag.value,
                 radius: 32,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
@@ -76,12 +76,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       // controller: colorController,
       label: const Text('Language'),
       dropdownMenuEntries: localeEntries,
-      onSelected: (String? langCode) {
-        if (langCode != null) {
-          if (langCode == showOtherLocales) {
+      onSelected: (String? localeCode) {
+        if (localeCode != null) {
+          if (localeCode == showOtherLocales) {
             showSelectLocaleDialog(context);
           } else {
-            LocaleManager.languageCode.value = langCode;
+            LocaleManager.languageTag.value = localeCode;
           }
         }
       },

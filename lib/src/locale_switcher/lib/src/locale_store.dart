@@ -25,18 +25,18 @@ abstract class LocaleStore {
   // todo: use ChangeNotifier to check values.
   // todo: store list of recently used locales
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get languageCode {
+  static ValueNotifier<String> get languageTag {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
       // _locale.value = platformDispatcher.locale;
       // todo: try to read pref here?
     }
-    return _languageCode;
+    return _languageTag;
   }
 
   /// Current [Locale], use [LocaleStore.setLocale] to update it.
   ///
-  /// [LocaleStore.languageCode] contains the real value that stored in [SharedPreferences].
+  /// [LocaleStore.languageTag] contains the real value that stored in [SharedPreferences].
   static ValueNotifier<Locale> get locale {
     if (__observer == null) {
       initSystemLocaleObserverAndLocaleUpdater();
@@ -57,7 +57,7 @@ abstract class LocaleStore {
   static get _pref => PreferenceRepository.pref;
 
   static final _locale = ValueNotifier<Locale>(const Locale('en'));
-  static final _languageCode = ValueNotifier<String>(systemLocale);
+  static final _languageTag = ValueNotifier<String>(systemLocale);
 
   static _LocaleObserver? __observer;
 
@@ -134,20 +134,20 @@ abstract class LocaleStore {
   ///
   /// It save locale into [SharedPreferences],
   /// and allow to use [systemLocale].
-  static void _setLocale(String langCode) {
+  static void _setLocale(String localeCode) {
     late Locale newLocale;
-    if (langCode == systemLocale || langCode == '') {
+    if (localeCode == systemLocale || localeCode == '') {
       newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
-      // languageCode.value = systemLocale;
-    } else if (langCode == showOtherLocales) {
+      // languageTag.value = systemLocale;
+    } else if (localeCode == showOtherLocales) {
       newLocale = locale.value; // on error: leave current
       dev.log('Error wrong locale name: $showOtherLocales');
     } else {
-      newLocale = Locale(langCode);
-      // languageCode.value = newLocale.languageCode;
+      newLocale = Locale(localeCode);
+      // languageTag.value = newLocale.languageTag;
     }
 
-    PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
+    PreferenceRepository.write(innerSharedPreferenceName, languageTag.value);
     locale.value = newLocale;
   }
 
@@ -157,8 +157,8 @@ abstract class LocaleStore {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = _LocaleObserver(onChanged: (_) {
         currentSystemLocale =
-            TestablePlatformDispatcher.platformDispatcher.locale.languageCode;
-        if (languageCode.value == systemLocale) {
+            TestablePlatformDispatcher.platformDispatcher.locale.toLanguageTag();
+        if (languageTag.value == systemLocale) {
           locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
         }
       });
@@ -166,21 +166,21 @@ abstract class LocaleStore {
         __observer!,
       );
 
-      // locale and languageCode always in sync:
-      languageCode.addListener(() {
-        if (locale.value.languageCode != languageCode.value) {
-          _setLocale(languageCode.value);
+      // locale and languageTag always in sync:
+      languageTag.addListener(() {
+        if (locale.value.toLanguageTag() != languageTag.value) {
+          _setLocale(languageTag.value);
         }
       });
       locale.addListener(() {
-        if (languageCode.value == systemLocale) {
+        if (languageTag.value == systemLocale) {
           if (locale.value !=
               TestablePlatformDispatcher.platformDispatcher.locale) {
-            languageCode.value = locale.value.languageCode;
+            languageTag.value = locale.value.toLanguageTag();
           }
         } else {
-          if (locale.value.languageCode != languageCode.value) {
-            languageCode.value = locale.value.languageCode;
+          if (locale.value.toLanguageTag() != languageTag.value) {
+            languageTag.value = locale.value.toLanguageTag();
           }
         }
       });
@@ -211,12 +211,12 @@ abstract class LocaleStore {
     //
     // > read locale from sharedPreference
     //
-    String langCode = systemLocale;
+    String localeCode = systemLocale;
     if (_pref != null) {
-      langCode =
-          PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
+      localeCode =
+          PreferenceRepository.read(innerSharedPreferenceName) ?? localeCode;
     }
-    languageCode.value = langCode;
+    languageTag.value = localeCode;
   }
 
   static void setSupportedLocales(

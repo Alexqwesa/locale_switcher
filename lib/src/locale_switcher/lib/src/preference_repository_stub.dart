@@ -12,7 +12,7 @@ class PreferenceRepository {
     return null;
   }
 
-  static Future<bool>? write(String innerSharedPreferenceName, languageCode) {
+  static Future<bool>? write(String innerSharedPreferenceName, languageTag) {
     return null;
   }
 
