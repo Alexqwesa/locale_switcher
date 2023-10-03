@@ -1,10 +1,7 @@
-// ignore_for_file: avoid_relative_lib_imports
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:locale_switcher/src/locale_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../lib/src/locale_store.dart';
 
 void main() {
   // setUpAll(() async {});

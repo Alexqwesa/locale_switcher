@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../locale_switcher.dart';
-import '../locale_store.dart';
+import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/locale_store.dart';
 
 /// IconButton to show and select a language.
 ///

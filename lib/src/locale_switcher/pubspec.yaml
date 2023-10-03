@@ -1,4 +1,4 @@
-name: locale_switcher_dev
+name: locale_switcher
 description: A minimalistic widget for switching the locale of your application with 4 lines of code.
 repository: https://github.com/Alexqwesa/locale_switcher
 homepage: https://github.com/Alexqwesa/locale_switcher
@@ -27,8 +27,6 @@ dev_dependencies: # for tests and examples
   flutter_localizations: #
     sdk: flutter
   flutter_svg: ^2.0.7
-  locale_switcher:
-    path: lib/src/locale_switcher
   intl:
   shared_preferences: ^2.2.1
 

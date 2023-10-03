@@ -1,15 +1,21 @@
-// ignore_for_file: avoid_relative_lib_imports
+// This is a basic Flutter widget test.
+//
+// To perform an interaction with a widget in your test, use the WidgetTester
+// utility in the flutter_test package. For example, you can send tap and scroll
+// gestures. You can also use WidgetTester to find child widgets in the widget
+// tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/locale_store.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: avoid_relative_lib_imports
 import '../example/lib/main_with_counter.dart';
-import '../lib/locale_switcher.dart';
-import '../lib/src/generated/asset_strings.dart';
-import '../lib/src/locale_store.dart';
-import '../lib/src/locale_switch_sub_widgets/grid_of_languages.dart';
-import '../lib/src/locale_switch_sub_widgets/select_locale_button.dart';
 
 void main() {
   group('Material tests', () {

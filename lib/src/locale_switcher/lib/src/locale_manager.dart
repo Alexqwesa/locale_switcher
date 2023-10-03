@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'locale_store.dart';
+import 'package:locale_switcher/src/locale_store.dart';
 
 // todo:
 /// An alternative to LocaleManager,
