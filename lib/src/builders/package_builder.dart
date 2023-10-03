@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 
@@ -74,7 +76,7 @@ class PackageBuilder implements Builder {
 
     if (pubspecYaml case {'dependencies': final Map psDep}) {
       if (psDep case {'locale_switcher': final psLS}) {
-        if (psLS case {'path': final psLS}) {
+        if (psLS case {'path': final _}) {
           // good
         } else {
           print(
