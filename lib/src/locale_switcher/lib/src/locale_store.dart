@@ -54,11 +54,6 @@ abstract class LocaleStore {
   /// List of supported locales, setup by [LocaleManager]
   static List<Locale> supportedLocales = [];
 
-  /// A name of key used to store locale in [SharedPreferences].
-  ///
-  /// Set it via [LocaleManager].[sharedPreferenceName]
-  static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
-
   /// If initialized: locale will be stored in [SharedPreferences].
   static get _pref => PreferenceRepository.pref;
 
@@ -66,6 +61,68 @@ abstract class LocaleStore {
   static final _languageCode = ValueNotifier<String>(systemLocale);
 
   static _LocaleObserver? __observer;
+
+  /// Set locale with checks.
+  ///
+  /// It save locale into [SharedPreferences],
+  /// and allow to use [systemLocale].
+  static void _setLocale(String langCode) {
+    late Locale newLocale;
+    if (langCode == systemLocale || langCode == '') {
+      newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
+      // languageCode.value = systemLocale;
+    } else if (langCode == showOtherLocales) {
+      newLocale = locale.value; // on error: leave current
+      dev.log('Error wrong locale name: $showOtherLocales');
+    } else {
+      newLocale = Locale(langCode);
+      // languageCode.value = newLocale.toString();
+    }
+
+    PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
+    locale.value = newLocale;
+  }
+
+  // AppLocalizations get tr => lookupAppLocalizations(locale);
+  static void initSystemLocaleObserverAndLocaleUpdater() {
+    if (__observer == null) {
+      WidgetsFlutterBinding.ensureInitialized();
+      __observer = _LocaleObserver(onChanged: (_) {
+        currentSystemLocale =
+            TestablePlatformDispatcher.platformDispatcher.locale.toString();
+        if (languageCode.value == systemLocale) {
+          locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
+        }
+      });
+      WidgetsBinding.instance.addObserver(
+        __observer!,
+      );
+
+      // locale and languageCode always in sync:
+      languageCode.addListener(() {
+        if (locale.value.toString() != languageCode.value) {
+          _setLocale(languageCode.value);
+        }
+      });
+      locale.addListener(() {
+        if (languageCode.value == systemLocale) {
+          if (locale.value !=
+              TestablePlatformDispatcher.platformDispatcher.locale) {
+            languageCode.value = locale.value.toString();
+          }
+        } else {
+          if (locale.value.toString() != languageCode.value) {
+            languageCode.value = locale.value.toString();
+          }
+        }
+      });
+    }
+  }
+
+  /// A name of key used to store locale in [SharedPreferences].
+  ///
+  /// Set it via [LocaleManager].[sharedPreferenceName]
+  static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
 
   /// Map flag to country.
   /// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
@@ -135,63 +192,6 @@ abstract class LocaleStore {
     // Norwegian
     'no': ['NO', 'Norsk'],
   };
-
-  /// Set locale with checks.
-  ///
-  /// It save locale into [SharedPreferences],
-  /// and allow to use [systemLocale].
-  static void _setLocale(String langCode) {
-    late Locale newLocale;
-    if (langCode == systemLocale || langCode == '') {
-      newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
-      // languageCode.value = systemLocale;
-    } else if (langCode == showOtherLocales) {
-      newLocale = locale.value; // on error: leave current
-      dev.log('Error wrong locale name: $showOtherLocales');
-    } else {
-      newLocale = Locale(langCode);
-      // languageCode.value = newLocale.toString();
-    }
-
-    PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
-    locale.value = newLocale;
-  }
-
-  // AppLocalizations get tr => lookupAppLocalizations(locale);
-  static void initSystemLocaleObserverAndLocaleUpdater() {
-    if (__observer == null) {
-      WidgetsFlutterBinding.ensureInitialized();
-      __observer = _LocaleObserver(onChanged: (_) {
-        currentSystemLocale =
-            TestablePlatformDispatcher.platformDispatcher.locale.toString();
-        if (languageCode.value == systemLocale) {
-          locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
-        }
-      });
-      WidgetsBinding.instance.addObserver(
-        __observer!,
-      );
-
-      // locale and languageCode always in sync:
-      languageCode.addListener(() {
-        if (locale.value.toString() != languageCode.value) {
-          _setLocale(languageCode.value);
-        }
-      });
-      locale.addListener(() {
-        if (languageCode.value == systemLocale) {
-          if (locale.value !=
-              TestablePlatformDispatcher.platformDispatcher.locale) {
-            languageCode.value = locale.value.toString();
-          }
-        } else {
-          if (locale.value.toString() != languageCode.value) {
-            languageCode.value = locale.value.toString();
-          }
-        }
-      });
-    }
-  }
 
   /// Create and init [LocaleStore] class.
   ///
