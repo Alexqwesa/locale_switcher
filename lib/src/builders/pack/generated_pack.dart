@@ -9,7 +9,7 @@ export 'package:locale_switcher/src/locale_manager.dart';
 export 'package:locale_switcher/src/locale_switcher.dart';
 export 'package:locale_switcher/src/show_select_locale_dialog.dart';
 
-// export 'package:locale_switcher/src/locale_store.dart';
+export 'package:locale_switcher/src/locale_store.dart' show StringToLocale;
 ''',
   'src': <String, dynamic>{
     'lang_icon_with_tool_tip': r'''import 'package:flutter/material.dart';
@@ -307,6 +307,11 @@ import 'package:locale_switcher/src/preference_repository.dart';
 //   AppLocalizations get tr => lookupAppLocalizations(this);
 // }
 
+// todo: use class LocaleNotifier to store supportedLocale in array with additional two slots for
+// system and showOther
+// store one index
+// and provide access to languageCode and locale
+
 abstract class LocaleStore {
   /// A special locale name - app will use `system` default locale.
   static const String systemLocale = 'system';
@@ -436,7 +441,7 @@ abstract class LocaleStore {
       dev.log('Error wrong locale name: $showOtherLocales');
     } else {
       newLocale = Locale(langCode);
-      // languageCode.value = newLocale.languageCode;
+      // languageCode.value = newLocale.toString();
     }
 
     PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
@@ -449,7 +454,7 @@ abstract class LocaleStore {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = _LocaleObserver(onChanged: (_) {
         currentSystemLocale =
-            TestablePlatformDispatcher.platformDispatcher.locale.languageCode;
+            TestablePlatformDispatcher.platformDispatcher.locale.toString();
         if (languageCode.value == systemLocale) {
           locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
         }
@@ -460,7 +465,7 @@ abstract class LocaleStore {
 
       // locale and languageCode always in sync:
       languageCode.addListener(() {
-        if (locale.value.languageCode != languageCode.value) {
+        if (locale.value.toString() != languageCode.value) {
           _setLocale(languageCode.value);
         }
       });
@@ -468,11 +473,11 @@ abstract class LocaleStore {
         if (languageCode.value == systemLocale) {
           if (locale.value !=
               TestablePlatformDispatcher.platformDispatcher.locale) {
-            languageCode.value = locale.value.languageCode;
+            languageCode.value = locale.value.toString();
           }
         } else {
-          if (locale.value.languageCode != languageCode.value) {
-            languageCode.value = locale.value.languageCode;
+          if (locale.value.toString() != languageCode.value) {
+            languageCode.value = locale.value.toString();
           }
         }
       });
@@ -541,6 +546,30 @@ class _LocaleObserver extends WidgetsBindingObserver {
   @override
   void didChangeLocales(List<Locale>? locales) {
     onChanged(locales);
+  }
+}
+
+extension StringToLocale on String {
+  /// Convert string to [Locale] object
+  Locale toLocale({String separator = '_'}) {
+    final localeList = split(separator);
+    switch (localeList.length) {
+      case 2:
+        return localeList.last.length == 4 // scriptCode length is 4
+            ? Locale.fromSubtags(
+                languageCode: localeList.first,
+                scriptCode: localeList.last,
+              )
+            : Locale(localeList.first, localeList.last);
+      case 3:
+        return Locale.fromSubtags(
+          languageCode: localeList.first,
+          scriptCode: localeList[1],
+          countryCode: localeList.last,
+        );
+      default:
+        return Locale(localeList.first);
+    }
   }
 }
 ''',
@@ -868,7 +897,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
       if (widget.showOsLocale) LocaleStore.systemLocale,
       ...LocaleStore.supportedLocales
           .take(widget.numberOfShown) // chose most used
-          .map((e) => e.languageCode),
+          .map((e) => e.toString()),
     ];
 
     return ValueListenableBuilder(
