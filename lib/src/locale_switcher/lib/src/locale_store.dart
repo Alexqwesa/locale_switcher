@@ -1,7 +1,3 @@
-import 'dart:developer' as dev;
-import 'dart:ui';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
@@ -21,41 +17,37 @@ import 'package:locale_switcher/src/preference_repository.dart';
 // and provide access to languageCode and locale
 
 abstract class LocaleStore {
-  /// A special locale name - app will use `system` default locale.
+  /// A special locale name to use system locale.
   static const String systemLocale = 'system';
-
-  /// Auto-updatable value, auto-update started after first access to [locale].
-  static String currentSystemLocale = 'en';
 
   // todo: use ChangeNotifier to check values.
   // todo: store list of recently used locales
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get languageCode {
-    if (__observer == null) {
-      initSystemLocaleObserverAndLocaleUpdater();
-      // _locale.value = platformDispatcher.locale;
-      // todo: try to read pref here?
-    }
-    return _languageCode;
-  }
+  // static ValueNotifier<String> get languageCode {
+  //   if (__observer == null) {
+  //     initSystemLocaleObserverAndLocaleUpdater();
+  //     // todo: try to read pref here?
+  //   }
+  //   return _languageCode;
+  // }
 
   /// Current [Locale], use [LocaleStore.setLocale] to update it.
   ///
-  /// [LocaleStore.languageCode] contains the real value that stored in [SharedPreferences].
-  static ValueNotifier<Locale> get locale {
-    if (__observer == null) {
-      initSystemLocaleObserverAndLocaleUpdater();
-      _locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
-    }
-    return _locale;
-  }
+  /// [LocaleStore.localeIndex] contains the real value that stored in [SharedPreferences].
+  // static ValueNotifier<Locale> get locale {
+  //   if (__observer == null) {
+  //     initSystemLocaleObserverAndLocaleUpdater();
+  //     _locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
+  //   }
+  //   return _locale;
+  // }
 
   /// List of supported locales.
   ///
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
   static List<Locale> supportedLocales = [];
 
-  /// List of supported locales.
+  /// List of helpers based on supported locales - [LocaleNameFlag].
   ///
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
   static LocaleNameFlagList localeNameFlags =
@@ -64,67 +56,33 @@ abstract class LocaleStore {
   /// If initialized: locale will be stored in [SharedPreferences].
   static get _pref => PreferenceRepository.pref;
 
-  static final _locale = ValueNotifier<Locale>(const Locale('en'));
-  static final _languageCode = ValueNotifier<String>(systemLocale);
-
-  static _LocaleObserver? __observer;
+  // static final _locale = ValueNotifier<Locale>(const Locale('en'));
+  // static final _languageCode = ValueNotifier<String>(systemLocale);
+  //
+  // static LocaleObserver? __observer;
 
   /// Set locale with checks.
   ///
   /// It save locale into [SharedPreferences],
   /// and allow to use [systemLocale].
-  static void _setLocale(String langCode) {
-    late Locale newLocale;
-    if (langCode == systemLocale || langCode == '') {
-      newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
-      // languageCode.value = systemLocale;
-    } else if (langCode == showOtherLocales) {
-      newLocale = locale.value; // on error: leave current
-      dev.log('Error wrong locale name: $showOtherLocales');
-    } else {
-      newLocale = Locale(langCode);
-      // languageCode.value = newLocale.toString();
-    }
-
-    PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
-    locale.value = newLocale;
-  }
+  // static void _setLocale(String langCode) {
+  //   late Locale newLocale;
+  //   if (langCode == systemLocale || langCode == '') {
+  //     newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
+  //     // languageCode.value = systemLocale;
+  //   } else if (langCode == showOtherLocales) {
+  //     newLocale = locale.value; // on error: leave current
+  //     dev.log('Error wrong locale name: $showOtherLocales');
+  //   } else {
+  //     newLocale = Locale(langCode);
+  //     // languageCode.value = newLocale.toString();
+  //   }
+  //
+  //   PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
+  //   locale.value = newLocale;
+  // }
 
   // AppLocalizations get tr => lookupAppLocalizations(locale);
-  static void initSystemLocaleObserverAndLocaleUpdater() {
-    if (__observer == null) {
-      WidgetsFlutterBinding.ensureInitialized();
-      __observer = _LocaleObserver(onChanged: (_) {
-        currentSystemLocale =
-            TestablePlatformDispatcher.platformDispatcher.locale.toString();
-        if (languageCode.value == systemLocale) {
-          locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
-        }
-      });
-      WidgetsBinding.instance.addObserver(
-        __observer!,
-      );
-
-      // locale and languageCode always in sync:
-      languageCode.addListener(() {
-        if (locale.value.toString() != languageCode.value) {
-          _setLocale(languageCode.value);
-        }
-      });
-      locale.addListener(() {
-        if (languageCode.value == systemLocale) {
-          if (locale.value !=
-              TestablePlatformDispatcher.platformDispatcher.locale) {
-            languageCode.value = locale.value.toString();
-          }
-        } else {
-          if (locale.value.toString() != languageCode.value) {
-            languageCode.value = locale.value.toString();
-          }
-        }
-      });
-    }
-  }
 
   /// A name of key used to store locale in [SharedPreferences].
   ///
@@ -200,36 +158,34 @@ abstract class LocaleStore {
     'no': ['NO', 'Norsk'],
   };
 
-  /// Create and init [LocaleStore] class.
+  /// Init [LocaleStore] class.
   ///
-  /// - It also add observer for changes in system locale,
-  /// - and init [SharedPreferences].
+  /// - It also init and read [SharedPreferences] (if available).
   static Future<void> init({
     List<Locale>? supportedLocales,
-    LocalizationsDelegate? delegate,
+    // LocalizationsDelegate? delegate,
     sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
   }) async {
-    if (_pref != null) {
-      throw UnsupportedError('You cannot initialize class LocaleStore twice!');
+    if (_pref == null) {
+      //
+      // > init inner vars
+      //
+      setSupportedLocales(supportedLocales);
+      //
+      // > init shared preference
+      //
+      innerSharedPreferenceName = sharedPreferenceName;
+      await PreferenceRepository.init();
+      //
+      // > read locale from sharedPreference
+      //
+      String langCode = systemLocale;
+      if (_pref != null) {
+        langCode =
+            PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
+        CurrentLocale.tryToSetLocale(langCode);
+      }
     }
-    //
-    // > init inner vars
-    //
-    setSupportedLocales(supportedLocales);
-    //
-    // > init shared preference
-    //
-    innerSharedPreferenceName = sharedPreferenceName;
-    await PreferenceRepository.init();
-    //
-    // > read locale from sharedPreference
-    //
-    String langCode = systemLocale;
-    if (_pref != null) {
-      langCode =
-          PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
-    }
-    languageCode.value = langCode;
   }
 
   static void setSupportedLocales(
@@ -239,29 +195,5 @@ abstract class LocaleStore {
       LocaleStore.supportedLocales = supportedLocales;
       LocaleStore.localeNameFlags = LocaleNameFlagList(supportedLocales);
     }
-  }
-}
-
-class TestablePlatformDispatcher {
-  static PlatformDispatcher? overridePlatformDispatcher;
-
-  static PlatformDispatcher get platformDispatcher {
-    if (overridePlatformDispatcher != null) {
-      return overridePlatformDispatcher!;
-    } else {
-      return WidgetsBinding.instance.platformDispatcher;
-    }
-  }
-}
-
-/// Observer used to notify the caller when the locale changes.
-class _LocaleObserver extends WidgetsBindingObserver {
-  final void Function(List<Locale>? locales) onChanged;
-
-  _LocaleObserver({required this.onChanged});
-
-  @override
-  void didChangeLocales(List<Locale>? locales) {
-    onChanged(locales);
   }
 }

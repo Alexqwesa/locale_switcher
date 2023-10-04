@@ -2,41 +2,70 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/locale_observable.dart';
 import 'package:locale_switcher/src/locale_store.dart';
+import 'package:locale_switcher/src/preference_repository.dart';
 
-class _LocaleNameList {
-  static final _index = ValueNotifier(0);
+class _CurrentSystemLocale {
+  static LocaleObserver? __observer;
 
+  /// Listen on system locale.
+  static ValueNotifier<Locale> get currentSystemLocale {
+    initSystemLocaleObserverAndLocaleUpdater();
+    return __currentSystemLocale;
+  }
 
+  static final __currentSystemLocale = ValueNotifier(const Locale('en'));
+
+  static void initSystemLocaleObserverAndLocaleUpdater() {
+    if (__observer == null) {
+      WidgetsFlutterBinding.ensureInitialized();
+      __observer = LocaleObserver(onChanged: (_) {
+        __currentSystemLocale.value =
+            TestablePlatformDispatcher.platformDispatcher.locale;
+      });
+      WidgetsBinding.instance.addObserver(
+        __observer!,
+      );
+    }
+  }
 }
 
-// supportedLocalesWithFlags
-// current locale
-// with Notifier?
-/// Generate [LocaleNameFlag]s for supportedLocales.
-///
-/// [supportedLocales] should be the same as [MaterialApp].supportedLocales
-class LocaleNameFlagList extends _LocaleNameList
-    with ListMixin<LocaleNameFlag> {
-  final List<Locale> supportedLocales;
-  final locales = <Locale?>[];
-  final names = <String>[];
+abstract class CurrentLocale extends _CurrentSystemLocale {
+  static late final ValueNotifier<int> _allNotifiers;
 
-// final flags = <Widget?>[];
-
-  final entries = <LocaleNameFlag>[];
-
-  int get index => _LocaleNameList._index.value;
-
-  set index(int value) {
-    if (value < length && value >= 0) {
-      _LocaleNameList._index.value = value;
+  /// Listen on system locale.
+  static ValueNotifier<int> get allNotifiers {
+    try {
+      return _allNotifiers;
+    } catch (e) {
+      _allNotifiers = ValueNotifier<int>(0);
+      notifier.addListener(() => _allNotifiers.value++);
+      _CurrentSystemLocale.currentSystemLocale
+          .addListener(() => _allNotifiers.value++);
+      return _allNotifiers;
     }
   }
 
-  LocaleNameFlag get current => LocaleStore.localeNameFlags[index];
+  static LocaleNameFlagList get store => LocaleStore.localeNameFlags;
 
-  set current(LocaleNameFlag value) {
+  static ValueNotifier<int> get notifier => _index;
+  static final _index = ValueNotifier(0);
+
+  static int get index => _index.value;
+
+  static set index(int value) {
+    if (value < LocaleStore.localeNameFlags.length && value >= 0) {
+      _index.value = value;
+
+      PreferenceRepository.write(
+          LocaleStore.innerSharedPreferenceName, current.name);
+    }
+  }
+
+  static LocaleNameFlag get current => LocaleStore.localeNameFlags[index];
+
+  static set current(LocaleNameFlag value) {
     var idx = LocaleStore.localeNameFlags.indexOf(value);
     if (idx >= 0 && idx < LocaleStore.localeNameFlags.length) {
       index = idx;
@@ -48,15 +77,58 @@ class LocaleNameFlagList extends _LocaleNameList
     }
   }
 
+  static LocaleNameFlag? byName(String name) {
+    if (store.names.contains(name)) {
+      return store.entries[store.names.indexOf(name)];
+    }
+    return null;
+  }
+
+  static LocaleNameFlag? byLocale(Locale locale) {
+    if (store.locales.contains(locale)) {
+      return store.entries[store.locales.indexOf(locale)];
+    }
+    return null;
+  }
+
+  // todo try more
+  // read all user locales? similarity check?
+  static void tryToSetLocale(String langCode) {
+    var loc = byName(langCode);
+    if (loc != null) {
+      current = loc; //??  byName(LocaleStore.systemLocale) ;
+    }
+  }
+
+  static Widget get flagForOtherLocalesButton => LocaleSwitcher.iconButton(
+        useStaticIcon:
+            ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
+                ? LocaleStore.languageToCountry[showOtherLocales]![2]
+                : const Icon(Icons.expand_more),
+      );
+}
+
+// supportedLocalesWithFlags
+// current locale
+// with Notifier?
+/// A list of generated [LocaleNameFlag]s for supportedLocales.
+///
+/// [supportedLocales] should be the same as [MaterialApp].supportedLocales
+class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
+  final List<Locale> supportedLocales;
+  final locales = <Locale?>[];
+  final names = <String>[];
+
+// final flags = <Widget?>[];
+
+  final entries = <LocaleNameFlag>[];
+
   LocaleNameFlagList(this.supportedLocales, {bool showOsLocale = true}) {
     if (showOsLocale) {
       locales.add(null);
       names.add(LocaleStore.systemLocale);
       entries.add(
-        LocaleNameFlag(
-            name: names.last,
-            locale: locales.last,
-            flag: findFlagFor(LocaleStore.systemLocale)),
+        SystemLocaleNameFlag(flag: findFlagFor(LocaleStore.systemLocale)),
       );
     }
 
@@ -91,22 +163,12 @@ class LocaleNameFlagList extends _LocaleNameList
     }
   }
 
-  LocaleNameFlag? byName(String name) {
-    if (names.contains(name)) {
-      return entries[names.indexOf(name)];
-    }
-    return null;
-  }
+  bool replaceLast({String? str, LocaleNameFlag? localeName}) {
+    LocaleNameFlag? entry = localeName;
 
-  LocaleNameFlag? byLocale(Locale locale) {
-    if (locales.contains(locale)) {
-      return entries[locales.indexOf(locale)];
+    if (str != null) {
+      entry ??= CurrentLocale.byName(str);
     }
-    return null;
-  }
-
-  bool replaceLast(String str) {
-    final entry = LocaleStore.localeNameFlags.byName(str);
     if (entry != null) {
       locales.last = entry.locale;
       names.last = entry.name;
@@ -121,13 +183,6 @@ class LocaleNameFlagList extends _LocaleNameList
 //     name: names.last, locale: locales.last, flag: flags.last);
   }
 
-  static Widget get flagForOtherLocalesButton => LocaleSwitcher.iconButton(
-        useStaticIcon:
-            ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
-                ? LocaleStore.languageToCountry[showOtherLocales]![2]
-                : const Icon(Icons.expand_more),
-      );
-
   /// Will search [LocaleStore.localeNameFlags] for name and add it.
   void addName(String str) {
     if (str == showOtherLocales) {
@@ -137,10 +192,10 @@ class LocaleNameFlagList extends _LocaleNameList
         LocaleNameFlag(
             name: names.last,
             locale: locales.last,
-            flag: flagForOtherLocalesButton),
+            flag: CurrentLocale.flagForOtherLocalesButton),
       );
     } else {
-      final entry = LocaleStore.localeNameFlags.byName(str);
+      final entry = CurrentLocale.byName(str);
       if (entry != null) {
         locales.add(entry.locale);
         names.add(entry.name);
@@ -148,9 +203,6 @@ class LocaleNameFlagList extends _LocaleNameList
       }
     }
   }
-
-// @override
-// Iterable<T> map<T>(T Function(LocaleNameFlag e) f) => entries.map<T>(f);
 
   @override
   int get length => entries.length;
@@ -194,7 +246,7 @@ class LocaleNameFlag {
         _language = language;
 
   Widget? get flag {
-// todo not null
+    // todo not null
     _flag ??= locale?.flag() ?? findFlagFor(name);
     return _flag;
   }
@@ -205,4 +257,18 @@ class LocaleNameFlag {
         '';
     return _language!;
   }
+}
+
+/// Just record of [Locale], it's name and flag.
+class SystemLocaleNameFlag extends LocaleNameFlag {
+  @override
+  Locale get locale => _CurrentSystemLocale.currentSystemLocale.value;
+
+  ValueNotifier<Locale> get notifier =>
+      _CurrentSystemLocale.currentSystemLocale;
+
+  SystemLocaleNameFlag({
+    super.flag,
+    super.language,
+  }) : super(name: LocaleStore.systemLocale);
 }

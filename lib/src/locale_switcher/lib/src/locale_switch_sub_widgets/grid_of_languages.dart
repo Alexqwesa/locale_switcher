@@ -18,10 +18,7 @@ class GridOfLanguages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locales = [
-      LocaleStore.systemLocale,
-      ...LocaleStore.supportedLocales.map((e) => e.languageCode),
-    ];
+    final locales = LocaleStore.localeNameFlags;
 
     return GridView(
       gridDelegate: gridDelegate ??
@@ -35,7 +32,7 @@ class GridOfLanguages extends StatelessWidget {
           return Card(
             child: InkWell(
               onTap: () {
-                LocaleManager.languageCode.value = langCode;
+                CurrentLocale.current = langCode;
                 additionalCallBack?.call(context);
               },
               child: Column(
@@ -44,7 +41,7 @@ class GridOfLanguages extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child:
-                          LangIconWithToolTip(langCode: langCode, shape: shape),
+                          LangIconWithToolTip(localeNameFlag: langCode, shape: shape),
                     ),
                   ),
                   Padding(

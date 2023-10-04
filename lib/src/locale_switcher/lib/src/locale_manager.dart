@@ -39,18 +39,18 @@ class LocaleManager extends StatefulWidget {
   /// (first two options are required, third is optional)
   final Map<String, List>? reassignFlags;
 
-  /// [ValueNotifier] with current language code, could be 'system'.
-  ///
-  /// Will automatically update [LocaleManager.locale].
-  /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  static ValueNotifier<String> get languageCode => LocaleStore.languageCode;
+  /// [ValueNotifier] with index of [localeNameFlags] currently used.
+  static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
 
+  /// A list of generated [LocaleNameFlag]s for supportedLocales.
+  ///
+  /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
   static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
 
   /// A [ValueListenable] with current locale.
   ///
-  /// Use [LocaleStore.languageCode] to update this notifier.
-  static ValueNotifier<Locale> get locale => LocaleStore.locale;
+  /// Use [LocaleStore.localeIndex] to update this notifier.
+  // static ValueNotifier<Locale> get locale => LocaleStore.locale;
 
   final List<Locale>? _supportedLocales;
 
@@ -71,10 +71,19 @@ class LocaleManager extends StatefulWidget {
     /// ```dart
     /// Widget build(BuildContext context) {
     /// return LocaleManager(
-    ///   supportedLocales: AppLocalizations.supportedLocales,
+    ///     child: MaterialApp(
+    ///       locale: CurrentLocale.current.locale,
+    ///       supportedLocales: AppLocalizations.supportedLocales,
+    /// ```
+    ///
+    /// Another Example:
+    /// ```dart
+    /// Widget build(BuildContext context) {
+    /// return LocaleManager(
+    ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
     ///   child: SomeOtherWidget(
     ///     child: MaterialApp(
-    ///       locale: LocaleManager.locale.value,
+    ///       locale: CurrentLocale.current.locale,
     ///       supportedLocales: AppLocalizations.supportedLocales,
     /// ```
     List<Locale>? supportedLocales,
@@ -92,9 +101,9 @@ class _LocaleManagerState extends State<LocaleManager> {
         });
       });
 
-  /// init [LocaleStore]'s delegate and supportedLocales
+  /// init [LocaleStore]'s supportedLocales
   void _readAppLocalization(Widget child) {
-    LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
+    // LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
     if (widget._supportedLocales != null) {
       LocaleStore.setSupportedLocales(widget._supportedLocales!);
     } else if (child.runtimeType == MaterialApp) {
@@ -135,7 +144,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
     super.initState();
 
-    LocaleStore.locale.addListener(updateParent);
+    CurrentLocale.allNotifiers.addListener(updateParent);
 
     if (!LocaleManager.isInitialized) {
       if (widget.storeLocale) {
@@ -150,7 +159,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
   @override
   void dispose() {
-    LocaleStore.locale.removeListener(updateParent);
+    CurrentLocale.allNotifiers.removeListener(updateParent);
     super.dispose();
   }
 

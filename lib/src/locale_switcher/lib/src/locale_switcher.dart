@@ -291,7 +291,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
 
     PreferenceRepository.sendGlobalKeyToRepository(widget.key as GlobalKey);
     // check: is it inited?
-    if (LocaleStore.supportedLocales.isEmpty) {
+    if (LocaleStore.supportedLocales.isEmpty) { // todo: use CurrentLocale
       // assume it was not inited
       final child = context.findAncestorWidgetOfExactType<MaterialApp>() ??
           context.findAncestorWidgetOfExactType<CupertinoApp>();
@@ -345,11 +345,11 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
     );
 
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.languageCode,
-      builder: (BuildContext context, value, Widget? child) {
+      valueListenable: CurrentLocale.notifier,
+      builder: (BuildContext context, index, Widget? child) {
         var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
-        if (!locales.names.contains(LocaleStore.languageCode.value)) {
-          locales.replaceLast(LocaleStore.languageCode.value);
+        if (!locales.names.contains(CurrentLocale.current.name)) {
+          locales.replaceLast(localeName: CurrentLocale.current);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales.addName(showOtherLocales);
