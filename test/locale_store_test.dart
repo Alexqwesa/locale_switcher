@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
+import 'package:locale_switcher_dev/src/locale_switcher/lib/src/locale_observable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -31,8 +33,8 @@ void main() {
     // final enLoc = const Locale('de').tr;
 
     // test start with english locale
-    expect(LocaleStore.languageCode.value, "de");
-    expect(LocaleStore.locale.value, deLoc);
+    expect(CurrentLocale.current.name, "de");
+    expect(CurrentLocale.current.locale, deLoc);
   });
 
   test('it monitor system locale changes', () async {
@@ -46,15 +48,15 @@ void main() {
 
     // test start with english locale
     const deLoc = Locale('de');
-    expect(LocaleStore.languageCode.value, "de");
-    expect(LocaleStore.locale.value, deLoc);
+    expect(CurrentLocale.current.name, "de");
+    expect(CurrentLocale.current.locale, deLoc);
 
-    LocaleStore.languageCode.value = LocaleStore.systemLocale;
-    expect(LocaleStore.languageCode.value, "system");
-    expect(LocaleStore.locale.value.languageCode, 'vi');
+    CurrentLocale.current = CurrentLocale.byName(LocaleStore.systemLocale)!;
+    expect(CurrentLocale.current.name, "system");
+    expect(CurrentLocale.current.locale!.languageCode, 'vi');
 
     platform.localeTestValue = const Locale('es');
-    expect(LocaleStore.languageCode.value, "system");
-    expect(LocaleStore.locale.value.languageCode, 'es');
+    expect(CurrentLocale.current.name, "system");
+    expect(CurrentLocale.current.locale!.languageCode, 'es');
   });
 }
