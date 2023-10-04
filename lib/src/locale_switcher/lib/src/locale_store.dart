@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 // extension AppLocalizationsExt on BuildContext {
@@ -51,8 +50,16 @@ abstract class LocaleStore {
     return _locale;
   }
 
-  /// List of supported locales, setup by [LocaleManager]
+  /// List of supported locales.
+  ///
+  /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
   static List<Locale> supportedLocales = [];
+
+  /// List of supported locales.
+  ///
+  /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
+  static LocaleNameFlagList localeNameFlags =
+      LocaleNameFlagList(<Locale>[const Locale('en', 'US')]);
 
   /// If initialized: locale will be stored in [SharedPreferences].
   static get _pref => PreferenceRepository.pref;
@@ -230,6 +237,7 @@ abstract class LocaleStore {
   ) {
     if (supportedLocales != null) {
       LocaleStore.supportedLocales = supportedLocales;
+      LocaleStore.localeNameFlags = LocaleNameFlagList(supportedLocales);
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
 // todo:
@@ -43,6 +44,8 @@ class LocaleManager extends StatefulWidget {
   /// Will automatically update [LocaleManager.locale].
   /// Value of this notifier should be either from [supportedLocales] or 'system'.
   static ValueNotifier<String> get languageCode => LocaleStore.languageCode;
+
+  static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
 
   /// A [ValueListenable] with current locale.
   ///

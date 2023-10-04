@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:locale_switcher/src/locale_name_flag_list.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -19,7 +20,7 @@ enum _Switcher {
   segmentedButton,
 }
 
-typedef LocaleSwitchBuilder = Widget Function(List<String>, BuildContext);
+typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
@@ -316,24 +317,42 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
     }
   }
 
+  /// Optional, should be used only for [MaterialApp].supportedLocales
+  ///
+  /// will speed up [LocaleSwitcher]
+  // or readSupportedLocales
+  // add localizationCallback (with/withOutContext)
+  static List<Locale> readLocales(List<Locale> supportedLocales) {
+    if (supportedLocales.isEmpty) {
+      supportedLocales = const [Locale('en')];
+    }
+
+    if (!identical(LocaleStore.supportedLocales, supportedLocales)) {
+      LocaleStore.setSupportedLocales(supportedLocales);
+    }
+
+    return supportedLocales;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final staticLocales = <String>[
-      if (widget.showOsLocale) LocaleStore.systemLocale,
-      ...LocaleStore.supportedLocales
+    final staticLocales = LocaleNameFlagList.fromEntries(
+      LocaleStore.localeNameFlags.entries
+          .skip(1) // first is system locale
           .take(widget.numberOfShown) // chose most used
-          .map((e) => e.toString()),
-    ];
+      ,
+      addOsLocale: widget.showOsLocale,
+    );
 
     return ValueListenableBuilder(
       valueListenable: LocaleStore.languageCode,
       builder: (BuildContext context, value, Widget? child) {
-        var locales = [...staticLocales];
-        if (!locales.contains(LocaleStore.languageCode.value)) {
-          locales.last = LocaleStore.languageCode.value;
+        var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
+        if (!locales.names.contains(LocaleStore.languageCode.value)) {
+          locales.replaceLast(LocaleStore.languageCode.value);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
-          locales.add(showOtherLocales);
+          locales.addName(showOtherLocales);
         }
         // todo: add 0.5 second delayed check of app locale ?
 
