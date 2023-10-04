@@ -144,7 +144,7 @@ abstract class LocaleStore {
       dev.log('Error wrong locale name: $showOtherLocales');
     } else {
       newLocale = Locale(langCode);
-      // languageCode.value = newLocale.languageCode;
+      // languageCode.value = newLocale.toString();
     }
 
     PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
@@ -157,7 +157,7 @@ abstract class LocaleStore {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = _LocaleObserver(onChanged: (_) {
         currentSystemLocale =
-            TestablePlatformDispatcher.platformDispatcher.locale.languageCode;
+            TestablePlatformDispatcher.platformDispatcher.locale.toString();
         if (languageCode.value == systemLocale) {
           locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
         }
@@ -168,7 +168,7 @@ abstract class LocaleStore {
 
       // locale and languageCode always in sync:
       languageCode.addListener(() {
-        if (locale.value.languageCode != languageCode.value) {
+        if (locale.value.toString() != languageCode.value) {
           _setLocale(languageCode.value);
         }
       });
@@ -176,11 +176,11 @@ abstract class LocaleStore {
         if (languageCode.value == systemLocale) {
           if (locale.value !=
               TestablePlatformDispatcher.platformDispatcher.locale) {
-            languageCode.value = locale.value.languageCode;
+            languageCode.value = locale.value.toString();
           }
         } else {
-          if (locale.value.languageCode != languageCode.value) {
-            languageCode.value = locale.value.languageCode;
+          if (locale.value.toString() != languageCode.value) {
+            languageCode.value = locale.value.toString();
           }
         }
       });
@@ -252,7 +252,7 @@ class _LocaleObserver extends WidgetsBindingObserver {
   }
 }
 
-extension StringToLocaleHelper on String {
+extension StringToLocale on String {
   /// Convert string to [Locale] object
   Locale toLocale({String separator = '_'}) {
     final localeList = split(separator);

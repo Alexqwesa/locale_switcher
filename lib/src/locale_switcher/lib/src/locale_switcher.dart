@@ -322,7 +322,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
       if (widget.showOsLocale) LocaleStore.systemLocale,
       ...LocaleStore.supportedLocales
           .take(widget.numberOfShown) // chose most used
-          .map((e) => e.languageCode),
+          .map((e) => e.toString()),
     ];
 
     return ValueListenableBuilder(
