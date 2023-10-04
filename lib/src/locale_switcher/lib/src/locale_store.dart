@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 // extension AppLocalizationsExt on BuildContext {
@@ -277,6 +278,63 @@ extension StringToLocale on String {
         );
       default:
         return Locale(localeList.first);
+    }
+  }
+}
+
+enum FallBackEnum {
+  full,
+  countryCodeThenFull,
+}
+
+Widget? findFlagFor(String str) {
+  final value = LocaleStore.languageToCountry[str]!;
+  if (value.length > 2 && value[2] != null) return value[2];
+  if (countryCodeToContent.containsKey(value[1])) {
+    return Flags.instance[value[1]]?.svg;
+  }
+  return null;
+}
+
+extension LocaleFlag on Locale {
+  /// Search for flag for given locale
+  Widget flag({FallBackEnum fallBack = FallBackEnum.full}) {
+    final str = toString();
+    // check full
+    final flag = findFlagFor(str);
+    if (flag != null) return flag;
+
+    final localeList = str.split('_');
+    // create fallback
+    late final Widget fb;
+    if (fallBack == FallBackEnum.full) {
+      fb = Text(str);
+    } else if (fallBack == FallBackEnum.countryCodeThenFull) {
+      if (localeList.length > 1) {
+        fb = Text(localeList.last);
+      } else {
+        fb = Text(str);
+      }
+    } else {
+      fb = Text(str.substring(0, 2));
+    }
+
+    switch (localeList.length) {
+      case 1:
+      // already checked by findFlagFor(str)
+      case 2:
+        if (localeList.last.length != 4) {
+          // second is not scriptCode
+          return findFlagFor(localeList.last) ?? fb;
+        } else {
+          return findFlagFor(localeList.first) ?? fb;
+        }
+      case 3:
+        final flag = findFlagFor(localeList.last);
+        if (flag != null) return flag;
+        return findFlagFor(localeList.first) ?? fb;
+      default:
+        return fb;
     }
   }
 }
