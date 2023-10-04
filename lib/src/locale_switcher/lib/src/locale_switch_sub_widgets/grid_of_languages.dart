@@ -20,7 +20,7 @@ class GridOfLanguages extends StatelessWidget {
   Widget build(BuildContext context) {
     final locales = [
       LocaleStore.systemLocale,
-      ...LocaleStore.supportedLocales.map((e) => e.toLanguageTag()),
+      ...LocaleStore.supportedLocales.map((e) => e.languageCode),
     ];
 
     return GridView(
@@ -29,13 +29,13 @@ class GridOfLanguages extends StatelessWidget {
             maxCrossAxisExtent: 200,
           ),
       children: [
-        ...locales.map((localeCode) {
-          final lang = LocaleStore.languageToCountry[localeCode] ??
-              [localeCode, 'Unknown locale'];
+        ...locales.map((langCode) {
+          final lang = LocaleStore.languageToCountry[langCode] ??
+              [langCode, 'Unknown locale'];
           return Card(
             child: InkWell(
               onTap: () {
-                LocaleManager.languageTag.value = localeCode;
+                LocaleManager.languageCode.value = langCode;
                 additionalCallBack?.call(context);
               },
               child: Column(
@@ -44,7 +44,7 @@ class GridOfLanguages extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child:
-                          LangIconWithToolTip(localeCode: localeCode, shape: shape),
+                          LangIconWithToolTip(langCode: langCode, shape: shape),
                     ),
                   ),
                   Padding(

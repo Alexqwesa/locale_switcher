@@ -18,7 +18,7 @@ void main() {
   //   const enLoc = Locale('en');
   //
   //   // test start with english locale
-  //   expect(LocaleStore.languageTag.value, "system");
+  //   expect(LocaleStore.languageCode.value, "system");
   //   expect(LocaleStore.locale.value, enLoc);
   // });
 
@@ -31,7 +31,7 @@ void main() {
     // final enLoc = const Locale('de').tr;
 
     // test start with english locale
-    expect(LocaleStore.languageTag.value, "de");
+    expect(LocaleStore.languageCode.value, "de");
     expect(LocaleStore.locale.value, deLoc);
   });
 
@@ -46,15 +46,15 @@ void main() {
 
     // test start with english locale
     const deLoc = Locale('de');
-    expect(LocaleStore.languageTag.value, "de");
+    expect(LocaleStore.languageCode.value, "de");
     expect(LocaleStore.locale.value, deLoc);
 
-    LocaleStore.languageTag.value = LocaleStore.systemLocale;
-    expect(LocaleStore.languageTag.value, "system");
-    expect(LocaleStore.locale.value.toLanguageTag(), 'vi');
+    LocaleStore.languageCode.value = LocaleStore.systemLocale;
+    expect(LocaleStore.languageCode.value, "system");
+    expect(LocaleStore.locale.value.languageCode, 'vi');
 
     platform.localeTestValue = const Locale('es');
-    expect(LocaleStore.languageTag.value, "system");
-    expect(LocaleStore.locale.value.toLanguageTag(), 'es');
+    expect(LocaleStore.languageCode.value, "system");
+    expect(LocaleStore.locale.value.languageCode, 'es');
   });
 }

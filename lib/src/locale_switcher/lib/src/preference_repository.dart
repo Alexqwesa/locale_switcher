@@ -13,8 +13,8 @@ class PreferenceRepository {
     return pref?.getString(innerSharedPreferenceName);
   }
 
-  static Future<bool>? write(String innerSharedPreferenceName, languageTag) {
-    return pref?.setString(innerSharedPreferenceName, languageTag);
+  static Future<bool>? write(String innerSharedPreferenceName, languageCode) {
+    return pref?.setString(innerSharedPreferenceName, languageCode);
   }
 
   // stub, only needed for system like: easy_localization

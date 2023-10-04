@@ -56,14 +56,14 @@ class LocaleSwitcher extends StatefulWidget {
   /// LocaleSwitcher.custom(
   ///   builder: (locales) {
   ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.languageTag.value,
+  ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
   ///       loading: false,
-  ///       onChanged: (localeCode) {
-  ///         if (localeCode == showOtherLocales) {
+  ///       onChanged: (langCode) {
+  ///         if (langCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.languageTag.value = localeCode;
+  ///           LocaleManager.languageCode.value = langCode;
   ///         }
   ///       },
   ///       iconBuilder: LangIconWithToolTip.forIconBuilder,
@@ -182,14 +182,14 @@ class LocaleSwitcher extends StatefulWidget {
   /// LocaleSwitcher.custom(
   ///   builder: (locales) {
   ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.languageTag.value,
+  ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
   ///       loading: false,
-  ///       onChanged: (localeCode) {
-  ///         if (localeCode == showOtherLocales) {
+  ///       onChanged: (langCode) {
+  ///         if (langCode == showOtherLocales) {
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.languageTag.value = localeCode;
+  ///           LocaleManager.languageCode.value = langCode;
   ///         }
   ///       },
   ///       iconBuilder: LangIconWithToolTip.forIconBuilder,
@@ -322,15 +322,15 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
       if (widget.showOsLocale) LocaleStore.systemLocale,
       ...LocaleStore.supportedLocales
           .take(widget.numberOfShown) // chose most used
-          .map((e) => e.toLanguageTag()),
+          .map((e) => e.languageCode),
     ];
 
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.languageTag,
+      valueListenable: LocaleStore.languageCode,
       builder: (BuildContext context, value, Widget? child) {
         var locales = [...staticLocales];
-        if (!locales.contains(LocaleStore.languageTag.value)) {
-          locales.last = LocaleStore.languageTag.value;
+        if (!locales.contains(LocaleStore.languageCode.value)) {
+          locales.last = LocaleStore.languageCode.value;
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales.add(showOtherLocales);

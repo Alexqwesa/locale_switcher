@@ -30,7 +30,7 @@ void main() {
 
       // test start with english locale
       expect(find.text(viLoc.counterDescription), findsOneWidget);
-      expect(LocaleStore.languageTag.value, "vi");
+      expect(LocaleStore.languageCode.value, "vi");
 
       expect(
           find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
@@ -40,8 +40,8 @@ void main() {
       await tester.tap(dropMenu);
       await tester.pumpAndSettle();
 
-      expect(LocaleManager.locale.value.toLanguageTag(), "vi");
-      expect(LocaleManager.languageTag.value, "vi");
+      expect(LocaleManager.locale.value.languageCode, "vi");
+      expect(LocaleManager.languageCode.value, "vi");
 
       // tap item
       final deOption = find.descendant(
@@ -61,8 +61,8 @@ void main() {
       // selected todo:
       expect(
           find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
-      expect(LocaleManager.languageTag.value, "de");
-      expect(LocaleManager.locale.value.toLanguageTag(), "de");
+      expect(LocaleManager.languageCode.value, "de");
+      expect(LocaleManager.locale.value.languageCode, "de");
 
       final deLoc = const Locale('de').tr;
       expect(find.text(deLoc.counterDescription), findsOneWidget);

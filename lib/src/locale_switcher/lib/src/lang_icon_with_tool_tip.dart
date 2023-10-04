@@ -32,7 +32,7 @@ class LangIconWithToolTip extends StatelessWidget {
 
   /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
   const LangIconWithToolTip.forIconBuilder(
-    this.localeCode,
+    this.langCode,
     bool _, {
     super.key,
     this.toolTipPrefix = '',
@@ -44,7 +44,7 @@ class LangIconWithToolTip extends StatelessWidget {
 
   const LangIconWithToolTip({
     super.key,
-    required this.localeCode,
+    required this.langCode,
     this.toolTipPrefix = '',
     this.radius,
     this.useNLettersInsteadOfIcon = 0,
@@ -52,11 +52,11 @@ class LangIconWithToolTip extends StatelessWidget {
     this.child,
   });
 
-  final String localeCode;
+  final String langCode;
 
   @override
   Widget build(BuildContext context) {
-    if (localeCode == showOtherLocales) {
+    if (langCode == showOtherLocales) {
       return LocaleSwitcher.iconButton(
         useStaticIcon:
             ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
@@ -65,8 +65,8 @@ class LangIconWithToolTip extends StatelessWidget {
       );
     }
 
-    final lang = LocaleStore.languageToCountry[localeCode] ??
-        [localeCode, 'Unknown language code: $localeCode'];
+    final lang = LocaleStore.languageToCountry[langCode] ??
+        [langCode, 'Unknown language code: $langCode'];
 
     var nLetters = useNLettersInsteadOfIcon;
     if (nLetters == 0 &&
@@ -75,7 +75,7 @@ class LangIconWithToolTip extends StatelessWidget {
     }
 
     final Widget defaultChild = child ??
-        ((nLetters > 0 && localeCode != LocaleStore.systemLocale)
+        ((nLetters > 0 && langCode != LocaleStore.systemLocale)
             ? ClipOval(
                 // text
                 child: SizedBox(
@@ -85,7 +85,7 @@ class LangIconWithToolTip extends StatelessWidget {
                       padding: const EdgeInsets.all(2.0),
                       child: FittedBox(
                           child: Text(
-                        localeCode.toUpperCase(),
+                        langCode.toUpperCase(),
                         semanticsLabel: lang[1],
                       )),
                     )),

@@ -148,9 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                               langCode;
                                         }
                                       },
-                                      iconBuilder: (langCode, foreground) =>
+                                      iconBuilder: (lang, foreground) =>
                                           LangIconWithToolTip(
-                                        localeCode: langCode,
+                                        langCode: lang,
                                         useNLettersInsteadOfIcon: showNletters,
                                       ),
                                       allowUnlistedValues: true,

@@ -39,13 +39,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
                 child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
                         LangIconWithToolTip(
-                          localeCode: e,
+                          langCode: e,
                           radius: curRadius,
                           useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                           shape: shape,
                         )
                     : LangIconWithToolTip(
-                        localeCode: e,
+                        langCode: e,
                         radius: curRadius,
                         useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                         shape: shape,
@@ -55,13 +55,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
           );
         },
       ).toList(),
-      selected: {LocaleManager.languageTag.value},
+      selected: {LocaleManager.languageCode.value},
       multiSelectionEnabled: false,
       onSelectionChanged: (Set<String> newSelection) {
         if (newSelection.first == showOtherLocales) {
           showSelectLocaleDialog(context);
         } else {
-          LocaleManager.languageTag.value = newSelection.first;
+          LocaleManager.languageCode.value = newSelection.first;
         }
       },
     );

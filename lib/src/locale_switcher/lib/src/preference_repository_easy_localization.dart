@@ -19,7 +19,7 @@ class PreferenceRepository {
   static String? read(String innerSharedPreferenceName) {
     final context = _lastUsedKey?.currentState?.context;
     if (context != null) {
-      return EasyLocalization.of(context)?.locale.toLanguageTag();
+      return EasyLocalization.of(context)?.locale.languageCode;
     }
 
     // dev.log(
@@ -28,7 +28,7 @@ class PreferenceRepository {
   }
 
   static Future<bool>? write(
-      String innerSharedPreferenceName, languageTag) async {
+      String innerSharedPreferenceName, languageCode) async {
     final context = _lastUsedKey?.currentState?.context;
     if (context != null) {
       await EasyLocalization.of(context)?.setLocale(LocaleStore.locale.value);
