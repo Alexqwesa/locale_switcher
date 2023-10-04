@@ -32,7 +32,7 @@ enum LocaleNotFoundFallBack {
 }
 
 Widget? findFlagFor(String str) {
-  final value = LocaleStore.languageToCountry[str]!;
+  final value = LocaleStore.languageToCountry[str] ?? const [];
   if (value.length > 2 && value[2] != null) return value[2];
   if (countryCodeToContent.containsKey(value[1])) {
     return Flags.instance[value[1]]?.svg;
