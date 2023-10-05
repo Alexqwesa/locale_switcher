@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
+/// Inner storage.
 abstract class LocaleStore {
   /// A special locale name to use system locale.
   static const String systemLocale = 'system';

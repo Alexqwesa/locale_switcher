@@ -2,11 +2,9 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/current_system_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
-// supportedLocalesWithFlags
-// current locale
-// with Notifier?
 /// A list of generated [LocaleNameFlag]s for supportedLocales.
 ///
 /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
@@ -88,7 +86,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
         LocaleNameFlag(
             name: names.last,
             locale: locales.last,
-            flag: CurrentLocale.flagForOtherLocalesButton),
+            flag: CurrentLocale.buttonFlagForOtherLocales),
       );
     } else {
       final entry = CurrentLocale.byName(str);
@@ -133,7 +131,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
       LocaleNameFlag(
           name: names.last,
           locale: locales.last,
-          flag: flag ?? CurrentLocale.flagForOtherLocalesButton),
+          flag: flag ?? CurrentLocale.buttonFlagForOtherLocales),
     );
   }
 }

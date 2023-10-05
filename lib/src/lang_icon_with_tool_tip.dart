@@ -79,7 +79,7 @@ class LangIconWithToolTip extends StatelessWidget {
     final locCode = localeNameFlag?.name ?? langCode ?? '??';
 
     if (locCode == showOtherLocales) {
-      return CurrentLocale.flagForOtherLocalesButton;
+      return CurrentLocale.buttonFlagForOtherLocales;
     }
     final lang = LocaleStore.languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
