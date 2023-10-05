@@ -326,7 +326,7 @@ import 'package:locale_switcher/src/locale_observable.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
-class _CurrentSystemLocale {
+class CurrentSystemLocale {
   static LocaleObserver? __observer;
 
   /// Listen on system locale.
@@ -351,7 +351,7 @@ class _CurrentSystemLocale {
   }
 }
 
-abstract class CurrentLocale extends _CurrentSystemLocale {
+abstract class CurrentLocale extends CurrentSystemLocale {
   static late final ValueNotifier<int> _allNotifiers;
 
   /// Listen on system locale.
@@ -361,7 +361,7 @@ abstract class CurrentLocale extends _CurrentSystemLocale {
     } catch (e) {
       _allNotifiers = ValueNotifier<int>(0);
       notifier.addListener(() => _allNotifiers.value++);
-      _CurrentSystemLocale.currentSystemLocale
+      CurrentSystemLocale.currentSystemLocale
           .addListener(() => _allNotifiers.value++);
       return _allNotifiers;
     }
@@ -582,10 +582,10 @@ class LocaleNameFlag {
 /// Just record of [Locale], it's name and flag.
 class SystemLocaleNameFlag extends LocaleNameFlag {
   @override
-  Locale get locale => _CurrentSystemLocale.currentSystemLocale.value;
+  Locale get locale => CurrentSystemLocale.currentSystemLocale.value;
 
   ValueNotifier<Locale> get notifier =>
-      _CurrentSystemLocale.currentSystemLocale;
+      CurrentSystemLocale.currentSystemLocale;
 
   SystemLocaleNameFlag({
     super.flag,
