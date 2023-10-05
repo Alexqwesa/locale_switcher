@@ -1,39 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/locale_observable.dart';
+import 'package:locale_switcher/src/current_system_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
-class CurrentSystemLocale {
-  static LocaleObserver? __observer;
-
-  /// Listen on system locale.
-  static ValueNotifier<Locale> get currentSystemLocale {
-    initSystemLocaleObserver();
-    return __currentSystemLocale;
-  }
-
-  static final __currentSystemLocale = ValueNotifier(const Locale('en'));
-
-  static void initSystemLocaleObserver() {
-    if (__observer == null) {
-      WidgetsFlutterBinding.ensureInitialized();
-      __observer = LocaleObserver(onChanged: (_) {
-        __currentSystemLocale.value =
-            TestablePlatformDispatcher.platformDispatcher.locale;
-      });
-      WidgetsBinding.instance.addObserver(
-        __observer!,
-      );
-    }
-  }
+enum IfLocaleNotFound {
+  doNothing,
+  useFirst,
+  useSystem,
 }
 
+/// An indexes and notifiers to work with [CurrentLocale.supported].
+///
+/// [current] and [index] - are pointed at current active entry in
+/// [LocaleSwitcher.localeNameFlags], have setters, correspond notifier - [notifier].
+///
+/// And other useful static methods and properties...
 abstract class CurrentLocale extends CurrentSystemLocale {
-  /// Global storage of [LocaleNameFlag]
+  /// Global storage of [LocaleNameFlag] - instance of [LocaleNameFlagList].
   ///
-  /// They are wrappers around [Locale]s in supportedLocales list.
-  static LocaleNameFlagList get store => LocaleStore.localeNameFlags;
+  /// [LocaleNameFlag] are wrappers around [Locale]s in supportedLocales list.
+  static LocaleNameFlagList get supported => LocaleStore.localeNameFlags;
 
   static late final ValueNotifier<int> _allNotifiers;
   static final _index = ValueNotifier(0);
@@ -70,10 +57,10 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  /// ValueNotifier of [index] of selected [CurrentLocale.store].
+  /// ValueNotifier of [index] of selected [CurrentLocale.supported].
   static ValueNotifier<int> get notifier => _index;
 
-  /// Index of selected [CurrentLocale.store].
+  /// Index of selected [CurrentLocale.supported].
   ///
   /// Can be set here.
   static int get index => _index.value;
@@ -110,8 +97,8 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   }
 
   static LocaleNameFlag? byName(String name) {
-    if (store.names.contains(name)) {
-      return store.entries[store.names.indexOf(name)];
+    if (supported.names.contains(name)) {
+      return supported.entries[supported.names.indexOf(name)];
     }
     return null;
   }
@@ -119,65 +106,69 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   /// Search by first 2 letter, return first found or null.
   static LocaleNameFlag? byLanguage(String name) {
     final pattern = name.substring(0, 2);
-    final String langName = store.names.firstWhere(
+    final String langName = supported.names.firstWhere(
       (element) => element.startsWith(pattern),
       orElse: () => '',
     );
-    if (store.names.contains(langName)) {
-      return store.entries[store.names.indexOf(langName)];
+    if (supported.names.contains(langName)) {
+      return supported.entries[supported.names.indexOf(langName)];
     }
     return null;
   }
 
   /// Search by [Locale], return exact match or null.
   static LocaleNameFlag? byLocale(Locale locale) {
-    if (store.locales.contains(locale)) {
-      return store.entries[store.locales.indexOf(locale)];
+    if (supported.locales.contains(locale)) {
+      return supported.entries[supported.locales.indexOf(locale)];
     }
     return null;
   }
 
-  /// Will try to find [Locale] by string in [CurrentLocale.store].
+  /// Will try to find [Locale] by string in [CurrentLocale.supported].
   ///
-  /// Just wrapper around: [CurrentLocale.current] = newValue;
+  /// Just wrapper around: [tryFindLocale] and [CurrentLocale.current] = newValue;
+  ///
+  /// If not found: do [ifLocaleNotFound]
+  static void trySetLocale(String langCode,
+      {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
+    var loc = tryFindLocale(langCode, ifLocaleNotFound: ifLocaleNotFound);
+    if (loc != null) {
+      CurrentLocale.current = loc;
+    }
+  }
+
+  /// Will try to find [Locale] by string in [CurrentLocale.supported].
   ///
   /// If not found: do [ifLocaleNotFound]
   // todo: similarity check?
-  static void trySetLocale(String langCode,
+  static LocaleNameFlag? tryFindLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = byName(langCode) ?? byLanguage(langCode);
     if (loc != null) {
-      current = loc;
-      return;
+      return loc;
     }
     switch (ifLocaleNotFound) {
       case IfLocaleNotFound.doNothing:
-        return;
+        return null;
       case IfLocaleNotFound.useSystem:
         if (byName(LocaleStore.systemLocale) != null) {
           current = byName(LocaleStore.systemLocale)!;
         }
-        return;
+        return null;
       case IfLocaleNotFound.useFirst:
-        if (store.names.first != LocaleStore.systemLocale) {
-          current = store.entries.first;
-        } else if (store.names.length > 2) {
-          current = store.entries[1];
+        if (supported.names.first != LocaleStore.systemLocale) {
+          current = supported.entries.first;
+        } else if (supported.names.length > 2) {
+          current = supported.entries[1];
         }
-        return;
+        return null;
     }
   }
 
-  static Widget get flagForOtherLocalesButton => LocaleSwitcher.iconButton(
+  static Widget get buttonFlagForOtherLocales => LocaleSwitcher.iconButton(
         useStaticIcon:
             ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
                 ? LocaleStore.languageToCountry[showOtherLocales]![2]
                 : const Icon(Icons.expand_more),
       );
-}
-
-enum IfLocaleNotFound {
-  doNothing,
-  useFirst,
-  useSystem,
 }

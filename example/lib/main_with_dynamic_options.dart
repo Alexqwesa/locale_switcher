@@ -19,12 +19,12 @@ class MyApp extends StatelessWidget {
     // ============= THIS 4 LINES ARE REQUIRED =============
     return LocaleManager(
       child: MaterialApp(
-        locale: LocaleManager.locale.value,
+        locale: LocaleSwitcher.locale.value,
         supportedLocales: AppLocalizations.supportedLocales,
         // ...
         localizationsDelegates: AppLocalizations.localizationsDelegates,
-        title: LocaleManager.locale.value.tr.example,
-        home: MyHomePage(title: LocaleManager.locale.value.tr.example),
+        title: LocaleSwitcher.locale.value.tr.example,
+        home: MyHomePage(title: LocaleSwitcher.locale.value.tr.example),
         debugShowCheckedModeBanner: false,
         // themeMode: ThemeMode.dark,
         theme: ThemeData
