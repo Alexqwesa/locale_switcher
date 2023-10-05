@@ -88,7 +88,6 @@ extension LocaleFlag on Locale {
   }
 }
 
-
 // extension AppLocalizationsExt on BuildContext {
 //   AppLocalizations get l10n => AppLocalizations.of(this);
 // }
