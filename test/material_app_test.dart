@@ -60,7 +60,7 @@ void main() {
       expect(CurrentLocale.current.locale?.languageCode, "en");
       expect(CurrentLocale.current.name, "en");
 
-      await tester.tap(sysFlag); // restore ?
+      await tester.tap(sysFlag.at(1)); // restore ?
     });
 
     testWidgets('it change locale via popUp dialog',

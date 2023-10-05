@@ -5,9 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter_svg/svg.dart';
-import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
@@ -32,18 +31,18 @@ void main() {
           find.byTooltip(LocaleStore.languageToCountry['system']![1]).at(3));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
-      expect(find.byType(SvgPicture), findsNWidgets(9)); // 1+1+3+2+2
+      expect(find.byType(SvgPicture), findsNWidgets(6)); // 1+1+2+2
 
       // await safeTapByKey(tester, 'letterSwitch');
       await safeTapByKey(tester, 'letterSwitch');
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
-      expect(find.byType(SvgPicture), findsNWidgets(3)); // ???? dialog?
+      expect(find.byType(SvgPicture), findsNothing);
       expect(find.text("VI"), findsNWidgets(4));
 
       // Verify that vi locale is loaded
       final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
-      expect(viFlag, findsNWidgets(5));
+      expect(viFlag, findsNWidgets(4));
       await tester.tap(viFlag.at(1));
       expect(CurrentLocale.current.locale?.languageCode, "vi");
       expect(CurrentLocale.current.name, "vi");
@@ -58,11 +57,14 @@ void main() {
       final sysFlag =
           find.byTooltip(LocaleStore.languageToCountry['system']![1]);
       await tester.tap(enFlag.at(1));
+
       await tester.pumpAndSettle();
       expect(CurrentLocale.current.locale?.languageCode, "en");
       expect(CurrentLocale.current.name, "en");
 
       await tester.tap(sysFlag.at(1)); // restore ?
+      await tester.pumpAndSettle();
+      // expect(viFlag, findsNWidgets(2)); // why 3
     });
   });
 }

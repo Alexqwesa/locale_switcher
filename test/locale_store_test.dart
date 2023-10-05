@@ -27,7 +27,8 @@ void main() {
   test('it load preference: de', () async {
     SharedPreferences.setMockInitialValues(
         {LocaleStore.innerSharedPreferenceName: "de"});
-    await LocaleStore.init();
+    await LocaleStore.init(
+        supportedLocales: const [Locale('de'), Locale('en')]);
 
     const deLoc = Locale('de');
     // final enLoc = const Locale('de').tr;
@@ -38,13 +39,15 @@ void main() {
   });
 
   test('it monitor system locale changes', () async {
+    WidgetsFlutterBinding.ensureInitialized();
     final platform = TestPlatformDispatcher(
         platformDispatcher: WidgetsBinding.instance.platformDispatcher);
     TestablePlatformDispatcher.overridePlatformDispatcher = platform;
     platform.localeTestValue = const Locale('vi');
     SharedPreferences.setMockInitialValues(
         {LocaleStore.innerSharedPreferenceName: "de"});
-    // await LocaleStore.init(); // can't init twice
+    await LocaleStore.init(
+        supportedLocales: const [Locale('de'), Locale('en'), Locale('vi')]);
 
     // test start with english locale
     const deLoc = Locale('de');

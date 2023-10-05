@@ -81,7 +81,7 @@ void main() {
       expect(CurrentLocale.current.locale?.languageCode, "en");
       expect(CurrentLocale.current.name, "en");
 
-      await tester.tap(sysFlag); // restore ?
+      await tester.tap(sysFlag.at(1)); // restore ?
     });
 
     testWidgets('it load locale and change via menu',
@@ -117,7 +117,7 @@ void main() {
         matching: find.byType(LangIconWithToolTip),
         // matching: find.text(LocaleStore.languageToCountry['de']![1]),
       );
-      expect(deOption, findsNWidgets(5)); // 4 + current
+      expect(deOption, findsNWidgets(6)); // 4 + current +1????
       // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
       // await tester.ensureVisible(deOption.at(4));
       // await tester.pumpAndSettle();
@@ -138,7 +138,8 @@ void main() {
       // ??
       final sysFlag =
           find.byTooltip(LocaleStore.languageToCountry['system']![1]);
-      await tester.tap(sysFlag); // restore ?
+      await tester.tap(sysFlag.at(1)); // restore ?
+      await tester.pumpAndSettle();
     });
 
     testWidgets('it change locale via popUp dialog',

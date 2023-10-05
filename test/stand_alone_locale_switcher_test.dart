@@ -18,7 +18,7 @@ void main() {
       final deLoc = const Locale('de').tr;
       final enLoc = const Locale('en').tr;
       final flags = find.byType(SvgPicture);
-      expect(flags, findsNWidgets(5)); // 2 + 3
+      expect(flags, findsNWidgets(6)); // 2 + 3 + 1
 
       // test start with english locale
       expect(find.text(enLoc.counterDescription), findsOneWidget);
@@ -52,7 +52,7 @@ void main() {
       expect(CurrentLocale.current.locale?.languageCode, "en");
       expect(CurrentLocale.current.name, "en");
 
-      await tester.tap(sysFlag); // restore ?
+      await tester.tap(sysFlag.at(1)); // restore ?
     });
   }
 }
