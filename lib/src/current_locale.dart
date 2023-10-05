@@ -9,13 +9,13 @@ class CurrentSystemLocale {
 
   /// Listen on system locale.
   static ValueNotifier<Locale> get currentSystemLocale {
-    initSystemLocaleObserverAndLocaleUpdater();
+    initSystemLocaleObserver();
     return __currentSystemLocale;
   }
 
   static final __currentSystemLocale = ValueNotifier(const Locale('en'));
 
-  static void initSystemLocaleObserverAndLocaleUpdater() {
+  static void initSystemLocaleObserver() {
     if (__observer == null) {
       WidgetsFlutterBinding.ensureInitialized();
       __observer = LocaleObserver(onChanged: (_) {
@@ -82,6 +82,20 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     return null;
   }
 
+  /// Search by first 2 letter, return first found or null.
+  static LocaleNameFlag? byLanguage(String name) {
+    final pattern = name.substring(0, 2);
+    final String langName = store.names.firstWhere(
+      (element) => element.startsWith(pattern),
+      orElse: () => '',
+    );
+    if (store.names.contains(langName)) {
+      return store.entries[store.names.indexOf(langName)];
+    }
+    return null;
+  }
+
+  /// Search by [Locale], return exact match or null.
   static LocaleNameFlag? byLocale(Locale locale) {
     if (store.locales.contains(locale)) {
       return store.entries[store.locales.indexOf(locale)];
@@ -89,12 +103,34 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     return null;
   }
 
-  // todo try more
-  // read all user locales? similarity check?
-  static void tryToSetLocale(String langCode) {
-    var loc = byName(langCode);
+  /// Will try to find [Locale] by string.
+  ///
+  /// Just wrapper around: [CurrentLocale.current] = newValue;
+  ///
+  /// If not found: do [ifLocaleNotFound]
+  // todo: similarity check?
+  static void tryToSetLocale(String langCode,
+      {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
+    var loc = byName(langCode) ?? byLanguage(langCode);
     if (loc != null) {
-      current = loc; //??  byName(LocaleStore.systemLocale) ;
+      current = loc;
+      return;
+    }
+    switch (ifLocaleNotFound) {
+      case IfLocaleNotFound.doNothing:
+        return;
+      case IfLocaleNotFound.useSystem:
+        if (byName(LocaleStore.systemLocale) != null) {
+          current = byName(LocaleStore.systemLocale)!;
+        }
+        return;
+      case IfLocaleNotFound.useFirst:
+        if (store.names.first != LocaleStore.systemLocale) {
+          current = store.entries.first;
+        } else if (store.names.length > 2) {
+          current = store.entries[1];
+        }
+        return;
     }
   }
 
@@ -104,4 +140,10 @@ abstract class CurrentLocale extends CurrentSystemLocale {
                 ? LocaleStore.languageToCountry[showOtherLocales]![2]
                 : const Icon(Icons.expand_more),
       );
+}
+
+enum IfLocaleNotFound {
+  doNothing,
+  useFirst,
+  useSystem,
 }

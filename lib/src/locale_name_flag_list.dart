@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
 // supportedLocalesWithFlags
@@ -161,8 +160,7 @@ class SystemLocaleNameFlag extends LocaleNameFlag {
   @override
   Locale get locale => CurrentSystemLocale.currentSystemLocale.value;
 
-  ValueNotifier<Locale> get notifier =>
-      CurrentSystemLocale.currentSystemLocale;
+  ValueNotifier<Locale> get notifier => CurrentSystemLocale.currentSystemLocale;
 
   SystemLocaleNameFlag({
     super.flag,

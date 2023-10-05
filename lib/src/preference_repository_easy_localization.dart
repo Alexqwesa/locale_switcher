@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:developer' as dev;
 
 import 'package:easy_localization/easy_localization.dart';
