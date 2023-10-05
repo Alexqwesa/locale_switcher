@@ -45,3 +45,6 @@ app.*.map.json
 
 #
 /desiredFileName.txt
+/examples/easy_localization/**
+!/examples/easy_localization/lib
+!/examples/easy_localization/pubspec.yaml

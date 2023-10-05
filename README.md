@@ -127,6 +127,8 @@ Example with dynamic option switch:
 
 [//]: # (- [ ] compose listenable into one class)
 
+[//]: # (- [ ] detect cupertino/material in dev package)
+
 ## FAQ
 
 #### - How to change order of languages?

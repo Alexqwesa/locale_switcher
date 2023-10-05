@@ -26,11 +26,15 @@ class LangIconWithToolTip extends StatelessWidget {
 
   /// OPTIONAL: your custom widget here,
   ///
-  /// If null: will be shown flag of country assigned to language or ...
+  /// If null: will be shown either flag from [localeNameFlag] or flag of country
+  /// (assigned to language in [LocaleManager])
   final Widget? child;
 
-  /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
-  const LangIconWithToolTip.forIconBuilder(
+  /// An entry of [LocaleNameFlagList].
+  final LocaleNameFlag? localeNameFlag;
+
+  /// Analog [LangIconWithToolTip] but for Strings.
+  const LangIconWithToolTip.forStringIconBuilder(
     this.langCode,
     bool _, {
     super.key,
@@ -39,33 +43,47 @@ class LangIconWithToolTip extends StatelessWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.shape = const CircleBorder(eccentricity: 0),
     this.child,
+    this.localeNameFlag,
   });
 
-  const LangIconWithToolTip({
+  /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders
+  /// in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
+  const LangIconWithToolTip.forIconBuilder(
+    this.localeNameFlag,
+    bool _, {
     super.key,
-    required this.langCode,
     this.toolTipPrefix = '',
     this.radius,
     this.useNLettersInsteadOfIcon = 0,
     this.shape = const CircleBorder(eccentricity: 0),
     this.child,
+    this.langCode,
   });
 
-  final String langCode;
+  const LangIconWithToolTip({
+    super.key,
+    this.langCode,
+    this.toolTipPrefix = '',
+    this.radius,
+    this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
+    this.child,
+    this.localeNameFlag,
+  }) : assert(langCode != null || localeNameFlag != null);
+
+  /// Have no effect if [localeNameFlag] is provided.
+  final String? langCode;
 
   @override
   Widget build(BuildContext context) {
-    if (langCode == showOtherLocales) {
-      return LocaleSwitcher.iconButton(
-        useStaticIcon:
-            ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
-                ? LocaleStore.languageToCountry[showOtherLocales]![2]
-                : const Icon(Icons.expand_more),
-      );
+    final locCode = langCode ?? localeNameFlag?.name ?? '??';
+
+    if (locCode == showOtherLocales) {
+      return CurrentLocale.flagForOtherLocalesButton;
     }
 
-    final lang = LocaleStore.languageToCountry[langCode] ??
-        [langCode, 'Unknown language code: $langCode'];
+    final lang = LocaleStore.languageToCountry[locCode] ??
+        [locCode, 'Unknown language code: $locCode'];
 
     var nLetters = useNLettersInsteadOfIcon;
     if (nLetters == 0 &&
@@ -74,7 +92,8 @@ class LangIconWithToolTip extends StatelessWidget {
     }
 
     final Widget defaultChild = child ??
-        ((nLetters > 0 && langCode != LocaleStore.systemLocale)
+        (useNLettersInsteadOfIcon == 0 ? localeNameFlag?.flag : null) ??
+        ((nLetters > 0 && locCode != LocaleStore.systemLocale)
             ? ClipOval(
                 // text
                 child: SizedBox(
@@ -84,7 +103,7 @@ class LangIconWithToolTip extends StatelessWidget {
                       padding: const EdgeInsets.all(2.0),
                       child: FittedBox(
                           child: Text(
-                        langCode.toUpperCase(),
+                        locCode.toUpperCase(),
                         semanticsLabel: lang[1],
                       )),
                     )),

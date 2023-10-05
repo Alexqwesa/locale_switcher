@@ -4,7 +4,7 @@ import 'package:locale_switcher/locale_switcher.dart';
 import '../locale_store.dart';
 
 class SegmentedButtonSwitch extends StatelessWidget {
-  final List<String> locales;
+  final LocaleNameFlagList locales;
   final int useNLettersInsteadOfIcon;
 
   final double? radius;
@@ -21,31 +21,31 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<String>(
+    return SegmentedButton<LocaleNameFlag>(
       emptySelectionAllowed: false,
       showSelectedIcon: false,
-      segments: locales.map<ButtonSegment<String>>(
+      segments: locales.map<ButtonSegment<LocaleNameFlag>>(
         (e) {
           final curRadius =
-              e == LocaleStore.systemLocale ? (radius ?? 24) * 5 : radius;
-          return ButtonSegment<String>(
+              e.name == LocaleStore.systemLocale ? (radius ?? 24) * 5 : radius;
+          return ButtonSegment<LocaleNameFlag>(
             value: e,
             tooltip: LocaleStore.languageToCountry[e]?[1] ?? e,
             label: Padding(
-              padding: e == LocaleStore.systemLocale
+              padding: e.name == LocaleStore.systemLocale
                   ? const EdgeInsets.all(0.0)
                   : const EdgeInsets.all(8.0),
               child: FittedBox(
                 child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
                     ? LocaleStore.languageToCountry[e]![2] ??
                         LangIconWithToolTip(
-                          langCode: e,
+                          localeNameFlag: e,
                           radius: curRadius,
                           useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                           shape: shape,
                         )
                     : LangIconWithToolTip(
-                        langCode: e,
+                        localeNameFlag: e,
                         radius: curRadius,
                         useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                         shape: shape,
@@ -55,13 +55,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
           );
         },
       ).toList(),
-      selected: {LocaleManager.languageCode.value},
+      selected: {CurrentLocale.current},
       multiSelectionEnabled: false,
-      onSelectionChanged: (Set<String> newSelection) {
-        if (newSelection.first == showOtherLocales) {
+      onSelectionChanged: (Set<LocaleNameFlag> newSelection) {
+        if (newSelection.first.name == showOtherLocales) {
           showSelectLocaleDialog(context);
         } else {
-          LocaleManager.languageCode.value = newSelection.first;
+          CurrentLocale.current = newSelection.first;
         }
       },
     );

@@ -20,14 +20,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
   });
 
-  final List<String> locales;
+  final LocaleNameFlagList locales;
 
   @override
   Widget build(BuildContext context) {
     const radius = 38.0;
     final localeEntries = locales
-        .map<DropdownMenuEntry<String>>(
-          (e) => DropdownMenuEntry<String>(
+        .map<DropdownMenuEntry<LocaleNameFlag>>(
+          (e) => DropdownMenuEntry<LocaleNameFlag>(
             value: e,
             label: LocaleStore.languageToCountry[e]?[1] ?? e,
             leadingIcon: showLeading
@@ -41,14 +41,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                                 2
                             ? LocaleStore.languageToCountry[e]![2] ??
                                 LangIconWithToolTip(
-                                  langCode: e,
+                                  localeNameFlag: e,
                                   radius: radius,
                                   useNLettersInsteadOfIcon:
                                       useNLettersInsteadOfIcon,
                                   shape: shape,
                                 )
                             : LangIconWithToolTip(
-                                langCode: e,
+                                localeNameFlag: e,
                                 radius: radius,
                                 useNLettersInsteadOfIcon:
                                     useNLettersInsteadOfIcon,
@@ -60,13 +60,13 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         )
         .toList();
 
-    return DropdownMenu<String>(
-      initialSelection: LocaleStore.languageCode.value,
+    return DropdownMenu<LocaleNameFlag>(
+      initialSelection: CurrentLocale.current ,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
-                langCode: LocaleStore.languageCode.value,
+                localeNameFlag: CurrentLocale.current,
                 radius: 32,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
@@ -76,12 +76,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       // controller: colorController,
       label: const Text('Language'),
       dropdownMenuEntries: localeEntries,
-      onSelected: (String? langCode) {
+      onSelected: (LocaleNameFlag? langCode) {
         if (langCode != null) {
-          if (langCode == showOtherLocales) {
+          if (langCode.name == showOtherLocales) {
             showSelectLocaleDialog(context);
           } else {
-            LocaleManager.languageCode.value = langCode;
+            CurrentLocale.current = langCode;
           }
         }
       },

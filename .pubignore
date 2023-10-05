@@ -22,3 +22,9 @@ build/
 docs/
 /lib/generated_plugin_registrant.dart
 desiredFileName.txt
+
+lib/src/builders/**
+lib/src/
+lib/src/locale_switcher/**
+lib/src/preference_repository_*
+examples/**

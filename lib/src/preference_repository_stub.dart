@@ -1,20 +1,19 @@
 import 'package:flutter/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+/// Stub class, in case: shared_preferences: false
 class PreferenceRepository {
   /// If initialized: locale will be stored in [SharedPreferences].
-  static SharedPreferences? pref;
+  static bool? pref;
 
-  static Future<void> init() async {
-    pref = await SharedPreferences.getInstance();
-  }
+  // stub
+  static Future<void> init() async {}
 
   static String? read(String innerSharedPreferenceName) {
-    return pref?.getString(innerSharedPreferenceName);
+    return null;
   }
 
   static Future<bool>? write(String innerSharedPreferenceName, languageCode) {
-    return pref?.setString(innerSharedPreferenceName, languageCode);
+    return null;
   }
 
   // stub, only needed for system like: easy_localization

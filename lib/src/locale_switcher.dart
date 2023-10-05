@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:locale_switcher/src/locale_store.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/segmented_button_switch.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_button.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_lang_switch.dart';
+import 'package:locale_switcher/src/locale_name_flag_list.dart';
+import 'package:locale_switcher/src/preference_repository.dart';
+
+import 'locale_store.dart';
+import 'locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
+import 'locale_switch_sub_widgets/grid_of_languages.dart';
+import 'locale_switch_sub_widgets/segmented_button_switch.dart';
+import 'locale_switch_sub_widgets/select_locale_button.dart';
+import 'locale_switch_sub_widgets/title_of_lang_switch.dart';
 
 const showOtherLocales = 'show_other_locales_button';
 
@@ -17,16 +20,12 @@ enum _Switcher {
   segmentedButton,
 }
 
-typedef LocaleSwitchBuilder = Widget Function(List<String>, BuildContext);
+typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
-/// Use either:
-/// - [LocaleSwitcher.segmentedButton],
-/// - [LocaleSwitcher.iconButton],
-/// - [LocaleSwitcher.menu],
-/// - [LocaleSwitcher.custom].
-class LocaleSwitcher extends StatelessWidget {
+/// Use either: [LocaleSwitcher.toggle] or [LocaleSwitcher.menu] or [LocaleSwitcher.custom]
+class LocaleSwitcher extends StatefulWidget {
   /// A text describing switcher
   ///
   /// default: 'Choose the language:'
@@ -128,7 +127,7 @@ class LocaleSwitcher extends StatelessWidget {
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/), [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
   factory LocaleSwitcher.menu({
-    Key? key,
+    GlobalKey? key,
     String? title = 'Choose language:',
     int numberOfShown = 200,
     bool showOsLocale = true,
@@ -139,7 +138,7 @@ class LocaleSwitcher extends StatelessWidget {
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
-      key: key,
+      key: key ?? GlobalKey(),
       title: title,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
@@ -157,7 +156,7 @@ class LocaleSwitcher extends StatelessWidget {
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
   /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - click on icon in AppBar to see this widget.
   factory LocaleSwitcher.grid({
-    Key? key,
+    GlobalKey? key,
     int numberOfShown = 200,
     bool showOsLocale = true,
     SliverGridDelegate? gridDelegate,
@@ -166,7 +165,7 @@ class LocaleSwitcher extends StatelessWidget {
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
-      key: key,
+      key: key ?? GlobalKey(),
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
       type: _Switcher.grid,
@@ -199,13 +198,13 @@ class LocaleSwitcher extends StatelessWidget {
   ///   })
   /// ```
   factory LocaleSwitcher.custom({
-    Key? key,
+    GlobalKey? key,
     required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
     bool showOsLocale = true,
   }) {
     return LocaleSwitcher._(
-      key: key,
+      key: key ?? GlobalKey(),
       title: null,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
@@ -221,7 +220,7 @@ class LocaleSwitcher extends StatelessWidget {
   ///
   /// In popup window will be displayed [LocaleSwitcher.grid].
   factory LocaleSwitcher.iconButton({
-    Key? key,
+    GlobalKey? key,
     String? toolTipPrefix = 'Current language: ',
     String? title = 'Select language: ',
     Icon? useStaticIcon,
@@ -233,7 +232,7 @@ class LocaleSwitcher extends StatelessWidget {
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
   }) {
     return LocaleSwitcher._(
-      key: key,
+      key: key ?? GlobalKey(),
       title: title,
       toolTipPrefix: toolTipPrefix,
       showOsLocale: showOsLocale,
@@ -252,7 +251,7 @@ class LocaleSwitcher extends StatelessWidget {
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
   /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
   factory LocaleSwitcher.segmentedButton({
-    Key? key,
+    GlobalKey? key,
     // double? iconRadius = 32,
     // required LocaleSwitchBuilder builder,
     String? title = 'Choose language:',
@@ -266,7 +265,7 @@ class LocaleSwitcher extends StatelessWidget {
     ShapeBorder? shape,
   }) {
     return LocaleSwitcher._(
-      key: key,
+      key: key ?? GlobalKey(),
       title: title,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
@@ -282,9 +281,17 @@ class LocaleSwitcher extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // todo: move to initState ?
-    if (LocaleStore.supportedLocales.isEmpty) {
+  State<LocaleSwitcher> createState() => LocaleSwitcherState();
+}
+
+class LocaleSwitcherState extends State<LocaleSwitcher> {
+  @override
+  void initState() {
+    super.initState();
+
+    PreferenceRepository.sendGlobalKeyToRepository(widget.key as GlobalKey);
+    // check: is it inited?
+    if (LocaleStore.supportedLocales.isEmpty) { // todo: use CurrentLocale
       // assume it was not inited
       final child = context.findAncestorWidgetOfExactType<MaterialApp>() ??
           context.findAncestorWidgetOfExactType<CupertinoApp>();
@@ -308,58 +315,80 @@ class LocaleSwitcher extends StatelessWidget {
         }
       }
     }
+  }
 
-    final staticLocales = <String>[
-      if (showOsLocale) LocaleStore.systemLocale,
-      ...LocaleStore.supportedLocales
-          .take(numberOfShown) // chose most used
-          .map((e) => e.languageCode),
-    ];
+  /// Optional, should be used only for [MaterialApp].supportedLocales
+  ///
+  /// will speed up [LocaleSwitcher]
+  // or readSupportedLocales
+  // add localizationCallback (with/withOutContext)
+  static List<Locale> readLocales(List<Locale> supportedLocales) {
+    if (supportedLocales.isEmpty) {
+      supportedLocales = const [Locale('en')];
+    }
+
+    if (!identical(LocaleStore.supportedLocales, supportedLocales)) {
+      LocaleStore.setSupportedLocales(supportedLocales);
+    }
+
+    return supportedLocales;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final staticLocales = LocaleNameFlagList.fromEntries(
+      LocaleStore.localeNameFlags.entries
+          .skip(1) // first is system locale
+          .take(widget.numberOfShown) // chose most used
+      ,
+      addOsLocale: widget.showOsLocale,
+    );
 
     return ValueListenableBuilder(
-      valueListenable: LocaleStore.languageCode,
-      builder: (BuildContext context, value, Widget? child) {
-        var locales = [...staticLocales];
-        if (!locales.contains(LocaleStore.languageCode.value)) {
-          locales.last = LocaleStore.languageCode.value;
+      valueListenable: CurrentLocale.notifier,
+      builder: (BuildContext context, index, Widget? child) {
+        var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
+        if (!locales.names.contains(CurrentLocale.current.name)) {
+          locales.replaceLast(localeName: CurrentLocale.current);
         }
-        if (LocaleStore.supportedLocales.length > numberOfShown) {
-          locales.add(showOtherLocales);
+        if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
+          locales.addName(showOtherLocales);
         }
+        // todo: add 0.5 second delayed check of app locale ?
 
-        return switch (_type) {
-          _Switcher.custom => builder!(locales, context),
+        return switch (widget._type) {
+          _Switcher.custom => widget.builder!(locales, context),
           _Switcher.menu => DropDownMenuLanguageSwitch(
               locales: locales,
-              title: title,
-              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-              showLeading: showLeading,
-              shape: shape,
+              title: widget.title,
+              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+              showLeading: widget.showLeading,
+              shape: widget.shape,
             ),
           _Switcher.grid => GridOfLanguages(
-              gridDelegate: gridDelegate,
-              additionalCallBack: additionalCallBack,
-              shape: shape,
+              gridDelegate: widget.gridDelegate,
+              additionalCallBack: widget.additionalCallBack,
+              shape: widget.shape,
             ),
           _Switcher.iconButton => SelectLocaleButton(
-              radius: iconRadius ?? 32,
-              popUpWindowTitle: title ?? '',
-              updateIconOnChange: (useStaticIcon != null),
-              useStaticIcon: useStaticIcon,
-              toolTipPrefix: toolTipPrefix ?? '',
-              useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-              shape: shape,
+              radius: widget.iconRadius ?? 32,
+              popUpWindowTitle: widget.title ?? '',
+              updateIconOnChange: (widget.useStaticIcon != null),
+              useStaticIcon: widget.useStaticIcon,
+              toolTipPrefix: widget.toolTipPrefix ?? '',
+              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+              shape: widget.shape,
             ),
           _Switcher.segmentedButton => TitleOfLangSwitch(
-              padding: padding,
-              crossAxisAlignment: crossAxisAlignment,
-              titlePositionTop: titlePositionTop,
-              titlePadding: titlePadding,
-              title: title,
+              padding: widget.padding,
+              crossAxisAlignment: widget.crossAxisAlignment,
+              titlePositionTop: widget.titlePositionTop,
+              titlePadding: widget.titlePadding,
+              title: widget.title,
               child: SegmentedButtonSwitch(
                 locales: locales,
-                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                shape: shape,
+                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+                shape: widget.shape,
               ),
             ),
         };
