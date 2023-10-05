@@ -48,3 +48,4 @@ app.*.map.json
 /examples/easy_localization/**
 !/examples/easy_localization/lib
 !/examples/easy_localization/pubspec.yaml
+/example/lib/src/packages/

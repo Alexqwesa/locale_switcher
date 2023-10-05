@@ -24,7 +24,8 @@ docs/
 desiredFileName.txt
 
 lib/src/builders/**
-lib/src/
-lib/src/locale_switcher/**
+build.yaml
+
 lib/src/preference_repository_*
 examples/**
+
