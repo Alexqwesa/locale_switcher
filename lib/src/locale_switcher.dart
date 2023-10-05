@@ -24,7 +24,11 @@ typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
-/// Use either: [LocaleSwitcher.toggle] or [LocaleSwitcher.menu] or [LocaleSwitcher.custom]
+/// Use either:
+/// - [LocaleSwitcher.segmentedButton],
+/// - [LocaleSwitcher.iconButton],
+/// - [LocaleSwitcher.menu],
+/// - [LocaleSwitcher.custom].
 class LocaleSwitcher extends StatefulWidget {
   /// A text describing switcher
   ///

@@ -11,11 +11,6 @@ import 'package:locale_switcher/src/preference_repository.dart';
 //   AppLocalizations get tr => lookupAppLocalizations(this);
 // }
 
-// todo: use class LocaleNotifier to store supportedLocale in array with additional two slots for
-// system and showOther
-// store one index
-// and provide access to languageCode and locale
-
 abstract class LocaleStore {
   /// A special locale name to use system locale.
   static const String systemLocale = 'system';

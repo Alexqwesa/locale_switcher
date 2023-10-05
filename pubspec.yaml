@@ -17,14 +17,15 @@ dependencies:
 
   #cupertino_icons: ^1.0.2
 
-dev_dependencies:
-  animated_toggle_switch: # for tests and examples
+dev_dependencies:         # for tests and examples
+  animated_toggle_switch:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_localizations:  # for tests and examples
+  flutter_localizations:
     sdk: flutter
-  intl:                   # for tests and examples
+  intl:
+  easy_localization:
 
 # The following section is specific to Flutter packages.
 flutter:
