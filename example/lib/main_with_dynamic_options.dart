@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       },
                                       iconBuilder: (lang, foreground) =>
                                           LangIconWithToolTip(
-                                        langCode: lang,
+                                        localeCode: lang,
                                         useNLettersInsteadOfIcon: showNletters,
                                       ),
                                       allowUnlistedValues: true,
