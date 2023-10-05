@@ -1,7 +1,7 @@
 name: locale_switcher_dev
 description: A minimalistic widget for switching the locale of your application with 4 lines of code.
-repository: https://github.com/Alexqwesa/locale_switcher
-homepage: https://github.com/Alexqwesa/locale_switcher
+repository: https://github.com/Alexqwesa/locale_switcher/tree/builder
+homepage: https://github.com/Alexqwesa/locale_switcher/tree/builder
 #author: Alexqwesa <alexo.veto@gmail.com>
 
 version: 0.9.8
