@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0
+
+* LocaleSwitcher.localeNameFlag - is list generated from supportedLocales,
+* CurrentLocale class - notifiers and helpers to work with LocaleNameFlagList,
+* move static methods to LocaleSwitcher from LocaleManager,
+* extensions: LocaleFlag on Locale, StringToLocale on String,
+* findFlagFor helper function.
+
 ## 0.9.8
 
 * update docs.
