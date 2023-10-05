@@ -16,6 +16,8 @@ abstract class CurrentSystemLocale {
   static void initSystemLocaleObserver() {
     if (__observer == null) {
       WidgetsFlutterBinding.ensureInitialized();
+      __currentSystemLocale.value =
+          TestablePlatformDispatcher.platformDispatcher.locale;
       __observer = LocaleObserver(onChanged: (_) {
         __currentSystemLocale.value =
             TestablePlatformDispatcher.platformDispatcher.locale;
