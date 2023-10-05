@@ -27,7 +27,7 @@ class LangIconWithToolTip extends StatelessWidget {
   /// OPTIONAL: your custom widget here,
   ///
   /// If null: will be shown either flag from [localeNameFlag] or flag of country
-  /// (assigned to language in [LocaleManager])
+  /// (assigned to language in [LocaleManager].reassignFlags)
   final Widget? child;
 
   /// An entry of [LocaleNameFlagList].
@@ -76,14 +76,41 @@ class LangIconWithToolTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locCode = langCode ?? localeNameFlag?.name ?? '??';
+    final locCode = localeNameFlag?.name ?? langCode ?? '??';
 
     if (locCode == showOtherLocales) {
       return CurrentLocale.flagForOtherLocalesButton;
     }
-
     final lang = LocaleStore.languageToCountry[locCode] ??
-        [locCode, 'Unknown language code: $locCode'];
+        <String>[locCode, 'Unknown language code: $locCode'];
+
+    var flag = child;
+    flag ??= localeNameFlag?.flag != null
+        ? CircleFlag(
+            shape: shape, size: radius ?? 48, child: localeNameFlag?.flag!)
+        : null;
+    flag ??= Flags.instance[(lang[0]).toLowerCase()] != null
+        ? CircleFlag(
+            shape: shape,
+            size: radius ?? 48,
+            child: Flags.instance[(lang[0]).toLowerCase()]!.svg)
+        : null;
+    if (locCode != LocaleStore.systemLocale && locCode != showOtherLocales) {
+      if (flag == null || useNLettersInsteadOfIcon > 0) {
+        flag = child ??
+            SizedBox(
+                width: radius ?? 48,
+                height: radius ?? 48,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: FittedBox(
+                      child: Text(
+                    locCode.toUpperCase(),
+                    semanticsLabel: localeNameFlag?.language ?? lang[1],
+                  )),
+                ));
+      }
+    }
 
     var nLetters = useNLettersInsteadOfIcon;
     if (nLetters == 0 &&
@@ -91,46 +118,12 @@ class LangIconWithToolTip extends StatelessWidget {
       nLetters = 2;
     }
 
-    final Widget defaultChild = child ??
-        (useNLettersInsteadOfIcon == 0 ? localeNameFlag?.flag : null) ??
-        ((nLetters > 0 && locCode != LocaleStore.systemLocale)
-            ? ClipOval(
-                // text
-                child: SizedBox(
-                    width: radius ?? 48,
-                    height: radius ?? 48,
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: FittedBox(
-                          child: Text(
-                        locCode.toUpperCase(),
-                        semanticsLabel: lang[1],
-                      )),
-                    )),
-              )
-            : lang.length <= 2 // i.e. no custom image
-                ? CircleFlag(
-                    Flags.instance[(lang[0] as String).toLowerCase()]!,
-                    // ovalShape: false,
-                    shape: shape,
-                    size: radius ?? 48,
-                  )
-                : (shape != null)
-                    ? ClipPath(
-                        child: lang[2],
-                        clipper: ShapeBorderClipper(
-                          shape: shape!,
-                          textDirection: Directionality.maybeOf(context),
-                        ),
-                      )
-                    : lang[2]);
-
     return FittedBox(
       child: Tooltip(
-          message: toolTipPrefix + lang[1],
+          message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
           waitDuration: const Duration(milliseconds: 50),
           preferBelow: true,
-          child: defaultChild),
+          child: flag ?? const Icon(Icons.error_outline_rounded)),
     );
   }
 }

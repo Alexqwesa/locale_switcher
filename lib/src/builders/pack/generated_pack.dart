@@ -1478,7 +1478,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .map<DropdownMenuEntry<LocaleNameFlag>>(
           (e) => DropdownMenuEntry<LocaleNameFlag>(
             value: e,
-            label: LocaleStore.languageToCountry[e]?[1] ?? e,
+            label: e.language,
             leadingIcon: showLeading
                 ? SizedBox(
                     width: radius,
@@ -1634,7 +1634,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
               e.name == LocaleStore.systemLocale ? (radius ?? 24) * 5 : radius;
           return ButtonSegment<LocaleNameFlag>(
             value: e,
-            tooltip: LocaleStore.languageToCountry[e]?[1] ?? e,
+            tooltip: e.language,
             label: Padding(
               padding: e.name == LocaleStore.systemLocale
                   ? const EdgeInsets.all(0.0)

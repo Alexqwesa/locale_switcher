@@ -121,6 +121,21 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
     locales.length = newLength;
     names.length = newLength;
   }
+
+  /// Add special entry into [LocaleNameFlagList].
+  ///
+  /// You should make sure to handle this entry selection in your widget.
+  // todo: {Null Function() onTap = ...}
+  void addShowOtherLocales({String name = showOtherLocales, Widget? flag}) {
+    locales.add(null);
+    names.add(showOtherLocales);
+    entries.add(
+      LocaleNameFlag(
+          name: names.last,
+          locale: locales.last,
+          flag: flag ?? CurrentLocale.flagForOtherLocalesButton),
+    );
+  }
 }
 
 /// Just record of [Locale], it's name and flag.
@@ -150,7 +165,7 @@ class LocaleNameFlag {
   String get language {
     _language ??= (LocaleStore.languageToCountry[name]?[1]! ??
             LocaleStore.languageToCountry[name.substring(0, 2)]) ??
-        '';
+        name;
     return _language!;
   }
 }

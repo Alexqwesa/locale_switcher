@@ -356,7 +356,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
           locales.replaceLast(localeName: CurrentLocale.current);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
-          locales.addName(showOtherLocales);
+          locales.addShowOtherLocales();
         }
         // todo: add 0.5 second delayed check of app locale ?
 

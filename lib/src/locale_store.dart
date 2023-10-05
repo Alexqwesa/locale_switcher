@@ -26,16 +26,11 @@ abstract class LocaleStore {
   //   return _languageCode;
   // }
 
-  /// Current [Locale], use [LocaleStore.setLocale] to update it.
+  /// A ReadOnly [ValueListenable] with current locale.
   ///
-  /// [LocaleStore.localeIndex] contains the real value that stored in [SharedPreferences].
-  // static ValueNotifier<Locale> get locale {
-  //   if (__observer == null) {
-  //     initSystemLocaleObserverAndLocaleUpdater();
-  //     _locale.value = TestablePlatformDispatcher.platformDispatcher.locale;
-  //   }
-  //   return _locale;
-  // }
+  /// Use [CurrentLocale.current] to update this notifier.
+  // here just for test and backward compatibility
+  static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   /// List of supported locales.
   ///

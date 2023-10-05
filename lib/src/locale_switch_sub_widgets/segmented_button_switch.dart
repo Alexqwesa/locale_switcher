@@ -30,21 +30,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
               e.name == LocaleStore.systemLocale ? (radius ?? 24) * 5 : radius;
           return ButtonSegment<LocaleNameFlag>(
             value: e,
-            tooltip: LocaleStore.languageToCountry[e]?[1] ?? e,
+            tooltip: e.language,
             label: Padding(
               padding: e.name == LocaleStore.systemLocale
                   ? const EdgeInsets.all(0.0)
                   : const EdgeInsets.all(8.0),
               child: FittedBox(
-                child: (LocaleStore.languageToCountry[e] ?? const []).length > 2
-                    ? LocaleStore.languageToCountry[e]![2] ??
-                        LangIconWithToolTip(
-                          localeNameFlag: e,
-                          radius: curRadius,
-                          useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                          shape: shape,
-                        )
-                    : LangIconWithToolTip(
+                child: LangIconWithToolTip(
                         localeNameFlag: e,
                         radius: curRadius,
                         useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,

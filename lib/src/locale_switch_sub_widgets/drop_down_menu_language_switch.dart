@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/locale_store.dart';
 
 class DropDownMenuLanguageSwitch extends StatelessWidget {
   final String? title;
@@ -29,31 +28,19 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .map<DropdownMenuEntry<LocaleNameFlag>>(
           (e) => DropdownMenuEntry<LocaleNameFlag>(
             value: e,
-            label: LocaleStore.languageToCountry[e]?[1] ?? e,
+            label: e.language,
             leadingIcon: showLeading
                 ? SizedBox(
                     width: radius,
                     height: radius,
                     key: ValueKey('item-$e'),
                     child: FittedBox(
-                        child: (LocaleStore.languageToCountry[e] ?? const [])
-                                    .length >
-                                2
-                            ? LocaleStore.languageToCountry[e]![2] ??
-                                LangIconWithToolTip(
-                                  localeNameFlag: e,
-                                  radius: radius,
-                                  useNLettersInsteadOfIcon:
-                                      useNLettersInsteadOfIcon,
-                                  shape: shape,
-                                )
-                            : LangIconWithToolTip(
-                                localeNameFlag: e,
-                                radius: radius,
-                                useNLettersInsteadOfIcon:
-                                    useNLettersInsteadOfIcon,
-                                shape: shape,
-                              )),
+                        child: LangIconWithToolTip(
+                      localeNameFlag: e,
+                      radius: radius,
+                      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                      shape: shape,
+                    )),
                   )
                 : null,
           ),
@@ -61,7 +48,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleNameFlag>(
-      initialSelection: CurrentLocale.current ,
+      initialSelection: CurrentLocale.current,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),

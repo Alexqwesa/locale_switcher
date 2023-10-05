@@ -47,10 +47,10 @@ class LocaleManager extends StatefulWidget {
   /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
   static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
 
-  /// A [ValueListenable] with current locale.
+  /// A ReadOnly [ValueListenable] with current locale.
   ///
-  /// Use [LocaleStore.localeIndex] to update this notifier.
-  // static ValueNotifier<Locale> get locale => LocaleStore.locale;
+  /// Use [CurrentLocale.current] to update this notifier.
+  static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   final List<Locale>? _supportedLocales;
 

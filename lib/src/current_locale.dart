@@ -30,7 +30,25 @@ class CurrentSystemLocale {
 }
 
 abstract class CurrentLocale extends CurrentSystemLocale {
+  static LocaleNameFlagList get store => LocaleStore.localeNameFlags;
   static late final ValueNotifier<int> _allNotifiers;
+  static final _index = ValueNotifier(0);
+
+  static late final ValueNotifier<Locale> _locale;
+
+  /// Listen on system locale.
+  static ValueNotifier<Locale> get locale {
+    try {
+      return _locale;
+    } catch (e) {
+      _locale = ValueNotifier<Locale>(const Locale('en'));
+      _locale.value = current.locale!;
+      allNotifiers.addListener(() => _locale.value = current.locale!);
+      CurrentSystemLocale.currentSystemLocale
+          .addListener(() => _allNotifiers.value++);
+      return _locale;
+    }
+  }
 
   /// Listen on system locale.
   static ValueNotifier<int> get allNotifiers {
@@ -45,19 +63,19 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  static LocaleNameFlagList get store => LocaleStore.localeNameFlags;
-
   static ValueNotifier<int> get notifier => _index;
-  static final _index = ValueNotifier(0);
 
   static int get index => _index.value;
 
   static set index(int value) {
     if (value < LocaleStore.localeNameFlags.length && value >= 0) {
-      _index.value = value;
+      if (LocaleStore.localeNameFlags[value].name != showOtherLocales) {
+        // just double check
+        _index.value = value;
 
-      PreferenceRepository.write(
-          LocaleStore.innerSharedPreferenceName, current.name);
+        PreferenceRepository.write(
+            LocaleStore.innerSharedPreferenceName, current.name);
+      }
     }
   }
 

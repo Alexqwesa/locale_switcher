@@ -87,20 +87,20 @@ class MyHomePage extends StatelessWidget {
 }
 
 Widget animatedToggleSwitchBuilder(
-    List<String> langCodes, BuildContext context) {
+    LocaleNameFlagList langCodes, BuildContext context) {
   if (langCodes.length <= 1) {
     // AnimatedToggleSwitch crash with one value
-    langCodes.add(showOtherLocales);
+    langCodes.addShowOtherLocales();
   }
 
-  return AnimatedToggleSwitch<String>.rolling(
+  return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
     values: langCodes,
-    current: LocaleManager.languageCode.value,
+    current: CurrentLocale.current,
     onChanged: (langCode) {
-      if (langCode == showOtherLocales) {
+      if (langCode.name == showOtherLocales) {
         showSelectLocaleDialog(context);
       } else {
-        LocaleManager.languageCode.value = langCode;
+        CurrentLocale.current = langCode;
       }
     },
     iconBuilder: LangIconWithToolTip.forIconBuilder,

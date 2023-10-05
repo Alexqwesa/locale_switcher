@@ -11,7 +11,7 @@ class CircleFlag extends StatelessWidget {
   final double size;
 
   /// Use [Flags] class or [countryCodeToContent] map to get the flag you want.
-  final Flag flag;
+  final Flag? flag;
 
   /// [Clip] option for widget [ClipPath].
   ///
@@ -23,21 +23,26 @@ class CircleFlag extends StatelessWidget {
   /// If null, return square flag.
   final ShapeBorder? shape;
 
-  const CircleFlag(
-    this.flag, {
+  /// Override [flag] with [Widget].
+  final Widget? child;
+
+  const CircleFlag({
+    this.flag,
+    this.child,
     super.key,
     this.size = 48,
     this.shape = const CircleBorder(eccentricity: 0),
     this.clipBehavior = Clip.antiAlias,
-  });
+  }) : assert(child != null || flag != null);
 
   @override
   Widget build(BuildContext context) {
-    final svg = SizedBox(
-      width: size,
-      height: size,
-      child: flag.svg,
-    );
+    final svg = child ??
+        SizedBox(
+          width: size,
+          height: size,
+          child: flag!.svg,
+        );
 
     return shape == null
         ? svg
