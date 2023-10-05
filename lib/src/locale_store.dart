@@ -173,7 +173,7 @@ abstract class LocaleStore {
       if (_pref != null) {
         langCode =
             PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
-        CurrentLocale.tryToSetLocale(langCode);
+        CurrentLocale.trySetLocale(langCode);
       }
     }
   }

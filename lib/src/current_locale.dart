@@ -79,6 +79,11 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
+  /// Current [LocaleNameFlag] what contains current locale.
+  ///
+  /// You can update this value directly, or
+  /// if you are not sure that your locale exist in list of supportedLocales:
+  /// use [CurrentLocale.trySetLocale].
   static LocaleNameFlag get current => LocaleStore.localeNameFlags[index];
 
   static set current(LocaleNameFlag value) {
@@ -127,7 +132,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   ///
   /// If not found: do [ifLocaleNotFound]
   // todo: similarity check?
-  static void tryToSetLocale(String langCode,
+  static void trySetLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = byName(langCode) ?? byLanguage(langCode);
     if (loc != null) {
