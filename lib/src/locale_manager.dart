@@ -37,6 +37,7 @@ class LocaleManager extends StatefulWidget {
   /// Example:
   /// {'en': ['GB', 'English', <Icon>]}
   /// (first two options are required, third is optional)
+  /// Note: keys are in lower cases.
   final Map<String, List>? reassignFlags;
 
   /// [ValueNotifier] with index of [localeNameFlags] currently used.

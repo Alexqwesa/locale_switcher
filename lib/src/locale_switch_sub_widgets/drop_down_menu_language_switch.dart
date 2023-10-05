@@ -33,7 +33,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                 ? SizedBox(
                     width: radius,
                     height: radius,
-                    key: ValueKey('item-$e'),
+                    key: ValueKey('item-${e.name}'),
                     child: FittedBox(
                         child: LangIconWithToolTip(
                       localeNameFlag: e,

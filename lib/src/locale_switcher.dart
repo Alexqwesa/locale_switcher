@@ -295,7 +295,8 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
 
     PreferenceRepository.sendGlobalKeyToRepository(widget.key as GlobalKey);
     // check: is it inited?
-    if (LocaleStore.supportedLocales.isEmpty) { // todo: use CurrentLocale
+    if (LocaleStore.supportedLocales.isEmpty) {
+      // todo: use CurrentLocale
       // assume it was not inited
       final child = context.findAncestorWidgetOfExactType<MaterialApp>() ??
           context.findAncestorWidgetOfExactType<CupertinoApp>();
@@ -340,12 +341,12 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
 
   @override
   Widget build(BuildContext context) {
+    final skip = widget.showOsLocale ? 0 : 1;
     final staticLocales = LocaleNameFlagList.fromEntries(
       LocaleStore.localeNameFlags.entries
-          .skip(1) // first is system locale
-          .take(widget.numberOfShown) // chose most used
+          .skip(skip) // first is system locale
+          .take(widget.numberOfShown + 1 - skip) // chose most used
       ,
-      addOsLocale: widget.showOsLocale,
     );
 
     return ValueListenableBuilder(

@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +17,7 @@ void main() {
 
       final deLoc = const Locale('de').tr;
       final enLoc = const Locale('en').tr;
-      final flags = find.byType(CircleFlag);
+      final flags = find.byType(SvgPicture);
       expect(flags, findsNWidgets(5)); // 2 + 3
 
       // test start with english locale

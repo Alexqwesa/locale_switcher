@@ -36,7 +36,7 @@ void main() {
           find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
 
       // tap menu
-      final dropMenu = find.byType(DropdownMenu<String>);
+      final dropMenu = find.byType(DropdownMenu<LocaleNameFlag>);
       await tester.tap(dropMenu);
       await tester.pumpAndSettle();
 
@@ -44,12 +44,12 @@ void main() {
       expect(CurrentLocale.current.name, "vi");
 
       // tap item
-      final deOption = find.descendant(
+      final options = find.descendant(
         of: dropMenu,
         matching: find.byType(LangIconWithToolTip),
         // matching: find.text(LocaleStore.languageToCountry['de']![1]),
       );
-      expect(deOption, findsNWidgets(5)); // 4 + current
+      expect(options, findsNWidgets(5)); // 4 + current
       // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
       // await tester.ensureVisible(deOption.at(4));
       // await tester.pumpAndSettle();

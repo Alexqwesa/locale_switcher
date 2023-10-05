@@ -28,7 +28,7 @@ class GridOfLanguages extends StatelessWidget {
       children: [
         ...locales.map((langCode) {
           final lang = LocaleStore.languageToCountry[langCode] ??
-              [langCode, 'Unknown locale'];
+              [langCode.name, langCode.language];
           return Card(
             child: InkWell(
               onTap: () {
@@ -40,8 +40,8 @@ class GridOfLanguages extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child:
-                          LangIconWithToolTip(localeNameFlag: langCode, shape: shape),
+                      child: LangIconWithToolTip(
+                          localeNameFlag: langCode, shape: shape),
                     ),
                   ),
                   Padding(

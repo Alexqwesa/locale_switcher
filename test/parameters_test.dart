@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flutter_svg/svg.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +20,7 @@ void main() {
     testWidgets('it show letters', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(const MyApp());
-      expect(find.byType(CircleFlag), findsNWidgets(7)); // 2 + 3 + 2
+      expect(find.byType(SvgPicture), findsNWidgets(7)); // 2 + 3 + 2
       expect(find.text("VI"), findsNothing);
       final switches = find.byType(Switch);
       expect(switches, findsNWidgets(3));
@@ -31,13 +32,13 @@ void main() {
           find.byTooltip(LocaleStore.languageToCountry['system']![1]).at(3));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
-      expect(find.byType(CircleFlag), findsNWidgets(9)); // 1+1+3+2+2
+      expect(find.byType(SvgPicture), findsNWidgets(9)); // 1+1+3+2+2
 
       // await safeTapByKey(tester, 'letterSwitch');
       await safeTapByKey(tester, 'letterSwitch');
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
-      expect(find.byType(CircleFlag), findsNWidgets(3)); // ???? dialog?
+      expect(find.byType(SvgPicture), findsNWidgets(3)); // ???? dialog?
       expect(find.text("VI"), findsNWidgets(4));
 
       // Verify that vi locale is loaded

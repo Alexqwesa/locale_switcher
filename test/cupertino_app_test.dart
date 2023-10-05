@@ -5,10 +5,10 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:locale_switcher/src/generated/asset_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
@@ -47,7 +47,7 @@ void main() {
 
       // final deLoc = const Locale('de').tr;
       final enLoc = const Locale('en').tr;
-      final flags = find.byType(CircleFlag);
+      final flags = find.byType(SvgPicture);
       expect(flags, findsNWidgets(5)); // 2 + 3
 
       // test start with english locale
@@ -104,7 +104,7 @@ void main() {
           find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
 
       // tap menu
-      final dropMenu = find.byType(DropdownMenu<String>);
+      final dropMenu = find.byType(DropdownMenu<LocaleNameFlag>);
       await tester.tap(dropMenu);
       await tester.pumpAndSettle();
 

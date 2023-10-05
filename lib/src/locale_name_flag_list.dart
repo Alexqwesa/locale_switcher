@@ -158,7 +158,8 @@ class LocaleNameFlag {
 
   Widget? get flag {
     // todo not null
-    _flag ??= locale?.flag() ?? findFlagFor(name);
+    _flag ??= locale?.flag(fallBack: null) ??
+        (locale == null ? findFlagFor(name) : null);
     return _flag;
   }
 

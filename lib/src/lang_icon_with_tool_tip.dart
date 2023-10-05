@@ -98,17 +98,14 @@ class LangIconWithToolTip extends StatelessWidget {
     if (locCode != LocaleStore.systemLocale && locCode != showOtherLocales) {
       if (flag == null || useNLettersInsteadOfIcon > 0) {
         flag = child ??
-            SizedBox(
-                width: radius ?? 48,
-                height: radius ?? 48,
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: FittedBox(
-                      child: Text(
-                    locCode.toUpperCase(),
-                    semanticsLabel: localeNameFlag?.language ?? lang[1],
-                  )),
-                ));
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: FittedBox(
+                  child: Text(
+                locCode.toUpperCase(),
+                semanticsLabel: localeNameFlag?.language ?? lang[1],
+              )),
+            );
       }
     }
 
@@ -118,12 +115,20 @@ class LangIconWithToolTip extends StatelessWidget {
       nLetters = 2;
     }
 
-    return FittedBox(
+    final fittedIcon = FittedBox(
       child: Tooltip(
           message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
           waitDuration: const Duration(milliseconds: 50),
           preferBelow: true,
           child: flag ?? const Icon(Icons.error_outline_rounded)),
     );
+
+    return (radius != null)
+        ? SizedBox(
+            width: radius,
+            height: radius,
+            child: fittedIcon,
+          )
+        : fittedIcon;
   }
 }

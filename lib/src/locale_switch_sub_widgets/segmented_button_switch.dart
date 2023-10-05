@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
-import '../locale_store.dart';
-
 class SegmentedButtonSwitch extends StatelessWidget {
   final LocaleNameFlagList locales;
   final int useNLettersInsteadOfIcon;
@@ -26,22 +24,21 @@ class SegmentedButtonSwitch extends StatelessWidget {
       showSelectedIcon: false,
       segments: locales.map<ButtonSegment<LocaleNameFlag>>(
         (e) {
-          final curRadius =
-              e.name == LocaleStore.systemLocale ? (radius ?? 24) * 5 : radius;
+          final curRadius = radius;
           return ButtonSegment<LocaleNameFlag>(
             value: e,
             tooltip: e.language,
             label: Padding(
-              padding: e.name == LocaleStore.systemLocale
-                  ? const EdgeInsets.all(0.0)
-                  : const EdgeInsets.all(8.0),
-              child: FittedBox(
-                child: LangIconWithToolTip(
-                        localeNameFlag: e,
-                        radius: curRadius,
-                        useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                        shape: shape,
-                      ),
+              padding:
+                  // e.name == LocaleStore.systemLocale
+                  //     ? const EdgeInsets.all(0.0)
+                  //     :
+                  const EdgeInsets.all(8.0),
+              child: LangIconWithToolTip(
+                localeNameFlag: e,
+                radius: curRadius,
+                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                shape: shape,
               ),
             ),
           );

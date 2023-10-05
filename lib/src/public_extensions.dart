@@ -29,20 +29,22 @@ extension StringToLocale on String {
 enum LocaleNotFoundFallBack {
   full,
   countryCodeThenFull,
+  countryCodeThenNull,
 }
 
 Widget? findFlagFor(String str) {
   final value = LocaleStore.languageToCountry[str] ?? const [];
   if (value.length > 2 && value[2] != null) return value[2];
-  if (countryCodeToContent.containsKey(value[1])) {
-    return Flags.instance[value[1]]?.svg;
+  if (countryCodeToContent.containsKey((value[0] as String).toLowerCase())) {
+    return Flags.instance[value[0]]?.svg;
   }
   return null;
 }
 
 extension LocaleFlag on Locale {
   /// Search for flag for given locale
-  Widget flag({LocaleNotFoundFallBack fallBack = LocaleNotFoundFallBack.full}) {
+  Widget? flag(
+      {LocaleNotFoundFallBack? fallBack = LocaleNotFoundFallBack.full}) {
     final str = toString();
     // check full
     final flag = findFlagFor(str);
@@ -50,17 +52,20 @@ extension LocaleFlag on Locale {
 
     final localeList = str.split('_');
     // create fallback
-    late final Widget fb;
-    if (fallBack == LocaleNotFoundFallBack.full) {
-      fb = Text(str);
-    } else if (fallBack == LocaleNotFoundFallBack.countryCodeThenFull) {
-      if (localeList.length > 1) {
-        fb = Text(localeList.last);
-      } else {
+    Widget? fb;
+    if (fallBack != null) {
+      if (fallBack == LocaleNotFoundFallBack.full) {
         fb = Text(str);
+      } else if (fallBack == LocaleNotFoundFallBack.countryCodeThenFull) {
+        if (localeList.length > 1) {
+          fb = Text(localeList.last);
+        } else {
+          fb = Text(str);
+        }
       }
-    } else {
-      fb = Text(str.substring(0, 2));
+      // else {
+      //   fb = Text(str.substring(0, 2));
+      // }
     }
 
     switch (localeList.length) {

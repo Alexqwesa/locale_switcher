@@ -81,6 +81,7 @@ abstract class LocaleStore {
 
   /// Map flag to country.
   /// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+  /// key in lowerCase!
   static Map<String, List<dynamic>> languageToCountry = {
     // use OS locale
     LocaleStore.systemLocale: [
