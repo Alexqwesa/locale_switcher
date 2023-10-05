@@ -53,6 +53,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
+                // key: const ValueKey('DDMLeading'), // todo: bugreport this duplicate
                 localeNameFlag: CurrentLocale.current,
                 radius: 32,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
