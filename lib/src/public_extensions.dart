@@ -87,3 +87,13 @@ extension LocaleFlag on Locale {
     }
   }
 }
+
+
+// extension AppLocalizationsExt on BuildContext {
+//   AppLocalizations get l10n => AppLocalizations.of(this);
+// }
+
+// extension LocaleWithDelegate on Locale {
+//   /// Get class with translation strings for this locale.
+//   AppLocalizations get tr => lookupAppLocalizations(this);
+// }

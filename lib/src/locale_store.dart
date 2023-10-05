@@ -2,29 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
-// extension AppLocalizationsExt on BuildContext {
-//   AppLocalizations get l10n => AppLocalizations.of(this);
-// }
-
-// extension LocaleWithDelegate on Locale {
-//   /// Get class with translation strings for this locale.
-//   AppLocalizations get tr => lookupAppLocalizations(this);
-// }
-
 abstract class LocaleStore {
   /// A special locale name to use system locale.
   static const String systemLocale = 'system';
-
-  // todo: use ChangeNotifier to check values.
-  // todo: store list of recently used locales
-  /// Value of this notifier should be either from [supportedLocales] or 'system'.
-  // static ValueNotifier<String> get languageCode {
-  //   if (__observer == null) {
-  //     initSystemLocaleObserverAndLocaleUpdater();
-  //     // todo: try to read pref here?
-  //   }
-  //   return _languageCode;
-  // }
 
   /// A ReadOnly [ValueListenable] with current locale.
   ///
@@ -41,43 +21,54 @@ abstract class LocaleStore {
   ///
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
   static LocaleNameFlagList localeNameFlags =
-      LocaleNameFlagList(<Locale>[const Locale('en', 'US')]);
+      LocaleNameFlagList(<Locale>[const Locale('en')]);
 
   /// If initialized: locale will be stored in [SharedPreferences].
   static get _pref => PreferenceRepository.pref;
-
-  // static final _locale = ValueNotifier<Locale>(const Locale('en'));
-  // static final _languageCode = ValueNotifier<String>(systemLocale);
-  //
-  // static LocaleObserver? __observer;
-
-  /// Set locale with checks.
-  ///
-  /// It save locale into [SharedPreferences],
-  /// and allow to use [systemLocale].
-  // static void _setLocale(String langCode) {
-  //   late Locale newLocale;
-  //   if (langCode == systemLocale || langCode == '') {
-  //     newLocale = TestablePlatformDispatcher.platformDispatcher.locale;
-  //     // languageCode.value = systemLocale;
-  //   } else if (langCode == showOtherLocales) {
-  //     newLocale = locale.value; // on error: leave current
-  //     dev.log('Error wrong locale name: $showOtherLocales');
-  //   } else {
-  //     newLocale = Locale(langCode);
-  //     // languageCode.value = newLocale.toString();
-  //   }
-  //
-  //   PreferenceRepository.write(innerSharedPreferenceName, languageCode.value);
-  //   locale.value = newLocale;
-  // }
-
-  // AppLocalizations get tr => lookupAppLocalizations(locale);
 
   /// A name of key used to store locale in [SharedPreferences].
   ///
   /// Set it via [LocaleManager].[sharedPreferenceName]
   static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
+
+  /// Init [LocaleStore] class.
+  ///
+  /// - It also init and read [SharedPreferences] (if available).
+  static Future<void> init({
+    List<Locale>? supportedLocales,
+    // LocalizationsDelegate? delegate,
+    sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
+  }) async {
+    if (_pref == null) {
+      //
+      // > init inner vars
+      //
+      setSupportedLocales(supportedLocales);
+      //
+      // > init shared preference
+      //
+      innerSharedPreferenceName = sharedPreferenceName;
+      await PreferenceRepository.init();
+      //
+      // > read locale from sharedPreference
+      //
+      String langCode = systemLocale;
+      if (_pref != null) {
+        langCode =
+            PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
+        CurrentLocale.trySetLocale(langCode);
+      }
+    }
+  }
+
+  static void setSupportedLocales(
+    List<Locale>? supportedLocales,
+  ) {
+    if (supportedLocales != null) {
+      LocaleStore.supportedLocales = supportedLocales;
+      LocaleStore.localeNameFlags = LocaleNameFlagList(supportedLocales);
+    }
+  }
 
   /// Map flag to country.
   /// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
@@ -148,43 +139,4 @@ abstract class LocaleStore {
     // Norwegian
     'no': ['NO', 'Norsk'],
   };
-
-  /// Init [LocaleStore] class.
-  ///
-  /// - It also init and read [SharedPreferences] (if available).
-  static Future<void> init({
-    List<Locale>? supportedLocales,
-    // LocalizationsDelegate? delegate,
-    sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
-  }) async {
-    if (_pref == null) {
-      //
-      // > init inner vars
-      //
-      setSupportedLocales(supportedLocales);
-      //
-      // > init shared preference
-      //
-      innerSharedPreferenceName = sharedPreferenceName;
-      await PreferenceRepository.init();
-      //
-      // > read locale from sharedPreference
-      //
-      String langCode = systemLocale;
-      if (_pref != null) {
-        langCode =
-            PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
-        CurrentLocale.trySetLocale(langCode);
-      }
-    }
-  }
-
-  static void setSupportedLocales(
-    List<Locale>? supportedLocales,
-  ) {
-    if (supportedLocales != null) {
-      LocaleStore.supportedLocales = supportedLocales;
-      LocaleStore.localeNameFlags = LocaleNameFlagList(supportedLocales);
-    }
-  }
 }

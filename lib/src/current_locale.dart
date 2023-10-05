@@ -30,13 +30,20 @@ class CurrentSystemLocale {
 }
 
 abstract class CurrentLocale extends CurrentSystemLocale {
+  /// Global storage of [LocaleNameFlag]
+  ///
+  /// They are wrappers around [Locale]s in supportedLocales list.
   static LocaleNameFlagList get store => LocaleStore.localeNameFlags;
+
   static late final ValueNotifier<int> _allNotifiers;
   static final _index = ValueNotifier(0);
-
   static late final ValueNotifier<Locale> _locale;
 
-  /// Listen on system locale.
+  /// Listen on both system locale and currently selected [LocaleNameFlag].
+  ///
+  /// In case [LocaleStore.systemLocale] is selected: it didn't try to guess
+  /// which [LocaleNameFlag] is best match, and just return OS locale.
+  /// (You localization system should select best match).
   static ValueNotifier<Locale> get locale {
     try {
       return _locale;
@@ -63,8 +70,12 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
+  /// ValueNotifier of [index] of selected [CurrentLocale.store].
   static ValueNotifier<int> get notifier => _index;
 
+  /// Index of selected [CurrentLocale.store].
+  ///
+  /// Can be set here.
   static int get index => _index.value;
 
   static set index(int value) {
@@ -126,7 +137,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     return null;
   }
 
-  /// Will try to find [Locale] by string.
+  /// Will try to find [Locale] by string in [CurrentLocale.store].
   ///
   /// Just wrapper around: [CurrentLocale.current] = newValue;
   ///
