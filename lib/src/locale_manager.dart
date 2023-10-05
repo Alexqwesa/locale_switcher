@@ -1,24 +1,16 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
-
-// todo:
-/// An alternative to LocaleManager,
-// Future<void> openStorageAndReadLocale({
-//   ifReadEmpty = LocaleStore.systemLocale,
-// }) async {
-//   return LocaleStore.init();
-// }
 
 /// This should be a parent to either [MaterialApp] or [CupertinoApp].
 ///
 /// It:
 /// - Rebuilds the child widget when the [locale] changes.
-/// - Observes changes in the system locale.
-/// - Saves the current locale to [SharedPreferences].
-/// - Loads the last used locale from [SharedPreferences].
+/// - Activate observing changes in the system locale.
+/// - Setup(and activate) auto-save of the current locale to [SharedPreferences].
+/// - Loads the last used locale from [SharedPreferences] (on first load only).
+// todo: deactivate observing changes in the system locale(if not used).
 class LocaleManager extends StatefulWidget {
   /// Either [MaterialApp] or [CupertinoApp].
   final Widget child;
@@ -39,19 +31,6 @@ class LocaleManager extends StatefulWidget {
   /// (first two options are required, third is optional)
   /// Note: keys are in lower cases.
   final Map<String, List>? reassignFlags;
-
-  /// [ValueNotifier] with index of [localeNameFlags] currently used.
-  static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
-
-  /// A list of generated [LocaleNameFlag]s for supportedLocales.
-  ///
-  /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
-  static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
-
-  /// A ReadOnly [ValueListenable] with current locale.
-  ///
-  /// Use [CurrentLocale.current] to update this notifier.
-  static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   final List<Locale>? _supportedLocales;
 

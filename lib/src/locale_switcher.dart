@@ -24,12 +24,43 @@ typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
-/// Use either:
+/// Use any of these constructors to create widget:
 /// - [LocaleSwitcher.segmentedButton],
 /// - [LocaleSwitcher.iconButton],
 /// - [LocaleSwitcher.menu],
 /// - [LocaleSwitcher.custom].
 class LocaleSwitcher extends StatefulWidget {
+  /// Update supportedLocales.
+  ///
+  /// Should be used in case [MaterialApp].supportedLocales changed.
+  // or readSupportedLocales
+  // add localizationCallback (with/withOutContext)
+  // todo:
+  static List<Locale> readLocales(List<Locale> supportedLocales) {
+    if (supportedLocales.isEmpty) {
+      supportedLocales = const [Locale('en')];
+    }
+
+    if (!identical(LocaleStore.supportedLocales, supportedLocales)) {
+      LocaleStore.setSupportedLocales(supportedLocales);
+    }
+
+    return supportedLocales;
+  }
+
+  /// [ValueNotifier] with index of [localeNameFlags] currently used.
+  static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
+
+  /// A list of generated [LocaleNameFlag]s for supportedLocales.
+  ///
+  /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
+  static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
+
+  /// A ReadOnly [ValueListenable] with current locale.
+  ///
+  /// Use [CurrentLocale.current] to update this notifier.
+  static ValueNotifier<Locale> get locale => CurrentLocale.locale;
+
   /// A text describing switcher
   ///
   /// default: 'Choose the language:'
@@ -320,23 +351,6 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
         }
       }
     }
-  }
-
-  /// Optional, should be used only for [MaterialApp].supportedLocales
-  ///
-  /// will speed up [LocaleSwitcher]
-  // or readSupportedLocales
-  // add localizationCallback (with/withOutContext)
-  static List<Locale> readLocales(List<Locale> supportedLocales) {
-    if (supportedLocales.isEmpty) {
-      supportedLocales = const [Locale('en')];
-    }
-
-    if (!identical(LocaleStore.supportedLocales, supportedLocales)) {
-      LocaleStore.setSupportedLocales(supportedLocales);
-    }
-
-    return supportedLocales;
   }
 
   @override
