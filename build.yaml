@@ -1,0 +1,12 @@
+# Read about `build.yaml` at https://pub.dartlang.org/packages/build_config
+builders:
+
+  # Prepare files for dynamic package - not for users
+  # (builder only run if package == locale_switcher)
+  locale_switcher_dev|packBuilder:
+    import: "package:locale_switcher/src/builders/builders.dart"
+    builder_factories: ["packBuilder"]
+    build_extensions: {r'$package$': ['lib/src/builders/pack/generated_pack.dart'], }
+    auto_apply: root_package
+    build_to: source
+

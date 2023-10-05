@@ -15,7 +15,7 @@ class PackBuilder implements Builder {
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
-    if (buildStep.inputId.package != 'locale_switcher_dev') {
+    if (buildStep.inputId.package != 'locale_switcher') {
       return;
     }
 
@@ -24,7 +24,8 @@ class PackBuilder implements Builder {
 
     print("Writing generated pack ${outFile.path}");
 
-    const packagePath = "lib/src/locale_switcher/";
+    // const packagePath = "lib/src/locale_switcher/";
+    const packagePath = "";
     var package = generateMapFromDir(
       '${packagePath}lib/',
       header: 'final package = <String, dynamic>{',
