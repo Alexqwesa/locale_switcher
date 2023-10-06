@@ -13,14 +13,14 @@ String writeFilteredFile(
         .where((element) {
       if (element.contains(filter)) {
         for (final pattern in includePattern) {
-          if (element.contains(filter + pattern)) {
+          if (element.contains('$filter${pattern.toUpperCase()},')) {
             return true;
           }
         }
         return false;
       } else if (element.contains(filter2)) {
         for (final pattern in includePatternUpper) {
-          if (element.contains(filter2 + pattern)) {
+          if (element.contains(filter2 + pattern + ' ')) {
             return true;
           }
         }

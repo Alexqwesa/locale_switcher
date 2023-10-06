@@ -12,7 +12,7 @@ Future<(String, List<String>, bool)> readAndWritePubspec(BuildStep buildStep,
   var deps = '';
   var comments = '';
   var flags = <String>[];
-  var filterFlags = false;
+  var filterFlags = true;
   // final flags = [];
   if (pubspecYaml case {'locale_switcher': final Map ls}) {
     if (ls case {'flags': final flags_}) {
