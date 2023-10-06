@@ -99,6 +99,7 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+
 Widget animatedToggleSwitchBuilder(
     LocaleNameFlagList langCodes, BuildContext context) {
   if (langCodes.length <= 1) {

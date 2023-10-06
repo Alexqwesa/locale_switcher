@@ -152,11 +152,10 @@ packages:
   locale_switcher:
     dependency: "direct main"
     description:
-      name: locale_switcher
-      sha256: "747d3733a38d8484a5076d9aabf9a43f08aa8c9ce1eb55aedb48973071b44d63"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.10.0"
+      path: "../.."
+      relative: true
+    source: path
+    version: "0.10.1"
   matcher:
     dependency: transitive
     description:

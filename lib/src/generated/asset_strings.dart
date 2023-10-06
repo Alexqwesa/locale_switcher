@@ -57,7 +57,7 @@ class CircleFlag extends StatelessWidget {
   }
 }
 
-final countryCodeToContent = <String, Flag>{
+const countryCodeToContent = <String, Flag>{
   'nz': Flags.NZ,
   'pw': Flags.PW,
   'cm': Flags.CM,

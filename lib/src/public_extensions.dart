@@ -32,10 +32,15 @@ enum LocaleNotFoundFallBack {
   countryCodeThenNull,
 }
 
-Widget? findFlagFor(String str) {
-  final value = LocaleStore.languageToCountry[str] ?? const [];
+Widget? findFlagFor(String input) {
+  final str = input.toLowerCase();
+  final value = LocaleStore.languageToCountry[str] ?? const [''];
   if (value.length > 2 && value[2] != null) return value[2];
-  if (countryCodeToContent.containsKey((value[0] as String).toLowerCase())) {
+
+  if (countryCodeToContent.containsKey(str)) {
+    return Flags.instance[str]?.svg;
+  } else if (countryCodeToContent
+      .containsKey((value[0] as String).toLowerCase())) {
     return Flags.instance[value[0]]?.svg;
   }
   return null;
