@@ -344,11 +344,10 @@ packages:
   locale_switcher:
     dependency: "direct main"
     description:
-      name: locale_switcher
-      sha256: b09cbb154237b002a73393dc973b69871c9901c0248700f215dc079c9400005e
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.10.1"
+      path: "lib/src/packages/locale_switcher"
+      relative: true
+    source: path
+    version: "0.0.0"
   locale_switcher_dev:
     dependency: "direct dev"
     description:
