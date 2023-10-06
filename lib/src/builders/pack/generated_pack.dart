@@ -689,8 +689,7 @@ class SystemLocaleNameFlag extends LocaleNameFlag {
   }) : super(name: LocaleStore.systemLocale);
 }
 ''',
-    'locale_observable': r'''
-import 'package:flutter/foundation.dart';
+    'locale_observable': r'''import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 class TestablePlatformDispatcher {
@@ -1466,7 +1465,6 @@ extension LocaleFlag on Locale {
   }
 }
 
-
 // extension AppLocalizationsExt on BuildContext {
 //   AppLocalizations get l10n => AppLocalizations.of(this);
 // }
@@ -1474,7 +1472,8 @@ extension LocaleFlag on Locale {
 // extension LocaleWithDelegate on Locale {
 //   /// Get class with translation strings for this locale.
 //   AppLocalizations get tr => lookupAppLocalizations(this);
-// }''',
+// }
+''',
     'show_select_locale_dialog': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
