@@ -18,6 +18,7 @@ dependencies:
   intl:
 
 locale_switcher:
+#  flags: false
   # please note: this is country codes, not language codes!
   flags: [ 'us', 'vn', 'de' ]  # generated package will only have this svg flags
   #shared_preferences: false # default: true

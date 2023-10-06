@@ -39,7 +39,10 @@ You will also needed to add generated package into
 locale_switcher:  
   # please note: these are country codes, not language codes!
   flags: [ 'us', 'vn', 'de' ]  # generated package will only have these svg flags, full list here https://github.com/cedvdb/flutter_circle_flags/tree/main/assets/svg
-  shared_preferences: false    # default, true
+  # also can be bool value:
+  # flags: true - by default(include all flags), set to false to not include flags
+  shared_preferences: false    # default - true
+  #easy_localization: false    # default - false, set true if you use easy_localization
   # Note: after changing these lines, run:  dart run build_runner build
   
 dependencies:
@@ -143,7 +146,7 @@ Example with dynamic option switch:
 
 ## TODO:
 
-- [ ] Test with other localization system (currently: tested only intl)
+- [ ] Test with other localization system (currently: tested only intl and easy_localization)
 - [ ] Support slang
 - [ ] Option to use .svg.vec instead of .svg
 - [ ] LocaleSwitcher: callback to all constructors

@@ -31,13 +31,22 @@ class PackageBuilder implements Builder {
     var deps = '';
     var comments = '';
     var flags = <String>[];
+    var filterFlags = false;
     // final flags = [];
     if (pubspecYaml case {'locale_switcher': final Map ls}) {
       if (ls case {'flags': final flags_}) {
-        if (flags_.runtimeType == YamlList) {
-          flags = (flags_ as YamlList)
-              .map<String>((element) => element as String)
-              .toList();
+        if (flags_ is bool) {
+          if (flags_) {
+            deps += '''  flutter_svg: ^2.0.7 \n''';
+            comments += '\n# Supported all flags: $flags_ \n';
+            filterFlags = false;
+          } else {
+            filterFlags = true; // there will be no match with empty flags
+            comments += '\n# Supported no flags \n';
+          }
+
+        } else if (flags_ is YamlList) {
+          flags = flags_.map<String>((element) => element as String).toList();
           if (flags.isNotEmpty) {
             deps += '''  flutter_svg: ^2.0.7 \n''';
             comments += '\n# Supported flags: $flags \n';
@@ -92,6 +101,7 @@ class PackageBuilder implements Builder {
       await buildStep.readAsString(assets),
       flags,
       join(path, 'lib', 'src', 'generated', 'asset_strings.dart'),
+      filterFlags,
     );
 
     const fileHeader = '''
