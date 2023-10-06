@@ -22,6 +22,7 @@ locale_switcher:
   # please note: this is country codes, not language codes!
   flags: [ 'us', 'vn', 'de' ]  # generated package will only have this svg flags
   #shared_preferences: false # default: true
+  #package_path: lib/src/packages/locale_switcher
 
 dev_dependencies:
   flutter_test:

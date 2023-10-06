@@ -4,8 +4,9 @@ builders:
   # Create dynamic package: locale_switcher
   locale_switcher_dev|packageBuilder:
     import: "package:locale_switcher_dev/src/builders/builders.dart"
-    builder_factories: ["packageBuilder"]
-    build_extensions: {'pubspec.yaml': ['lib/src/packages/locale_switcher/pubspec.yaml'], }
+    builder_factories: [ "packageBuilder" ]
+    build_extensions:
+      $package$: ['lib/src/packages/locale_switcher/pubspec.yaml']
     auto_apply: root_package
     build_to: cache
 

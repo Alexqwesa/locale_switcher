@@ -1,16 +1,13 @@
-import 'dart:io';
-
-void writeFilteredFile(String input, List<String> includePattern,
-    String outPath, bool filterFlags) {
+String writeFilteredFile(
+    String input, List<String> includePattern, bool filterFlags) {
   final includePatternUpper = includePattern.map((e) => e.toUpperCase());
   const filter = ": Flags.";
   const filter2 = "  static const Flag ";
-  late final Iterable<String> out;
 
   if (!filterFlags) {
-    out = input.split('\n');
+    return input;
   } else {
-    out = input
+    final out = input
         .replaceAll("Flag(\n      '''", "Flag(      '''")
         .split('\n')
         .where((element) {
@@ -32,12 +29,7 @@ void writeFilteredFile(String input, List<String> includePattern,
         return true;
       }
     });
-  }
 
-  final dir = Directory('lib/src/packages/locale_switcher/lib/src/generated/');
-  if (!dir.existsSync()) {
-    dir.createSync(recursive: true);
+    return out.join('\n');
   }
-
-  File(outPath).writeAsStringSync(out.join('\n'));
 }
