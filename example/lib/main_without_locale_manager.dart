@@ -18,15 +18,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // ============= THIS 6 LINES ARE REQUIRED =============
     return ValueListenableBuilder(
-      valueListenable: LocaleManager.locale,
+      valueListenable: LocaleSwitcher.locale,
       builder: (BuildContext context, locale, Widget? child) {
         return MaterialApp(
           locale: locale,
           supportedLocales: AppLocalizations.supportedLocales,
           // ...
           localizationsDelegates: AppLocalizations.localizationsDelegates,
-          title: LocaleManager.locale.value.tr.example,
-          home: MyHomePage(title: LocaleManager.locale.value.tr.example),
+          title: LocaleSwitcher.locale.value.tr.example,
+          home: MyHomePage(title: LocaleSwitcher.locale.value.tr.example),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme:
@@ -74,17 +74,17 @@ class MyHomePage extends StatelessWidget {
                 builder: (langCodes, context) {
                   if (langCodes.length <= 1) {
                     // AnimatedToggleSwitch crash with one value
-                    langCodes.add(showOtherLocales);
+                    langCodes.addShowOtherLocales();
                   }
 
-                  return AnimatedToggleSwitch<String>.rolling(
-                    values: langCodes,
-                    current: LocaleManager.languageCode.value,
+                  return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
+                    values: LocaleSwitcher.localeNameFlags,
+                    current: CurrentLocale.current,
                     onChanged: (langCode) {
-                      if (langCode == showOtherLocales) {
+                      if (langCode.name == showOtherLocales) {
                         showSelectLocaleDialog(context);
                       } else {
-                        LocaleManager.languageCode.value = langCode;
+                        CurrentLocale.current = langCode;
                       }
                     },
                     iconBuilder: LangIconWithToolTip.forIconBuilder,
