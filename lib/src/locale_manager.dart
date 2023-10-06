@@ -40,6 +40,8 @@ class LocaleManager extends StatefulWidget {
     this.reassignFlags,
     this.storeLocale = true,
     this.sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
+    // this.setLocaleCallback, // todo:
+    // this.readLocaleCallback,
 
     /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
     /// or [CupertinoApp].
