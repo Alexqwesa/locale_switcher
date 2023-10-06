@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+* sync with `locale_switcher`.
+
 ## 0.9.8
 
 * minor fix.

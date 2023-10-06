@@ -4,7 +4,6 @@ import 'package:path/path.dart' show join;
 void writeMapAsFiles(Map<String, dynamic> package,
     Future<void> Function(String file, String output) writer,
     {path = 'lib/'}) {
-
   for (final key in package.keys) {
     if (package[key].runtimeType == String) {
       writer(join(path, '$key.dart'), package[key]);

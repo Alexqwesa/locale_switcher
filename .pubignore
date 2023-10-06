@@ -22,6 +22,9 @@ build/
 docs/
 /lib/generated_plugin_registrant.dart
 desiredFileName.txt
+
+locale_switcher.iml
+
 /example/lib/src/packages/**
 # lib/**
 lib/locale_switcher.dart

@@ -44,7 +44,7 @@ class PackageBuilder implements Builder {
 
     // write asset_strings.dart
     final assets = AssetId('locale_switcher_dev',
-        join('lib', 'src', 'builders', 'pack', 'asset_strings.dart'));
+        join('lib', 'src', 'builders', 'pack', 'asset_strings.txt'));
     final assetStrings = writeFilteredFile(
       await buildStep.readAsString(assets),
       flags,

@@ -80,7 +80,8 @@ a widget to switch locale:
 
 ## Usage
 
-1) Wrap `MaterialApp` or `CupertinoApp` with [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html):
+1) Wrap `MaterialApp` or `CupertinoApp` with [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html)
+(example for `intl` package):
 
 ```dart
   @override
