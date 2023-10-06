@@ -162,8 +162,8 @@ class LocaleNameFlag {
   }
 
   String get language {
-    _language ??= (LocaleStore.languageToCountry[name]?[1]! ??
-            LocaleStore.languageToCountry[name.substring(0, 2)]) ??
+    _language ??= (LocaleStore.languageToCountry[name]?[1] ??
+            LocaleStore.languageToCountry[name.substring(0, 2)]?[0]) ??
         name;
     return _language!;
   }
