@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.10.1
+## 0.10.2
 
 * LocaleSwitcher.localeNameFlag - is list generated from supportedLocales,
 * CurrentLocale class - notifiers and helpers to work with LocaleNameFlagList,
