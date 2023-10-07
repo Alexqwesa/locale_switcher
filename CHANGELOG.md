@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+
+* LocaleSwitcher.setLocaleCallBack - your callBack after selecting locale,
+* LocaleSwitcher.localeBestMatch - return best match in supportedLocales for LocaleSwitcher.locale,
+* easy_localization status: tested,
+* docs update.
+
 ## 0.10.2
 
 * LocaleSwitcher.localeNameFlag - is list generated from supportedLocales,
@@ -19,13 +26,13 @@
 
 ## 0.9.6
 
-* created package `locale_switcher_dev` which can generate this package dynamically. 
-which required a few more lines to set up, but allow you to control 
-what flags are included (or none) and which packages it depend on (or none).
+* created package `locale_switcher_dev` which can generate this package dynamically.
+  which required a few more lines to set up, but allow you to control
+  what flags are included (or none) and which packages it depend on (or none).
 
 ## 0.9.5
 
-* remove `LocaleSwitcher.toggle` and it dependency`animated_toggle_switch`, 
+* remove `LocaleSwitcher.toggle` and it dependency`animated_toggle_switch`,
 * instead of `LocaleSwitcher.toggle` use `LocaleSwitcher.custom` with `animated_toggle_switch` as shown in example,
 * new option `shape` for `LocaleSwitcher`,
 * use generated icon resources, preparing to use build_runner.
