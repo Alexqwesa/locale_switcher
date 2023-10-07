@@ -32,9 +32,9 @@ and which packages it depend on (or none).
 ## Features
 
 - [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html) widget:
-  - optionally: load/stores the last selected locale in `SharedPreferences`,
-  - update locale of app (listen to `notifier` and rebuild `MaterialApp`),
-  - observes changes in the system locale,
+    - optionally: load/stores the last selected locale in `SharedPreferences`,
+    - update locale of app (listen to `notifier` and rebuild `MaterialApp`),
+    - observes changes in the system locale,
 
 - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) - 
 a widget to switch locale:
@@ -45,8 +45,9 @@ a widget to switch locale:
     - constructor [LocaleSwitcher.iconButton](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.iconButton.html) - button/indicator which open popup window to select locale,
 
 - Some other helpers:
-  - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
-  - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
+    - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html)
+      class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
+    - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
 
 - Can be generated via [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev) 
 package, in this case you control:
@@ -55,21 +56,23 @@ package, in this case you control:
 
 ## Usage
 
-1) Wrap `MaterialApp` or `CupertinoApp` with [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html):
+1) Wrap `MaterialApp` or `CupertinoApp`
+   with [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html)
+   (example for `intl` package):
 
 ```dart
   @override
 Widget build(BuildContext context, WidgetRef ref) {
   return LocaleManager(
       child: MaterialApp(
-        locale: LocaleManager.locale.value,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: LocaleSwitcher.localeBestMatch,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
   //...
 ```
 
-2) Add [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) widget anywhere into your app.
-
+2) Add [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html)
+   widget anywhere into your app.
 
 ## Troubleshooting
 
@@ -79,18 +82,18 @@ before reporting bug.
 
 ### Check that intl package is setup correctly:
 
-The following instructions are  from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
+The following instructions are from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
 
 In `pubspec.yaml`:
 
 ```yaml  
 
 dependencies: # in this section
-  intl: 
+  intl:
   flutter_localizations:
     sdk: flutter
 dev_dependencies: # in this section 
-  build_runner:  
+  build_runner:
 flutter: # in this section 
   generate: true  
 ```
@@ -106,22 +109,32 @@ untranslated-messages-file: desiredFileName.txt
 preferred-supported-locales: [ "en", "vi", "de" ]
 nullable-getter: false
 ```
+
 ## Example
 
-[Online Example here](https://alexqwesa.github.io/locale_switcher/) 
+### With [intl](https://pub.dev/packages/intl) package:
+
+[Online Example here](https://alexqwesa.github.io/locale_switcher/)
 
 - [Example Code (recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
 
-
-Another example code: [LocaleSwitcher used without 
+Another example code: [LocaleSwitcher used without
 LocaleManager(not recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_without_locale_manager.dart).
 
-Example with dynamic option switch: 
+Example with dynamic option switch:
 [here](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart).
+
+### With [easy_localization](https://pub.dev/packages/easy_localization) package:
+
+[locale_switcher_dev](https://pub.dev/packages/locale_switcher) + easy_localization:
+https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization (recommended)
+
+[locale_switcher](https://pub.dev/packages/locale_switcher) + easy_localization:
+https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization
 
 ## TODO:
 
-- [ ] Test with other localization system (currently: tested only intl)
+- [ ] Test with other localization system (currently: tested intl and easy_localization)
 - [ ] Support slang
 - [ ] Rectangle and oval flags, not just square and circle
 
@@ -138,7 +151,9 @@ or dynamically via  [LocaleSwitcher.custom](https://pub.dev/documentation/locale
 
 #### - How to change flag of language?
 
-Use [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html).`reassign` parameter like this:
+Use [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html).`reassign`
+parameter like this:
+
 ```dart
 LocaleManager(
   reassign: {'en': ['GB', 'English', <Your_icon_optional>]}
@@ -147,7 +162,6 @@ LocaleManager(
 ...
 )
 ```
-
 
 #### - How to use localization outside of `MaterialApp`(or CupertinoApp)?
 
