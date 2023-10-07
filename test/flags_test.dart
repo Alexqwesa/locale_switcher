@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
+// ignore: avoid_relative_lib_imports
 import '../example/lib/main_with_counter.dart';
 
 void main() {
