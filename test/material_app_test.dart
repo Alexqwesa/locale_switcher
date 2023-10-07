@@ -82,7 +82,7 @@ void main() {
 
       // Verify that vi locale is loaded
       final selectLocaleButton = find.byType(SelectLocaleButton);
-      expect(selectLocaleButton, findsNWidgets(2));
+      expect(selectLocaleButton, findsNWidgets(1));
       await tester.tap(selectLocaleButton.at(0));
       await tester.pumpAndSettle();
 
