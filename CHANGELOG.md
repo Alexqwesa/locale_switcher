@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.11.0
+
+* sync with `locale_switcher`:
+* LocaleSwitcher.setLocaleCallBack - your callBack after selecting locale,
+* LocaleSwitcher.localeBestMatch - return best match in supportedLocales for LocaleSwitcher.locale,
+* easy_localization status: tested,
+* docs update.
+
+
 ## 0.10.2
 
 * sync with `locale_switcher`.
