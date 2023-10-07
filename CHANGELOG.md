@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.0
+## 0.11.1
 
 * LocaleSwitcher.setLocaleCallBack - your callBack after selecting locale,
 * LocaleSwitcher.localeBestMatch - return best match in supportedLocales for LocaleSwitcher.locale,
