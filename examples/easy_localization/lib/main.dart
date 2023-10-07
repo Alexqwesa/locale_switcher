@@ -64,7 +64,10 @@ class MyHomePage extends StatelessWidget {
         title: Text(title),
         actions: [
           // =============== THIS LINE ===============
-          LocaleSwitcher.iconButton(),
+          LocaleSwitcher.iconButton(
+            setLocaleCallBack: (context) =>
+                context.setLocale(LocaleSwitcher.localeBestMatch),
+          ),
         ],
       ),
       body: Center(
@@ -73,7 +76,11 @@ class MyHomePage extends StatelessWidget {
           children: <Widget>[
             Center(
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.menu(title: LocaleKeys.chooseLanguage.tr()),
+              child: LocaleSwitcher.menu(
+                title: LocaleKeys.chooseLanguage.tr(),
+                setLocaleCallBack: (context) =>
+                    context.setLocale(LocaleSwitcher.localeBestMatch),
+              ),
             ),
             const Divider(),
             SizedBox(
@@ -91,6 +98,8 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
                 title: LocaleKeys.chooseLanguage.tr(),
+                setLocaleCallBack: (context) =>
+                    context.setLocale(LocaleSwitcher.localeBestMatch),
               ),
             ),
           ],
@@ -112,9 +121,14 @@ Widget animatedToggleSwitchBuilder(
     current: CurrentLocale.current,
     onChanged: (langCode) {
       if (langCode.name == showOtherLocales) {
-        showSelectLocaleDialog(context);
+        showSelectLocaleDialog(
+          context,
+          setLocaleCallBack: (context) =>
+              context.setLocale(LocaleSwitcher.localeBestMatch),
+        );
       } else {
         CurrentLocale.current = langCode;
+        context.setLocale(LocaleSwitcher.localeBestMatch);
       }
     },
     iconBuilder: LangIconWithToolTip.forIconBuilder,

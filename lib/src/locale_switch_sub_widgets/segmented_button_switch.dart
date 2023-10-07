@@ -9,12 +9,15 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   final ShapeBorder? shape;
 
+  final Function(BuildContext)? setLocaleCallBack;
+
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
     this.useNLettersInsteadOfIcon = 0,
     this.radius = 32,
     this.shape,
+    this.setLocaleCallBack,
   });
 
   @override
@@ -48,9 +51,10 @@ class SegmentedButtonSwitch extends StatelessWidget {
       multiSelectionEnabled: false,
       onSelectionChanged: (Set<LocaleNameFlag> newSelection) {
         if (newSelection.first.name == showOtherLocales) {
-          showSelectLocaleDialog(context);
+          showSelectLocaleDialog(context, setLocaleCallBack: setLocaleCallBack);
         } else {
           CurrentLocale.current = newSelection.first;
+          setLocaleCallBack?.call(context);
         }
       },
     );

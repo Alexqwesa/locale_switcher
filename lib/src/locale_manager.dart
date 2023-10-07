@@ -24,7 +24,7 @@ class LocaleManager extends StatefulWidget {
   /// Make sure what static data only initialized once.
   static bool isInitialized = false;
 
-  /// Add or change language to flag mapping.
+  /// Add or change records for language in prebuilt flag mapping.
   ///
   /// Example:
   /// {'en': ['GB', 'English', <Icon>]}
@@ -40,8 +40,6 @@ class LocaleManager extends StatefulWidget {
     this.reassignFlags,
     this.storeLocale = true,
     this.sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
-    // this.setLocaleCallback, // todo:
-    // this.readLocaleCallback,
 
     /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
     /// or [CupertinoApp].

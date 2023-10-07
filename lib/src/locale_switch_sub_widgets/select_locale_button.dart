@@ -19,6 +19,8 @@ class SelectLocaleButton extends StatelessWidget {
 
   final ShapeBorder? shape;
 
+  final Function(BuildContext)? setLocaleCallBack;
+
   const SelectLocaleButton({
     super.key,
     this.updateIconOnChange = true,
@@ -28,6 +30,7 @@ class SelectLocaleButton extends StatelessWidget {
     this.popUpWindowTitle = "",
     this.useNLettersInsteadOfIcon = 0,
     this.shape = const CircleBorder(eccentricity: 0),
+    this.setLocaleCallBack,
   });
 
   @override
@@ -46,8 +49,11 @@ class SelectLocaleButton extends StatelessWidget {
               ),
           // tooltip: LocaleStore.languageToCountry[showOtherLocales]?[1] ??
           //     "Other locales",
-          onPressed: () =>
-              showSelectLocaleDialog(context, title: popUpWindowTitle),
+          onPressed: () => showSelectLocaleDialog(
+            context,
+            title: popUpWindowTitle,
+            setLocaleCallBack: setLocaleCallBack,
+          ),
         );
       },
     );

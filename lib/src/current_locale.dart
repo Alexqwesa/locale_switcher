@@ -30,7 +30,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   ///
   /// In case [LocaleStore.systemLocale] is selected: it didn't try to guess
   /// which [LocaleNameFlag] is best match, and just return OS locale.
-  /// (You localization system should select best match).
+  /// (Your localization system should select best match).
   static ValueNotifier<Locale> get locale {
     try {
       return _locale;

@@ -138,13 +138,33 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
 
 /// Just record of [Locale], it's name and flag.
 class LocaleNameFlag {
+  /// cache
   String? _language;
 
+  /// cache
   Widget? _flag;
 
+  /// [Locale].toString() or one of special names, like: systemLocale or [showOtherLocales].
   final String name;
 
+  /// Is [Locale] for ordinary locales, null for [showOtherLocales], dynamic for systemLocale.
   final Locale? locale;
+
+  Locale get bestMatch {
+    switch (name) {
+      case showOtherLocales:
+        if (LocaleStore.localeNameFlags.length > 2) {
+          return LocaleStore.localeNameFlags[1].locale ?? const Locale('en');
+        } else {
+          return const Locale('en');
+        }
+      case LocaleStore.systemLocale:
+        return CurrentLocale.tryFindLocale(locale!.toString())?.locale ??
+            const Locale('en');
+      default:
+        return locale ?? const Locale('en');
+    }
+  }
 
   LocaleNameFlag({
     this.name = '',
@@ -154,7 +174,18 @@ class LocaleNameFlag {
   })  : _flag = flag,
         _language = language;
 
+  /// Find flag for [name].
+  ///
+  /// Search in [LocaleManager.reassignFlags] for locale first, then [Flags.instance].
+  ///
+  /// For systemLocale or [showOtherLocales] only look into [LocaleManager.reassignFlags].
   Widget? get flag {
+    if (name == showOtherLocales || name == LocaleStore.systemLocale) {
+      if (LocaleStore.languageToCountry[name] != null &&
+          LocaleStore.languageToCountry[name]!.length > 2) {
+        _flag = LocaleStore.languageToCountry[name]?[2];
+      }
+    }
     _flag ??= locale?.flag(fallBack: null);
     if (_flag == null && locale?.toString() != name) {
       _flag = findFlagFor(name);
