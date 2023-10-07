@@ -89,6 +89,8 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
+                // setLocaleCallBack: (context) =>
+                //     context.setLocale(LocaleSwitcher.localeBestMatch),
               ),
             ),
             const Divider(),

@@ -124,7 +124,11 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
   ///
   /// You should make sure to handle this entry selection in your widget.
   // todo: {Null Function() onTap = ...}
-  void addShowOtherLocales({String name = showOtherLocales, Widget? flag}) {
+  void addShowOtherLocales({
+    String name = showOtherLocales,
+    Widget? flag,
+    // Function(BuildContext)? setLocaleCallBack,
+  }) {
     locales.add(null);
     names.add(showOtherLocales);
     entries.add(
@@ -132,6 +136,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
           name: names.last,
           locale: locales.last,
           flag: flag ?? CurrentLocale.buttonFlagForOtherLocales),
+      // setLocaleCallBack: setLocaleCallBack
     );
   }
 }
@@ -194,8 +199,9 @@ class LocaleNameFlag {
   }
 
   String get language {
-    _language ??= (LocaleStore.languageToCountry[name]?[1] ??
-            LocaleStore.languageToCountry[name.substring(0, 2)]?[0]) ??
+    _language ??= (LocaleStore.languageToCountry[name.toLowerCase()]?[1] ??
+            LocaleStore.languageToCountry[name.substring(0, 2).toLowerCase()]
+                ?[1]) ??
         name;
     return _language!;
   }

@@ -114,7 +114,7 @@ class _LocaleManagerState extends State<LocaleManager> {
       // reassign flags
       if (widget.reassignFlags != null) {
         for (final MapEntry(:key, :value) in widget.reassignFlags!.entries) {
-          LocaleStore.languageToCountry[key] = value;
+          LocaleStore.languageToCountry[key.toLowerCase()] = value;
         }
       }
 

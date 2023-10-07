@@ -262,6 +262,7 @@ class LocaleSwitcher extends StatefulWidget {
     required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
     bool showOsLocale = true,
+    // Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
       key: key ?? GlobalKey(),
@@ -270,6 +271,7 @@ class LocaleSwitcher extends StatefulWidget {
       numberOfShown: numberOfShown,
       type: _Switcher.custom,
       builder: builder,
+      // setLocaleCallBack: null,
     );
   }
 
@@ -400,7 +402,8 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
           locales.replaceLast(localeName: CurrentLocale.current);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
-          locales.addShowOtherLocales();
+          locales
+              .addShowOtherLocales(); //setLocaleCallBack: widget.setLocaleCallBack);
         }
         // todo: add 0.5 second delayed check of app locale ?
 

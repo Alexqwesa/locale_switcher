@@ -26,13 +26,13 @@ class GridOfLanguages extends StatelessWidget {
             maxCrossAxisExtent: 200,
           ),
       children: [
-        ...locales.map((langCode) {
-          final lang = LocaleStore.languageToCountry[langCode] ??
-              [langCode.name, langCode.language];
+        ...locales.map((locNameFlag) {
+          final lang = LocaleStore.languageToCountry[locNameFlag] ??
+              [locNameFlag.name, locNameFlag.language];
           return Card(
             child: InkWell(
               onTap: () {
-                CurrentLocale.current = langCode;
+                CurrentLocale.current = locNameFlag;
                 setLocaleCallBack?.call(context);
               },
               child: Column(
@@ -41,7 +41,7 @@ class GridOfLanguages extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: LangIconWithToolTip(
-                          localeNameFlag: langCode, shape: shape),
+                          localeNameFlag: locNameFlag, shape: shape),
                     ),
                   ),
                   Padding(

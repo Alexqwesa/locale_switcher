@@ -165,10 +165,8 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  static Widget get buttonFlagForOtherLocales => LocaleSwitcher.iconButton(
-        useStaticIcon:
-            ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
-                ? LocaleStore.languageToCountry[showOtherLocales]![2]
-                : const Icon(Icons.expand_more),
-      );
+  static Widget get buttonFlagForOtherLocales =>
+      ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
+          ? LocaleStore.languageToCountry[showOtherLocales]![2]
+          : const Icon(Icons.expand_more);
 }
