@@ -151,10 +151,10 @@ Example with dynamic option switch:
 ### With [easy_localization](https://pub.dev/packages/easy_localization) package:
 
 [locale_switcher_dev](https://pub.dev/packages/locale_switcher) + easy_localization:
-https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization (recommended)
+[https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization](https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization) (recommended)
 
 [locale_switcher](https://pub.dev/packages/locale_switcher) + easy_localization:
-https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization
+[https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization](https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization)
 
 ## TODO:
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.1
+## 0.11.2
 
 * sync with `locale_switcher`:
 * LocaleSwitcher.setLocaleCallBack - your callBack after selecting locale,
