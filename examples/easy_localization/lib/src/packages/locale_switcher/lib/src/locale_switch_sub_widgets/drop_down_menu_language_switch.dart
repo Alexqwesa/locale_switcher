@@ -10,6 +10,8 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   final ShapeBorder? shape;
 
+  final Function(BuildContext)? setLocaleCallBack;
+
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
@@ -17,6 +19,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
+    this.setLocaleCallBack,
   });
 
   final LocaleNameFlagList locales;
@@ -67,9 +70,11 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       onSelected: (LocaleNameFlag? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
-            showSelectLocaleDialog(context);
+            showSelectLocaleDialog(context,
+                setLocaleCallBack: setLocaleCallBack);
           } else {
             CurrentLocale.current = langCode;
+            setLocaleCallBack?.call(context);
           }
         }
       },

@@ -5,14 +5,14 @@ import 'package:locale_switcher/src/locale_store.dart';
 /// This is the [GridView] used by [showSelectLocaleDialog] internally.
 class GridOfLanguages extends StatelessWidget {
   final SliverGridDelegate? gridDelegate;
-  final Function(BuildContext)? additionalCallBack;
+  final Function(BuildContext)? setLocaleCallBack;
 
   final ShapeBorder? shape;
 
   const GridOfLanguages({
     super.key,
     this.gridDelegate,
-    this.additionalCallBack,
+    this.setLocaleCallBack,
     this.shape = const CircleBorder(eccentricity: 0),
   });
 
@@ -26,14 +26,14 @@ class GridOfLanguages extends StatelessWidget {
             maxCrossAxisExtent: 200,
           ),
       children: [
-        ...locales.map((langCode) {
-          final lang = LocaleStore.languageToCountry[langCode] ??
-              [langCode.name, langCode.language];
+        ...locales.map((locNameFlag) {
+          final lang = LocaleStore.languageToCountry[locNameFlag] ??
+              [locNameFlag.name, locNameFlag.language];
           return Card(
             child: InkWell(
               onTap: () {
-                CurrentLocale.current = langCode;
-                additionalCallBack?.call(context);
+                CurrentLocale.current = locNameFlag;
+                setLocaleCallBack?.call(context);
               },
               child: Column(
                 children: [
@@ -41,7 +41,7 @@ class GridOfLanguages extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: LangIconWithToolTip(
-                          localeNameFlag: langCode, shape: shape),
+                          localeNameFlag: locNameFlag, shape: shape),
                     ),
                   ),
                   Padding(

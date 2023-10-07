@@ -124,7 +124,11 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
   ///
   /// You should make sure to handle this entry selection in your widget.
   // todo: {Null Function() onTap = ...}
-  void addShowOtherLocales({String name = showOtherLocales, Widget? flag}) {
+  void addShowOtherLocales({
+    String name = showOtherLocales,
+    Widget? flag,
+    // Function(BuildContext)? setLocaleCallBack,
+  }) {
     locales.add(null);
     names.add(showOtherLocales);
     entries.add(
@@ -132,19 +136,40 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
           name: names.last,
           locale: locales.last,
           flag: flag ?? CurrentLocale.buttonFlagForOtherLocales),
+      // setLocaleCallBack: setLocaleCallBack
     );
   }
 }
 
 /// Just record of [Locale], it's name and flag.
 class LocaleNameFlag {
+  /// cache
   String? _language;
 
+  /// cache
   Widget? _flag;
 
+  /// [Locale].toString() or one of special names, like: systemLocale or [showOtherLocales].
   final String name;
 
+  /// Is [Locale] for ordinary locales, null for [showOtherLocales], dynamic for systemLocale.
   final Locale? locale;
+
+  Locale get bestMatch {
+    switch (name) {
+      case showOtherLocales:
+        if (LocaleStore.localeNameFlags.length > 2) {
+          return LocaleStore.localeNameFlags[1].locale ?? const Locale('en');
+        } else {
+          return const Locale('en');
+        }
+      case LocaleStore.systemLocale:
+        return CurrentLocale.tryFindLocale(locale!.toString())?.locale ??
+            const Locale('en');
+      default:
+        return locale ?? const Locale('en');
+    }
+  }
 
   LocaleNameFlag({
     this.name = '',
@@ -154,7 +179,18 @@ class LocaleNameFlag {
   })  : _flag = flag,
         _language = language;
 
+  /// Find flag for [name].
+  ///
+  /// Search in [LocaleManager.reassignFlags] for locale first, then [Flags.instance].
+  ///
+  /// For systemLocale or [showOtherLocales] only look into [LocaleManager.reassignFlags].
   Widget? get flag {
+    if (name == showOtherLocales || name == LocaleStore.systemLocale) {
+      if (LocaleStore.languageToCountry[name] != null &&
+          LocaleStore.languageToCountry[name]!.length > 2) {
+        _flag = LocaleStore.languageToCountry[name]?[2];
+      }
+    }
     _flag ??= locale?.flag(fallBack: null);
     if (_flag == null && locale?.toString() != name) {
       _flag = findFlagFor(name);
@@ -163,8 +199,9 @@ class LocaleNameFlag {
   }
 
   String get language {
-    _language ??= (LocaleStore.languageToCountry[name]?[1] ??
-            LocaleStore.languageToCountry[name.substring(0, 2)]?[0]) ??
+    _language ??= (LocaleStore.languageToCountry[name.toLowerCase()]?[1] ??
+            LocaleStore.languageToCountry[name.substring(0, 2).toLowerCase()]
+                ?[1]) ??
         name;
     return _language!;
   }

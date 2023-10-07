@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     // ============= THIS 4 LINES ARE REQUIRED =============
     return LocaleManager(
       child: MaterialApp(
-        locale: LocaleSwitcher.locale.value,
+        locale: LocaleSwitcher.localeBestMatch,
         supportedLocales: AppLocalizations.supportedLocales,
         // ...
         localizationsDelegates: AppLocalizations.localizationsDelegates,
