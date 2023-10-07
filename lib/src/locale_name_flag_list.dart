@@ -35,8 +35,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
     }
   }
 
-  LocaleNameFlagList.fromEntries(
-    Iterable<LocaleNameFlag> list, {
+  LocaleNameFlagList.fromEntries(Iterable<LocaleNameFlag> list, {
     this.supportedLocales = const <Locale>[],
     bool addOsLocale = false,
   }) {
@@ -156,6 +155,13 @@ class LocaleNameFlag {
   final Locale? locale;
 
   Locale get bestMatch {
+    // exact search
+    if (name != LocaleStore.systemLocale &&
+        name != showOtherLocales &&
+        LocaleStore.localeNameFlags.names.contains(name)) {
+      return CurrentLocale.current.locale!;
+    }
+    // guess
     switch (name) {
       case showOtherLocales:
         if (LocaleStore.localeNameFlags.length > 2) {
@@ -164,7 +170,9 @@ class LocaleNameFlag {
           return const Locale('en');
         }
       case LocaleStore.systemLocale:
-        return CurrentLocale.tryFindLocale(locale!.toString())?.locale ??
+        return CurrentLocale
+            .tryFindLocale(locale!.toString())
+            ?.locale ??
             const Locale('en');
       default:
         return locale ?? const Locale('en');
@@ -176,7 +184,8 @@ class LocaleNameFlag {
     this.locale,
     Widget? flag,
     String? language,
-  })  : _flag = flag,
+  })
+      : _flag = flag,
         _language = language;
 
   /// Find flag for [name].
@@ -200,8 +209,8 @@ class LocaleNameFlag {
 
   String get language {
     _language ??= (LocaleStore.languageToCountry[name.toLowerCase()]?[1] ??
-            LocaleStore.languageToCountry[name.substring(0, 2).toLowerCase()]
-                ?[1]) ??
+        LocaleStore.languageToCountry[name.substring(0, 2).toLowerCase()]
+        ?[1]) ??
         name;
     return _language!;
   }
