@@ -22,7 +22,8 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
       locales.add(null);
       names.add(LocaleStore.systemLocale);
       entries.add(
-        SystemLocaleNameFlag(flag: findFlagFor(LocaleStore.systemLocale)),
+        SystemLocaleNameFlag(
+            flag: findFlagFor(language: LocaleStore.systemLocale)),
       );
     }
 
@@ -47,7 +48,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
         LocaleNameFlag(
             name: names.last,
             locale: locales.last,
-            flag: findFlagFor(LocaleStore.systemLocale)),
+            flag: findFlagFor(language: LocaleStore.systemLocale)),
       );
     }
     entries.addAll(list);
@@ -200,7 +201,7 @@ class LocaleNameFlag {
     }
     _flag ??= locale?.flag(fallBack: null);
     if (_flag == null && locale?.toString() != name) {
-      _flag = findFlagFor(name);
+      _flag = findFlagFor(language: name);
     }
     return _flag;
   }
