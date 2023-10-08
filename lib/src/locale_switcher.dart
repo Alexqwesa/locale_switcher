@@ -11,7 +11,11 @@ import 'locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'locale_switch_sub_widgets/select_locale_button.dart';
 import 'locale_switch_sub_widgets/title_of_lang_switch.dart';
 
+/// A special name for wrapper [LocaleName] to use as system locale.
 const showOtherLocales = 'show_other_locales_button';
+
+/// A special name for wrapper [LocaleName] to use as button that show other locales.
+const systemLocale = 'system';
 
 enum _Switcher {
   menu,
@@ -21,7 +25,8 @@ enum _Switcher {
   segmentedButton,
 }
 
-typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
+typedef LocaleSwitchBuilder = Widget Function(
+    SupportedLocaleNames, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
@@ -31,16 +36,16 @@ typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 /// - [LocaleSwitcher.menu],
 /// - [LocaleSwitcher.custom].
 class LocaleSwitcher extends StatefulWidget {
-  /// Currently selected entry in [localeNameFlags] that contains [Locale].
+  /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
   ///
-  /// You can update it by using any value in [localeNameFlags],
-  /// if you are not sure that your locale exist in list of supportedLocales(in [localeNameFlags]):
+  /// You can update it by using any value in [supportedLocaleNames],
+  /// if you are not sure that your locale exist in list of supportedLocales(in [supportedLocaleNames]):
   /// use [LocaleSwitcher.trySetLocale].
   ///
   /// The notifier [localeIndex] is the underlying notifier for this value.
-  static LocaleNameFlag get current => LocaleSwitcher.current;
+  static LocaleName get current => LocaleSwitcher.current;
 
-  static set current(LocaleNameFlag value) => LocaleSwitcher.current = value;
+  static set current(LocaleName value) => LocaleSwitcher.current = value;
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
@@ -62,13 +67,14 @@ class LocaleSwitcher extends StatefulWidget {
     return supportedLocales;
   }
 
-  /// [ValueNotifier] with index of [localeNameFlags] currently used.
+  /// [ValueNotifier] with index of [supportedLocaleNames] currently used.
   static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
 
-  /// A list of generated [LocaleNameFlag]s for supportedLocales.
+  /// A list of generated [LocaleName]s for supportedLocales.
   ///
   /// Note: [supportedLocales] should be the same as [MaterialApp].supportedLocales
-  static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
+  static SupportedLocaleNames get supportedLocaleNames =>
+      LocaleStore.supportedLocaleNames;
 
   /// A ReadOnly [ValueListenable] with current locale.
   ///
@@ -133,7 +139,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Only for [LocaleSwitcher.grid] constructor
   final SliverGridDelegate? gridDelegate;
 
-  /// Function called after choosing new current `Locale` (actually [LocaleNameFlag]).
+  /// Function called after choosing new current `Locale` (actually [LocaleName]).
   ///
   /// Useful for [LocaleSwitcher.grid] - if you want to close popup window after new selection.
   ///
@@ -399,8 +405,8 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   Widget build(BuildContext context) {
     final skip = widget.showOsLocale ? 0 : 1;
-    final staticLocales = LocaleNameFlagList.fromEntries(
-      LocaleStore.localeNameFlags.entries
+    final staticLocales = SupportedLocaleNames.fromEntries(
+      LocaleStore.supportedLocaleNames.entries
           .skip(skip) // first is system locale
           .take(widget.numberOfShown + 1 - skip) // chose most used
       ,
@@ -409,7 +415,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
     return ValueListenableBuilder(
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
-        var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
+        var locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
         if (!locales.names.contains(LocaleSwitcher.current.name)) {
           locales.replaceLast(localeName: LocaleSwitcher.current);
         }

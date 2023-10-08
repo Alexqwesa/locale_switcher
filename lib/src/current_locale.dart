@@ -13,23 +13,23 @@ enum IfLocaleNotFound {
 /// An indexes and notifiers to work with [CurrentLocale.supported].
 ///
 /// [current] and [index] - are pointed at current active entry in
-/// [LocaleSwitcher.localeNameFlags], have setters, correspond notifier - [notifier].
+/// [LocaleSwitcher.supportedLocaleNames], have setters, correspond notifier - [notifier].
 ///
 /// And other useful static methods and properties...
 abstract class CurrentLocale extends CurrentSystemLocale {
-  /// Global storage of [LocaleNameFlag] - instance of [LocaleNameFlagList].
+  /// Global storage of [LocaleName] - instance of [SupportedLocaleNames].
   ///
-  /// [LocaleNameFlag] are wrappers around [Locale]s in supportedLocales list.
-  static LocaleNameFlagList get supported => LocaleStore.localeNameFlags;
+  /// [LocaleName] are wrappers around [Locale]s in supportedLocales list.
+  static SupportedLocaleNames get supported => LocaleStore.supportedLocaleNames;
 
   static late final ValueNotifier<int> _allNotifiers;
   static final _index = ValueNotifier(0);
   static late final ValueNotifier<Locale> _locale;
 
-  /// Listen on both system locale and currently selected [LocaleNameFlag].
+  /// Listen on both system locale and currently selected [LocaleName].
   ///
-  /// In case [LocaleStore.systemLocale] is selected: it didn't try to guess
-  /// which [LocaleNameFlag] is best match, and just return OS locale.
+  /// In case [systemLocale] is selected: it didn't try to guess
+  /// which [LocaleName] is best match, and just return OS locale.
   /// (Your localization system should select best match).
   static ValueNotifier<Locale> get locale {
     try {
@@ -66,8 +66,8 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   static int get index => _index.value;
 
   static set index(int value) {
-    if (value < LocaleStore.localeNameFlags.length && value >= 0) {
-      if (LocaleStore.localeNameFlags[value].name != showOtherLocales) {
+    if (value < LocaleStore.supportedLocaleNames.length && value >= 0) {
+      if (LocaleStore.supportedLocaleNames[value].name != showOtherLocales) {
         // just double check
         _index.value = value;
 
@@ -77,26 +77,26 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  /// Currently selected entry in [LocaleNameFlag].
+  /// Currently selected entry in [LocaleName].
   ///
   /// You can update this value directly, or
   /// if you are not sure that your locale exist in list of supportedLocales:
   /// use [CurrentLocale.trySetLocale].
-  static LocaleNameFlag get current => LocaleStore.localeNameFlags[index];
+  static LocaleName get current => LocaleStore.supportedLocaleNames[index];
 
-  static set current(LocaleNameFlag value) {
-    var idx = LocaleStore.localeNameFlags.indexOf(value);
-    if (idx >= 0 && idx < LocaleStore.localeNameFlags.length) {
+  static set current(LocaleName value) {
+    var idx = LocaleStore.supportedLocaleNames.indexOf(value);
+    if (idx >= 0 && idx < LocaleStore.supportedLocaleNames.length) {
       index = idx;
     } else {
-      idx = LocaleStore.localeNameFlags.indexOf(byName(value.name));
-      if (idx >= 0 && idx < LocaleStore.localeNameFlags.length) {
+      idx = LocaleStore.supportedLocaleNames.indexOf(byName(value.name));
+      if (idx >= 0 && idx < LocaleStore.supportedLocaleNames.length) {
         index = idx;
       }
     }
   }
 
-  static LocaleNameFlag? byName(String name) {
+  static LocaleName? byName(String name) {
     if (supported.names.contains(name)) {
       return supported.entries[supported.names.indexOf(name)];
     }
@@ -104,7 +104,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   }
 
   /// Search by first 2 letter, return first found or null.
-  static LocaleNameFlag? byLanguage(String name) {
+  static LocaleName? byLanguage(String name) {
     final pattern = name.substring(0, 2);
     final String langName = supported.names.firstWhere(
       (element) => element.startsWith(pattern),
@@ -117,7 +117,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   }
 
   /// Search by [Locale], return exact match or null.
-  static LocaleNameFlag? byLocale(Locale locale) {
+  static LocaleName? byLocale(Locale locale) {
     if (supported.locales.contains(locale)) {
       return supported.entries[supported.locales.indexOf(locale)];
     }
@@ -141,7 +141,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   ///
   /// If not found: do [ifLocaleNotFound]
   // todo: similarity check?
-  static LocaleNameFlag? tryFindLocale(String langCode,
+  static LocaleName? tryFindLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = byName(langCode) ?? byLanguage(langCode);
     if (loc != null) {
@@ -151,12 +151,12 @@ abstract class CurrentLocale extends CurrentSystemLocale {
       case IfLocaleNotFound.doNothing:
         return null;
       case IfLocaleNotFound.useSystem:
-        if (byName(LocaleStore.systemLocale) != null) {
-          current = byName(LocaleStore.systemLocale)!;
+        if (byName(systemLocale) != null) {
+          current = byName(systemLocale)!;
         }
         return null;
       case IfLocaleNotFound.useFirst:
-        if (supported.names.first != LocaleStore.systemLocale) {
+        if (supported.names.first != systemLocale) {
           current = supported.entries.first;
         } else if (supported.names.length > 2) {
           current = supported.entries[1];

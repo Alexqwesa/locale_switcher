@@ -18,7 +18,7 @@ class GridOfLanguages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locales = LocaleStore.localeNameFlags;
+    final locales = LocaleStore.supportedLocaleNames;
 
     return GridView(
       gridDelegate: gridDelegate ??

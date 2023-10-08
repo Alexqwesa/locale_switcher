@@ -87,13 +87,13 @@ class MyHomePage extends StatelessWidget {
 }
 
 Widget animatedToggleSwitchBuilder(
-    LocaleNameFlagList langCodes, BuildContext context) {
+    SupportedLocaleNames langCodes, BuildContext context) {
   if (langCodes.length <= 1) {
     // AnimatedToggleSwitch crash with one value
     langCodes.addShowOtherLocales();
   }
 
-  return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
+  return AnimatedToggleSwitch<LocaleName>.rolling(
     values: langCodes,
     current: LocaleSwitcher.current,
     onChanged: (langCode) {

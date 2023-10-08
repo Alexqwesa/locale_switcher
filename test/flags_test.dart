@@ -16,7 +16,7 @@ void main() {
     ));
 
     final namesSystem = ['system', 'en', 'vi', 'de'];
-    final lnf = LocaleSwitcher.localeNameFlags;
+    final lnf = LocaleSwitcher.supportedLocaleNames;
     expect(lnf.names, namesSystem);
     expect(lnf[1].flag?.key, Flags.instance['us']?.svg.key);
     expect(lnf[2].flag?.key, Flags.instance['vn']?.svg.key);
@@ -33,12 +33,12 @@ void main() {
       supportedLocales: names.map((String e) => e.toLocale()).toList(),
       child: const MyApp(),
     ));
-    var lnf1 = LocaleSwitcher.localeNameFlags;
+    var lnf1 = LocaleSwitcher.supportedLocaleNames;
     // it init supportedLocales only once (previous test)
     expect(lnf1.names, ['system', 'en', 'vi', 'de']);
     // it update supportedLocales
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
-    final lnf = LocaleSwitcher.localeNameFlags;
+    final lnf = LocaleSwitcher.supportedLocaleNames;
     final namesSystem = ['system', 'en_GB', 'vi_VN', 'de_lu'];
     expect(lnf.names, namesSystem);
 
@@ -47,7 +47,7 @@ void main() {
     expect(lnf[2].flag?.key, Flags.instance['vn']?.svg.key);
     expect(lnf[3].flag?.key, Flags.instance['lu']?.svg.key);
 
-    // it update LocaleNameFlagList indexes works
+    // it update SupportedLocaleNames indexes works
     final namesSystem1 = ['system', 'de', 'vi_VN', 'de_lu'];
     lnf[1] = lnf1[3];
     expect(lnf.names, namesSystem1);
@@ -70,13 +70,13 @@ void main() {
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
 
     final namesSystem = ['system', 'en_GB', 'vi_VN', 'de_De'];
-    final lnf = LocaleSwitcher.localeNameFlags;
+    final lnf = LocaleSwitcher.supportedLocaleNames;
     expect(lnf.names, namesSystem);
 
     expect(LocaleSwitcher.current, lnf[0]);
     expect(LocaleSwitcher.localeBestMatch, lnf[3].locale);
 
-    LocaleSwitcher.current = LocaleSwitcher.localeNameFlags[1];
+    LocaleSwitcher.current = LocaleSwitcher.supportedLocaleNames[1];
     expect(LocaleSwitcher.current, lnf[1]);
     expect(LocaleSwitcher.localeBestMatch, lnf[1].locale);
   });
@@ -98,10 +98,10 @@ void main() {
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
 
     final namesSystem = ['system', 'en_GB', 'vi_VN', 'de_De'];
-    final lnf = LocaleSwitcher.localeNameFlags;
+    final lnf = LocaleSwitcher.supportedLocaleNames;
     expect(lnf.names, namesSystem);
 
-    LocaleSwitcher.current = LocaleSwitcher.localeNameFlags[0];
+    LocaleSwitcher.current = LocaleSwitcher.supportedLocaleNames[0];
     platform.localeTestValue = const Locale('vi');
     expect(LocaleSwitcher.current, lnf[0]);
     expect(LocaleSwitcher.localeBestMatch, lnf[2].locale);

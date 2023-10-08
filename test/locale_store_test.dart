@@ -55,7 +55,7 @@ void main() {
     expect(LocaleSwitcher.current.name, "de");
     expect(LocaleSwitcher.current.locale, deLoc);
 
-    LocaleSwitcher.current = CurrentLocale.byName(LocaleStore.systemLocale)!;
+    LocaleSwitcher.current = CurrentLocale.byName(systemLocale)!;
     expect(LocaleSwitcher.current.name, "system");
     expect(LocaleSwitcher.current.locale!.languageCode, 'vi');
 

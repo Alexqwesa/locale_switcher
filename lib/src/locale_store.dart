@@ -5,9 +5,6 @@ import 'package:locale_switcher/src/preference_repository.dart';
 
 /// Inner storage.
 abstract class LocaleStore {
-  /// A special locale name to use system locale.
-  static const String systemLocale = 'system';
-
   /// A ReadOnly [ValueListenable] with current locale.
   ///
   /// Use [LocaleSwitcher.current] to update this notifier.
@@ -19,11 +16,11 @@ abstract class LocaleStore {
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
   static List<Locale> supportedLocales = [];
 
-  /// List of helpers based on supported locales - [LocaleNameFlag].
+  /// List of helpers based on supported locales - [LocaleName].
   ///
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
-  static LocaleNameFlagList localeNameFlags =
-      LocaleNameFlagList(<Locale>[const Locale('en')]);
+  static SupportedLocaleNames supportedLocaleNames =
+      SupportedLocaleNames(<Locale>[const Locale('en')]);
 
   /// If initialized: locale will be stored in [SharedPreferences].
   static get _pref => PreferenceRepository.pref;
@@ -68,7 +65,7 @@ abstract class LocaleStore {
   ) {
     if (supportedLocales != null) {
       LocaleStore.supportedLocales = supportedLocales;
-      LocaleStore.localeNameFlags = LocaleNameFlagList(supportedLocales);
+      LocaleStore.supportedLocaleNames = SupportedLocaleNames(supportedLocales);
     }
   }
 
@@ -77,7 +74,7 @@ abstract class LocaleStore {
   /// key in lowerCase!
   static Map<String, List<dynamic>> languageToCountry = {
     // use OS locale
-    LocaleStore.systemLocale: [
+    systemLocale: [
       'System',
       'OS locale',
       // if (!kIsWeb && Platform.isAndroid) const Icon(Icons.android),

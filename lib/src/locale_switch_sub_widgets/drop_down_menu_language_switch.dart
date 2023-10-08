@@ -22,14 +22,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.setLocaleCallBack,
   });
 
-  final LocaleNameFlagList locales;
+  final SupportedLocaleNames locales;
 
   @override
   Widget build(BuildContext context) {
     const radius = 38.0;
     final localeEntries = locales
-        .map<DropdownMenuEntry<LocaleNameFlag>>(
-          (e) => DropdownMenuEntry<LocaleNameFlag>(
+        .map<DropdownMenuEntry<LocaleName>>(
+          (e) => DropdownMenuEntry<LocaleName>(
             value: e,
             label: e.language,
             leadingIcon: showLeading
@@ -50,7 +50,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         )
         .toList();
 
-    return DropdownMenu<LocaleNameFlag>(
+    return DropdownMenu<LocaleName>(
       initialSelection: LocaleSwitcher.current,
       leadingIcon: showLeading
           ? Padding(
@@ -67,7 +67,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       // controller: colorController,
       label: const Text('Language'),
       dropdownMenuEntries: localeEntries,
-      onSelected: (LocaleNameFlag? langCode) {
+      onSelected: (LocaleName? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
             showSelectLocaleDialog(context,

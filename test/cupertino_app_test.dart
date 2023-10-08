@@ -104,7 +104,7 @@ void main() {
           find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
 
       // tap menu
-      final dropMenu = find.byType(DropdownMenu<LocaleNameFlag>);
+      final dropMenu = find.byType(DropdownMenu<LocaleName>);
       await tester.tap(dropMenu);
       await tester.pumpAndSettle();
 

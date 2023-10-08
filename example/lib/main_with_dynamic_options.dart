@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }
 
                                     return AnimatedToggleSwitch<
-                                        LocaleNameFlag>.rolling(
+                                        LocaleName>.rolling(
                                       values: langCodes,
                                       current: LocaleSwitcher.current,
                                       onChanged: (langCode) {

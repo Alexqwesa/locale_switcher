@@ -77,8 +77,8 @@ class MyHomePage extends StatelessWidget {
                     langCodes.addShowOtherLocales();
                   }
 
-                  return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
-                    values: LocaleSwitcher.localeNameFlags,
+                  return AnimatedToggleSwitch<LocaleName>.rolling(
+                    values: LocaleSwitcher.supportedLocaleNames,
                     current: LocaleSwitcher.current,
                     onChanged: (langCode) {
                       if (langCode.name == showOtherLocales) {

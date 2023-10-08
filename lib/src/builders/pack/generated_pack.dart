@@ -30,19 +30,19 @@ enum IfLocaleNotFound {
 ///
 /// And other useful static methods and properties...
 abstract class CurrentLocale extends CurrentSystemLocale {
-  /// Global storage of [LocaleNameFlag] - instance of [LocaleNameFlagList].
+  /// Global storage of [LocaleName] - instance of [SupportedLocaleNames].
   ///
-  /// [LocaleNameFlag] are wrappers around [Locale]s in supportedLocales list.
-  static LocaleNameFlagList get supported => LocaleStore.localeNameFlags;
+  /// [LocaleName] are wrappers around [Locale]s in supportedLocales list.
+  static SupportedLocaleNames get supported => LocaleStore.localeNameFlags;
 
   static late final ValueNotifier<int> _allNotifiers;
   static final _index = ValueNotifier(0);
   static late final ValueNotifier<Locale> _locale;
 
-  /// Listen on both system locale and currently selected [LocaleNameFlag].
+  /// Listen on both system locale and currently selected [LocaleName].
   ///
-  /// In case [LocaleStore.systemLocale] is selected: it didn't try to guess
-  /// which [LocaleNameFlag] is best match, and just return OS locale.
+  /// In case [systemLocale] is selected: it didn't try to guess
+  /// which [LocaleName] is best match, and just return OS locale.
   /// (Your localization system should select best match).
   static ValueNotifier<Locale> get locale {
     try {
@@ -90,14 +90,14 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  /// Currently selected entry in [LocaleNameFlag].
+  /// Currently selected entry in [LocaleName].
   ///
   /// You can update this value directly, or
   /// if you are not sure that your locale exist in list of supportedLocales:
   /// use [CurrentLocale.trySetLocale].
-  static LocaleNameFlag get current => LocaleStore.localeNameFlags[index];
+  static LocaleName get current => LocaleStore.localeNameFlags[index];
 
-  static set current(LocaleNameFlag value) {
+  static set current(LocaleName value) {
     var idx = LocaleStore.localeNameFlags.indexOf(value);
     if (idx >= 0 && idx < LocaleStore.localeNameFlags.length) {
       index = idx;
@@ -109,7 +109,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  static LocaleNameFlag? byName(String name) {
+  static LocaleName? byName(String name) {
     if (supported.names.contains(name)) {
       return supported.entries[supported.names.indexOf(name)];
     }
@@ -117,7 +117,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   }
 
   /// Search by first 2 letter, return first found or null.
-  static LocaleNameFlag? byLanguage(String name) {
+  static LocaleName? byLanguage(String name) {
     final pattern = name.substring(0, 2);
     final String langName = supported.names.firstWhere(
       (element) => element.startsWith(pattern),
@@ -130,7 +130,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   }
 
   /// Search by [Locale], return exact match or null.
-  static LocaleNameFlag? byLocale(Locale locale) {
+  static LocaleName? byLocale(Locale locale) {
     if (supported.locales.contains(locale)) {
       return supported.entries[supported.locales.indexOf(locale)];
     }
@@ -154,7 +154,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   ///
   /// If not found: do [ifLocaleNotFound]
   // todo: similarity check?
-  static LocaleNameFlag? tryFindLocale(String langCode,
+  static LocaleName? tryFindLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = byName(langCode) ?? byLanguage(langCode);
     if (loc != null) {
@@ -164,12 +164,12 @@ abstract class CurrentLocale extends CurrentSystemLocale {
       case IfLocaleNotFound.doNothing:
         return null;
       case IfLocaleNotFound.useSystem:
-        if (byName(LocaleStore.systemLocale) != null) {
-          current = byName(LocaleStore.systemLocale)!;
+        if (byName(systemLocale) != null) {
+          current = byName(systemLocale)!;
         }
         return null;
       case IfLocaleNotFound.useFirst:
-        if (supported.names.first != LocaleStore.systemLocale) {
+        if (supported.names.first != systemLocale) {
           current = supported.entries.first;
         } else if (supported.names.length > 2) {
           current = supported.entries[1];
@@ -247,8 +247,8 @@ class LangIconWithToolTip extends StatelessWidget {
   /// (assigned to language in [LocaleManager].reassignFlags)
   final Widget? child;
 
-  /// An entry of [LocaleNameFlagList].
-  final LocaleNameFlag? localeNameFlag;
+  /// An entry of [SupportedLocaleNames].
+  final LocaleName? localeNameFlag;
 
   /// Analog [LangIconWithToolTip] but for Strings.
   const LangIconWithToolTip.forStringIconBuilder(
@@ -312,7 +312,7 @@ class LangIconWithToolTip extends StatelessWidget {
             size: radius ?? 48,
             child: Flags.instance[(lang[0]).toLowerCase()]!.svg)
         : null;
-    if (locCode != LocaleStore.systemLocale && locCode != showOtherLocales) {
+    if (locCode != systemLocale && locCode != showOtherLocales) {
       if (flag == null || useNLettersInsteadOfIcon > 0) {
         flag = child ??
             Padding(
@@ -508,25 +508,25 @@ import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_system_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
-/// A list of generated [LocaleNameFlag]s for supportedLocales.
+/// A list of generated [LocaleName]s for supportedLocales.
 ///
 /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
-class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
+class SupportedLocaleNames with ListMixin<LocaleName> {
   final List<Locale> supportedLocales;
   final locales = <Locale?>[];
   final names = <String>[];
 
 // final flags = <Widget?>[];
 
-  final entries = <LocaleNameFlag>[];
+  final entries = <LocaleName>[];
 
-  LocaleNameFlagList(this.supportedLocales, {bool showOsLocale = true}) {
+  SupportedLocaleNames(this.supportedLocales, {bool showOsLocale = true}) {
     if (showOsLocale) {
       locales.add(null);
-      names.add(LocaleStore.systemLocale);
+      names.add(systemLocale);
       entries.add(
-        SystemLocaleNameFlag(
-            flag: findFlagFor(language: LocaleStore.systemLocale)),
+        SystemLocaleName(
+            flag: findFlagFor(language: systemLocale)),
       );
     }
 
@@ -534,24 +534,24 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
       locales.add(loc);
       names.add(loc.toString());
       entries.add(
-        LocaleNameFlag(name: names.last, locale: locales.last),
+        LocaleName(name: names.last, locale: locales.last),
       );
     }
   }
 
-  LocaleNameFlagList.fromEntries(
-    Iterable<LocaleNameFlag> list, {
+  SupportedLocaleNames.fromEntries(
+    Iterable<LocaleName> list, {
     this.supportedLocales = const <Locale>[],
     bool addOsLocale = false,
   }) {
     if (addOsLocale) {
       locales.add(null);
-      names.add(LocaleStore.systemLocale);
+      names.add(systemLocale);
       entries.add(
-        LocaleNameFlag(
+        LocaleName(
             name: names.last,
             locale: locales.last,
-            flag: findFlagFor(language: LocaleStore.systemLocale)),
+            flag: findFlagFor(language: systemLocale)),
       );
     }
     entries.addAll(list);
@@ -561,8 +561,8 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
     }
   }
 
-  bool replaceLast({String? str, LocaleNameFlag? localeName}) {
-    LocaleNameFlag? entry = localeName;
+  bool replaceLast({String? str, LocaleName? localeName}) {
+    LocaleName? entry = localeName;
 
     if (str != null) {
       entry ??= CurrentLocale.byName(str);
@@ -577,7 +577,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
 // final loc = str.toLocale();
 // locales.last = loc;
 // names.last = loc.toString();
-// entries.last = LocaleNameFlag(
+// entries.last = LocaleName(
 //     name: names.last, locale: locales.last, flag: flags.last);
   }
 
@@ -587,7 +587,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
       locales.add(null);
       names.add(showOtherLocales);
       entries.add(
-        LocaleNameFlag(
+        LocaleName(
             name: names.last,
             locale: locales.last,
             flag: CurrentLocale.buttonFlagForOtherLocales),
@@ -611,7 +611,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
   }
 
   @override
-  void operator []=(int index, LocaleNameFlag entry) {
+  void operator []=(int index, LocaleName entry) {
     locales[index] = entry.locale;
     names[index] = entry.name;
     entries[index] = entry;
@@ -624,7 +624,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
     names.length = newLength;
   }
 
-  /// Add special entry into [LocaleNameFlagList].
+  /// Add special entry into [SupportedLocaleNames].
   ///
   /// You should make sure to handle this entry selection in your widget.
   // todo: {Null Function() onTap = ...}
@@ -636,7 +636,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
     locales.add(null);
     names.add(showOtherLocales);
     entries.add(
-      LocaleNameFlag(
+      LocaleName(
           name: names.last,
           locale: locales.last,
           flag: flag ?? CurrentLocale.buttonFlagForOtherLocales),
@@ -646,7 +646,7 @@ class LocaleNameFlagList with ListMixin<LocaleNameFlag> {
 }
 
 /// Just record of [Locale], it's name and flag.
-class LocaleNameFlag {
+class LocaleName {
   /// cache
   String? _language;
 
@@ -666,7 +666,7 @@ class LocaleNameFlag {
 
   Locale get bestMatch {
     // exact search
-    if (name != LocaleStore.systemLocale &&
+    if (name != systemLocale &&
         name != showOtherLocales &&
         LocaleStore.localeNameFlags.names.contains(name)) {
       return LocaleSwitcher.current.locale!;
@@ -679,7 +679,7 @@ class LocaleNameFlag {
         } else {
           return const Locale('en');
         }
-      case LocaleStore.systemLocale:
+      case systemLocale:
         return CurrentLocale.tryFindLocale(locale!.toString())?.locale ??
             const Locale('en');
       default:
@@ -687,7 +687,7 @@ class LocaleNameFlag {
     }
   }
 
-  LocaleNameFlag({
+  LocaleName({
     this.name = '',
     this.locale,
     Widget? flag,
@@ -701,7 +701,7 @@ class LocaleNameFlag {
   ///
   /// For systemLocale or [showOtherLocales] only look into [LocaleManager.reassignFlags].
   Widget? get flag {
-    if (name == showOtherLocales || name == LocaleStore.systemLocale) {
+    if (name == showOtherLocales || name == systemLocale) {
       if (LocaleStore.languageToCountry[name] != null &&
           LocaleStore.languageToCountry[name]!.length > 2) {
         _flag = LocaleStore.languageToCountry[name]?[2];
@@ -724,16 +724,16 @@ class LocaleNameFlag {
 }
 
 /// Just record of [Locale], it's name and flag.
-class SystemLocaleNameFlag extends LocaleNameFlag {
+class SystemLocaleName extends LocaleName {
   @override
   Locale get locale => CurrentSystemLocale.currentSystemLocale.value;
 
   ValueNotifier<Locale> get notifier => CurrentSystemLocale.currentSystemLocale;
 
-  SystemLocaleNameFlag({
+  SystemLocaleName({
     super.flag,
     super.language,
-  }) : super(name: LocaleStore.systemLocale);
+  }) : super(name: systemLocale);
 }
 ''',
   'locale_observable': r'''import 'package:flutter/foundation.dart';
@@ -783,11 +783,11 @@ abstract class LocaleStore {
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
   static List<Locale> supportedLocales = [];
 
-  /// List of helpers based on supported locales - [LocaleNameFlag].
+  /// List of helpers based on supported locales - [LocaleName].
   ///
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
-  static LocaleNameFlagList localeNameFlags =
-      LocaleNameFlagList(<Locale>[const Locale('en')]);
+  static SupportedLocaleNames localeNameFlags =
+      SupportedLocaleNames(<Locale>[const Locale('en')]);
 
   /// If initialized: locale will be stored in [SharedPreferences].
   static get _pref => PreferenceRepository.pref;
@@ -832,7 +832,7 @@ abstract class LocaleStore {
   ) {
     if (supportedLocales != null) {
       LocaleStore.supportedLocales = supportedLocales;
-      LocaleStore.localeNameFlags = LocaleNameFlagList(supportedLocales);
+      LocaleStore.localeNameFlags = SupportedLocaleNames(supportedLocales);
     }
   }
 
@@ -841,7 +841,7 @@ abstract class LocaleStore {
   /// key in lowerCase!
   static Map<String, List<dynamic>> languageToCountry = {
     // use OS locale
-    LocaleStore.systemLocale: [
+    systemLocale: [
       'System',
       'OS locale',
       // if (!kIsWeb && Platform.isAndroid) const Icon(Icons.android),
@@ -929,7 +929,7 @@ enum _Switcher {
   segmentedButton,
 }
 
-typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
+typedef LocaleSwitchBuilder = Widget Function(SupportedLocaleNames, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
@@ -946,9 +946,9 @@ class LocaleSwitcher extends StatefulWidget {
   /// use [LocaleSwitcher.trySetLocale].
   ///
   /// The notifier [localeIndex] is the underlying notifier for this value.
-  static LocaleNameFlag get current => LocaleSwitcher.current;
+  static LocaleName get current => LocaleSwitcher.current;
 
-  static set current(LocaleNameFlag value) => LocaleSwitcher.current = value;
+  static set current(LocaleName value) => LocaleSwitcher.current = value;
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
@@ -973,10 +973,10 @@ class LocaleSwitcher extends StatefulWidget {
   /// [ValueNotifier] with index of [localeNameFlags] currently used.
   static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
 
-  /// A list of generated [LocaleNameFlag]s for supportedLocales.
+  /// A list of generated [LocaleName]s for supportedLocales.
   ///
   /// Note: [supportedLocales] should be the same as [MaterialApp].supportedLocales
-  static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
+  static SupportedLocaleNames get localeNameFlags => LocaleStore.localeNameFlags;
 
   /// A ReadOnly [ValueListenable] with current locale.
   ///
@@ -1041,7 +1041,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Only for [LocaleSwitcher.grid] constructor
   final SliverGridDelegate? gridDelegate;
 
-  /// Function called after choosing new current `Locale` (actually [LocaleNameFlag]).
+  /// Function called after choosing new current `Locale` (actually [LocaleName]).
   ///
   /// Useful for [LocaleSwitcher.grid] - if you want to close popup window after new selection.
   ///
@@ -1307,7 +1307,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   Widget build(BuildContext context) {
     final skip = widget.showOsLocale ? 0 : 1;
-    final staticLocales = LocaleNameFlagList.fromEntries(
+    final staticLocales = SupportedLocaleNames.fromEntries(
       LocaleStore.localeNameFlags.entries
           .skip(skip) // first is system locale
           .take(widget.numberOfShown + 1 - skip) // chose most used
@@ -1317,7 +1317,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
     return ValueListenableBuilder(
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
-        var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
+        var locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
         if (!locales.names.contains(LocaleSwitcher.current.name)) {
           locales.replaceLast(localeName: LocaleSwitcher.current);
         }
@@ -1653,14 +1653,14 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.setLocaleCallBack,
   });
 
-  final LocaleNameFlagList locales;
+  final SupportedLocaleNames locales;
 
   @override
   Widget build(BuildContext context) {
     const radius = 38.0;
     final localeEntries = locales
-        .map<DropdownMenuEntry<LocaleNameFlag>>(
-          (e) => DropdownMenuEntry<LocaleNameFlag>(
+        .map<DropdownMenuEntry<LocaleName>>(
+          (e) => DropdownMenuEntry<LocaleName>(
             value: e,
             label: e.language,
             leadingIcon: showLeading
@@ -1681,7 +1681,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         )
         .toList();
 
-    return DropdownMenu<LocaleNameFlag>(
+    return DropdownMenu<LocaleName>(
       initialSelection: LocaleSwitcher.current,
       leadingIcon: showLeading
           ? Padding(
@@ -1698,7 +1698,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       // controller: colorController,
       label: const Text('Language'),
       dropdownMenuEntries: localeEntries,
-      onSelected: (LocaleNameFlag? langCode) {
+      onSelected: (LocaleName? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
             showSelectLocaleDialog(context,
@@ -1781,7 +1781,7 @@ class GridOfLanguages extends StatelessWidget {
 import 'package:locale_switcher/locale_switcher.dart';
 
 class SegmentedButtonSwitch extends StatelessWidget {
-  final LocaleNameFlagList locales;
+  final SupportedLocaleNames locales;
   final int useNLettersInsteadOfIcon;
 
   final double? radius;
@@ -1801,18 +1801,18 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<LocaleNameFlag>(
+    return SegmentedButton<LocaleName>(
       emptySelectionAllowed: false,
       showSelectedIcon: false,
-      segments: locales.map<ButtonSegment<LocaleNameFlag>>(
+      segments: locales.map<ButtonSegment<LocaleName>>(
         (e) {
           final curRadius = radius;
-          return ButtonSegment<LocaleNameFlag>(
+          return ButtonSegment<LocaleName>(
             value: e,
             tooltip: e.language,
             label: Padding(
               padding:
-                  // e.name == LocaleStore.systemLocale
+                  // e.name == systemLocale
                   //     ? const EdgeInsets.all(0.0)
                   //     :
                   const EdgeInsets.all(8.0),
@@ -1828,7 +1828,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
       ).toList(),
       selected: {LocaleSwitcher.current},
       multiSelectionEnabled: false,
-      onSelectionChanged: (Set<LocaleNameFlag> newSelection) {
+      onSelectionChanged: (Set<LocaleName> newSelection) {
         if (newSelection.first.name == showOtherLocales) {
           showSelectLocaleDialog(context, setLocaleCallBack: setLocaleCallBack);
         } else {
