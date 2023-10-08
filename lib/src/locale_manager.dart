@@ -35,42 +35,41 @@ class LocaleManager extends StatefulWidget {
   /// Note 2: prebuilt map here: [LocaleStore.languageToCountry]
   final Map<String, List>? reassignFlags;
 
-  final List<Locale>? _supportedLocales;
+  /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
+  /// or [CupertinoApp].
+  ///
+  /// Note: [MaterialApp] or [CupertinoApp] and this widget should still be inside the
+  /// same `build` method, otherwise it will not listen to [locale] notifier!
+  ///
+  /// Example:
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  /// return LocaleManager(
+  ///     child: MaterialApp(
+  ///       locale: LocaleSwitcher.current.locale,
+  ///       supportedLocales: AppLocalizations.supportedLocales,
+  /// ```
+  ///
+  /// Another Example:
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  /// return LocaleManager(
+  ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
+  ///   child: SomeOtherWidget(
+  ///     child: MaterialApp(
+  ///       locale: LocaleSwitcher.current.locale,
+  ///       supportedLocales: AppLocalizations.supportedLocales,
+  /// ```
+  final List<Locale>? supportedLocales;
 
   const LocaleManager({
     super.key,
     required this.child,
     this.reassignFlags,
     this.storeLocale = true,
-    this.sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
-
-    /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
-    /// or [CupertinoApp].
-    ///
-    /// Note: [MaterialApp] or [CupertinoApp] and this widget should still be inside the
-    /// same `build` method, otherwise it will not listen to [locale] notifier!
-    ///
-    /// Example:
-    /// ```dart
-    /// Widget build(BuildContext context) {
-    /// return LocaleManager(
-    ///     child: MaterialApp(
-    ///       locale: LocaleSwitcher.current.locale,
-    ///       supportedLocales: AppLocalizations.supportedLocales,
-    /// ```
-    ///
-    /// Another Example:
-    /// ```dart
-    /// Widget build(BuildContext context) {
-    /// return LocaleManager(
-    ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
-    ///   child: SomeOtherWidget(
-    ///     child: MaterialApp(
-    ///       locale: LocaleSwitcher.current.locale,
-    ///       supportedLocales: AppLocalizations.supportedLocales,
-    /// ```
-    List<Locale>? supportedLocales,
-  }) : _supportedLocales = supportedLocales;
+    this.sharedPreferenceName = 'LocaleSwitcherCurrentLocaleName',
+    this.supportedLocales,
+  });
 
   @override
   State<LocaleManager> createState() => _LocaleManagerState();
@@ -87,8 +86,8 @@ class _LocaleManagerState extends State<LocaleManager> {
   /// init [LocaleStore]'s supportedLocales
   void _readAppLocalization(Widget child) {
     // LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
-    if (widget._supportedLocales != null) {
-      LocaleStore.setSupportedLocales(widget._supportedLocales!);
+    if (widget.supportedLocales != null) {
+      LocaleStore.setSupportedLocales(widget.supportedLocales!);
     } else if (child.runtimeType == MaterialApp) {
       final supportedLocales =
           (child as MaterialApp).supportedLocales.toList(growable: false);
