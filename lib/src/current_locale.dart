@@ -126,14 +126,14 @@ abstract class CurrentLocale extends CurrentSystemLocale {
 
   /// Will try to find [Locale] by string in [CurrentLocale.supported].
   ///
-  /// Just wrapper around: [tryFindLocale] and [CurrentLocale.current] = newValue;
+  /// Just wrapper around: [tryFindLocale] and [LocaleSwitcher.current] = newValue;
   ///
   /// If not found: do [ifLocaleNotFound]
   static void trySetLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = tryFindLocale(langCode, ifLocaleNotFound: ifLocaleNotFound);
     if (loc != null) {
-      CurrentLocale.current = loc;
+      LocaleSwitcher.current = loc;
     }
   }
 
@@ -165,6 +165,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
+  /// maybe make public?
   static Widget get buttonFlagForOtherLocales =>
       ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
           ? LocaleStore.languageToCountry[showOtherLocales]![2]

@@ -32,7 +32,7 @@ class GridOfLanguages extends StatelessWidget {
           return Card(
             child: InkWell(
               onTap: () {
-                CurrentLocale.current = locNameFlag;
+                LocaleSwitcher.current = locNameFlag;
                 setLocaleCallBack?.call(context);
               },
               child: Column(

@@ -140,12 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     return AnimatedToggleSwitch<
                                         LocaleNameFlag>.rolling(
                                       values: langCodes,
-                                      current: CurrentLocale.current,
+                                      current: LocaleSwitcher.current,
                                       onChanged: (langCode) {
                                         if (langCode.name == showOtherLocales) {
                                           showSelectLocaleDialog(context);
                                         } else {
-                                          CurrentLocale.current = langCode;
+                                          LocaleSwitcher.current = langCode;
                                         }
                                       },
                                       iconBuilder: (lang, foreground) =>

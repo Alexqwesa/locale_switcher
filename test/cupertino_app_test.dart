@@ -27,12 +27,12 @@ class MyAppCupertinoTest extends StatelessWidget {
     // ============= THIS 5 LINES REQUIRED =============
     return LocaleManager(
       child: CupertinoApp(
-        locale: CurrentLocale.current.locale!,
+        locale: LocaleSwitcher.current.locale!,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // ...
-        title: CurrentLocale.current.locale!.tr.example,
-        home: MyHomePage(title: CurrentLocale.current.locale!.tr.example),
+        title: LocaleSwitcher.current.locale!.tr.example,
+        home: MyHomePage(title: LocaleSwitcher.current.locale!.tr.example),
       ),
     );
   }
@@ -52,14 +52,14 @@ void main() {
 
       // test start with english locale
       expect(find.text(enLoc.counterDescription), findsOneWidget);
-      expect(CurrentLocale.current.name, "system");
+      expect(LocaleSwitcher.current.name, "system");
 
       // Verify that vi locale is loaded
       final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
       expect(viFlag, findsNWidgets(2));
       await tester.tap(viFlag.at(1));
-      expect(CurrentLocale.current.locale?.languageCode, "vi");
-      expect(CurrentLocale.current.name, "vi");
+      expect(LocaleSwitcher.current.locale?.languageCode, "vi");
+      expect(LocaleSwitcher.current.name, "vi");
       await tester.pumpAndSettle();
       // expect(find.text(deLoc.counterDescription), findsOneWidget);
       // expect(find.text(enLoc.counterDescription), findsNothing);
@@ -69,8 +69,8 @@ void main() {
       final enFlag = find.byTooltip(LocaleStore.languageToCountry['en']![1]);
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
-      expect(CurrentLocale.current.locale?.languageCode, "en");
-      expect(CurrentLocale.current.name, "en");
+      expect(LocaleSwitcher.current.locale?.languageCode, "en");
+      expect(LocaleSwitcher.current.name, "en");
       // expect(find.text(enLoc.counterDescription), findsOneWidget);
       // expect(find.text(deLoc.counterDescription), findsNothing);
 
@@ -78,8 +78,8 @@ void main() {
           find.byTooltip(LocaleStore.languageToCountry['system']![1]);
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
-      expect(CurrentLocale.current.locale?.languageCode, "en");
-      expect(CurrentLocale.current.name, "en");
+      expect(LocaleSwitcher.current.locale?.languageCode, "en");
+      expect(LocaleSwitcher.current.name, "en");
 
       await tester.tap(sysFlag.at(1)); // restore ?
     });
@@ -98,7 +98,7 @@ void main() {
 
       // test start with english locale
       expect(find.text(viLoc.counterDescription), findsOneWidget);
-      expect(CurrentLocale.current.name, "vi");
+      expect(LocaleSwitcher.current.name, "vi");
 
       expect(
           find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
@@ -108,8 +108,8 @@ void main() {
       await tester.tap(dropMenu);
       await tester.pumpAndSettle();
 
-      expect(CurrentLocale.current.locale?.languageCode, "vi");
-      expect(CurrentLocale.current.name, "vi");
+      expect(LocaleSwitcher.current.locale?.languageCode, "vi");
+      expect(LocaleSwitcher.current.name, "vi");
 
       // tap item
       final deOption = find.descendant(
@@ -129,8 +129,8 @@ void main() {
       // selected todo:
       expect(
           find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
-      expect(CurrentLocale.current.name, "de");
-      expect(CurrentLocale.current.locale?.languageCode, "de");
+      expect(LocaleSwitcher.current.name, "de");
+      expect(LocaleSwitcher.current.locale?.languageCode, "de");
 
       final deLoc = const Locale('de').tr;
       expect(find.text(deLoc.counterDescription), findsOneWidget);
@@ -156,7 +156,7 @@ void main() {
       final enLoc = const Locale('en').tr;
 
       // test start with english locale
-      expect(CurrentLocale.current.name, "system");
+      expect(LocaleSwitcher.current.name, "system");
       expect(find.text(enLoc.counterDescription), findsOneWidget);
 
       // Verify that vi locale is loaded
@@ -178,8 +178,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify that en locale is loaded
-      expect(CurrentLocale.current.locale?.languageCode, "de");
-      expect(CurrentLocale.current.name, "de");
+      expect(LocaleSwitcher.current.locale?.languageCode, "de");
+      expect(LocaleSwitcher.current.name, "de");
 
       expect(
           find.text(const Locale('de').tr.counterDescription), findsOneWidget);

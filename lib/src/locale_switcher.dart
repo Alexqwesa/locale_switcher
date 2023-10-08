@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -37,9 +38,9 @@ class LocaleSwitcher extends StatefulWidget {
   /// use [LocaleSwitcher.trySetLocale].
   ///
   /// The notifier [localeIndex] is the underlying notifier for this value.
-  static LocaleNameFlag get current => CurrentLocale.current;
+  static LocaleNameFlag get current => LocaleSwitcher.current;
 
-  static set current(LocaleNameFlag value) => CurrentLocale.current = value;
+  static set current(LocaleNameFlag value) => LocaleSwitcher.current = value;
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
@@ -74,13 +75,13 @@ class LocaleSwitcher extends StatefulWidget {
   /// If selected systemLocale - value can be outside of range of supportedLocales.
   /// Use [localeBestMatch] if you needed locale in range of supportedLocales.
   ///
-  /// Use [CurrentLocale.current] to update this notifier.
+  /// Use [LocaleSwitcher.current] to update this notifier.
   static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   /// A ReadOnly [Locale], in range of supportedLocales, if selected systemLocale it try to guess.
   ///
-  /// Use [CurrentLocale.current] to update this value.
-  static Locale get localeBestMatch => CurrentLocale.current.bestMatch;
+  /// Use [LocaleSwitcher.current] to update this value.
+  static Locale get localeBestMatch => LocaleSwitcher.current.bestMatch;
 
   /// A text describing switcher
   ///
@@ -409,8 +410,8 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
         var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
-        if (!locales.names.contains(CurrentLocale.current.name)) {
-          locales.replaceLast(localeName: CurrentLocale.current);
+        if (!locales.names.contains(LocaleSwitcher.current.name)) {
+          locales.replaceLast(localeName: LocaleSwitcher.current);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales

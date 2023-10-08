@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/current_system_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
@@ -166,7 +167,7 @@ class LocaleNameFlag {
     if (name != LocaleStore.systemLocale &&
         name != showOtherLocales &&
         LocaleStore.localeNameFlags.names.contains(name)) {
-      return CurrentLocale.current.locale!;
+      return LocaleSwitcher.current.locale!;
     }
     // guess
     switch (name) {

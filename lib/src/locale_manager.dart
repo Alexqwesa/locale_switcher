@@ -52,7 +52,7 @@ class LocaleManager extends StatefulWidget {
     /// Widget build(BuildContext context) {
     /// return LocaleManager(
     ///     child: MaterialApp(
-    ///       locale: CurrentLocale.current.locale,
+    ///       locale: LocaleSwitcher.current.locale,
     ///       supportedLocales: AppLocalizations.supportedLocales,
     /// ```
     ///
@@ -63,7 +63,7 @@ class LocaleManager extends StatefulWidget {
     ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
     ///   child: SomeOtherWidget(
     ///     child: MaterialApp(
-    ///       locale: CurrentLocale.current.locale,
+    ///       locale: LocaleSwitcher.current.locale,
     ///       supportedLocales: AppLocalizations.supportedLocales,
     /// ```
     List<Locale>? supportedLocales,
@@ -124,7 +124,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
     super.initState();
 
-    CurrentLocale.allNotifiers.addListener(updateParent);
+    LocaleSwitcher.locale.addListener(updateParent);
 
     if (!LocaleManager.isInitialized) {
       if (widget.storeLocale) {
@@ -139,7 +139,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
   @override
   void dispose() {
-    CurrentLocale.allNotifiers.removeListener(updateParent);
+    LocaleSwitcher.locale.removeListener(updateParent);
     super.dispose();
   }
 

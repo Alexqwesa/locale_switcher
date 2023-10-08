@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 /// Inner storage.
@@ -9,7 +10,7 @@ abstract class LocaleStore {
 
   /// A ReadOnly [ValueListenable] with current locale.
   ///
-  /// Use [CurrentLocale.current] to update this notifier.
+  /// Use [LocaleSwitcher.current] to update this notifier.
   // here just for test and backward compatibility
   static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 

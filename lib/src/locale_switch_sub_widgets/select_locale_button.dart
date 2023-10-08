@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/current_locale.dart';
 
 /// IconButton to show and select a language.
 ///
@@ -42,7 +43,7 @@ class SelectLocaleButton extends StatelessWidget {
           icon: useStaticIcon ??
               LangIconWithToolTip(
                 toolTipPrefix: toolTipPrefix,
-                localeNameFlag: CurrentLocale.current,
+                localeNameFlag: LocaleSwitcher.current,
                 radius: radius,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,

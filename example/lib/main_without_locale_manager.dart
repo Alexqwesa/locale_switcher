@@ -79,12 +79,12 @@ class MyHomePage extends StatelessWidget {
 
                   return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
                     values: LocaleSwitcher.localeNameFlags,
-                    current: CurrentLocale.current,
+                    current: LocaleSwitcher.current,
                     onChanged: (langCode) {
                       if (langCode.name == showOtherLocales) {
                         showSelectLocaleDialog(context);
                       } else {
-                        CurrentLocale.current = langCode;
+                        LocaleSwitcher.current = langCode;
                       }
                     },
                     iconBuilder: LangIconWithToolTip.forIconBuilder,

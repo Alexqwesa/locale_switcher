@@ -139,14 +139,14 @@ abstract class CurrentLocale extends CurrentSystemLocale {
 
   /// Will try to find [Locale] by string in [CurrentLocale.supported].
   ///
-  /// Just wrapper around: [tryFindLocale] and [CurrentLocale.current] = newValue;
+  /// Just wrapper around: [tryFindLocale] and [LocaleSwitcher.current] = newValue;
   ///
   /// If not found: do [ifLocaleNotFound]
   static void trySetLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = tryFindLocale(langCode, ifLocaleNotFound: ifLocaleNotFound);
     if (loc != null) {
-      CurrentLocale.current = loc;
+      LocaleSwitcher.current = loc;
     }
   }
 
@@ -404,7 +404,7 @@ class LocaleManager extends StatefulWidget {
     /// Widget build(BuildContext context) {
     /// return LocaleManager(
     ///     child: MaterialApp(
-    ///       locale: CurrentLocale.current.locale,
+    ///       locale: LocaleSwitcher.current.locale,
     ///       supportedLocales: AppLocalizations.supportedLocales,
     /// ```
     ///
@@ -415,7 +415,7 @@ class LocaleManager extends StatefulWidget {
     ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
     ///   child: SomeOtherWidget(
     ///     child: MaterialApp(
-    ///       locale: CurrentLocale.current.locale,
+    ///       locale: LocaleSwitcher.current.locale,
     ///       supportedLocales: AppLocalizations.supportedLocales,
     /// ```
     List<Locale>? supportedLocales,
@@ -669,7 +669,7 @@ class LocaleNameFlag {
     if (name != LocaleStore.systemLocale &&
         name != showOtherLocales &&
         LocaleStore.localeNameFlags.names.contains(name)) {
-      return CurrentLocale.current.locale!;
+      return LocaleSwitcher.current.locale!;
     }
     // guess
     switch (name) {
@@ -774,7 +774,7 @@ abstract class LocaleStore {
 
   /// A ReadOnly [ValueListenable] with current locale.
   ///
-  /// Use [CurrentLocale.current] to update this notifier.
+  /// Use [LocaleSwitcher.current] to update this notifier.
   // here just for test and backward compatibility
   static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
@@ -946,9 +946,9 @@ class LocaleSwitcher extends StatefulWidget {
   /// use [LocaleSwitcher.trySetLocale].
   ///
   /// The notifier [localeIndex] is the underlying notifier for this value.
-  static LocaleNameFlag get current => CurrentLocale.current;
+  static LocaleNameFlag get current => LocaleSwitcher.current;
 
-  static set current(LocaleNameFlag value) => CurrentLocale.current = value;
+  static set current(LocaleNameFlag value) => LocaleSwitcher.current = value;
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
@@ -983,13 +983,13 @@ class LocaleSwitcher extends StatefulWidget {
   /// If selected systemLocale - value can be outside of range of supportedLocales.
   /// Use [localeBestMatch] if you needed locale in range of supportedLocales.
   ///
-  /// Use [CurrentLocale.current] to update this notifier.
+  /// Use [LocaleSwitcher.current] to update this notifier.
   static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   /// A ReadOnly [Locale], in range of supportedLocales, if selected systemLocale it try to guess.
   ///
-  /// Use [CurrentLocale.current] to update this value.
-  static Locale get localeBestMatch => CurrentLocale.current.bestMatch;
+  /// Use [LocaleSwitcher.current] to update this value.
+  static Locale get localeBestMatch => LocaleSwitcher.current.bestMatch;
 
   /// A text describing switcher
   ///
@@ -1318,8 +1318,8 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
         var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
-        if (!locales.names.contains(CurrentLocale.current.name)) {
-          locales.replaceLast(localeName: CurrentLocale.current);
+        if (!locales.names.contains(LocaleSwitcher.current.name)) {
+          locales.replaceLast(localeName: LocaleSwitcher.current);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales
@@ -1428,9 +1428,9 @@ class PreferenceRepository {
   static Future<bool>? write(
       String innerSharedPreferenceName, languageCode) async {
     final context = _lastUsedKey?.currentState?.context;
-    if (context != null && CurrentLocale.current.locale != null) {
+    if (context != null && LocaleSwitcher.current.locale != null) {
       await EasyLocalization.of(context)
-          ?.setLocale(CurrentLocale.current.locale!);
+          ?.setLocale(LocaleSwitcher.current.locale!);
       return true;
     }
 
@@ -1682,13 +1682,13 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleNameFlag>(
-      initialSelection: CurrentLocale.current,
+      initialSelection: LocaleSwitcher.current,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
                 // key: const ValueKey('DDMLeading'), // todo: bugreport this duplicate
-                localeNameFlag: CurrentLocale.current,
+                localeNameFlag: LocaleSwitcher.current,
                 radius: 32,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
@@ -1704,7 +1704,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
             showSelectLocaleDialog(context,
                 setLocaleCallBack: setLocaleCallBack);
           } else {
-            CurrentLocale.current = langCode;
+            LocaleSwitcher.current = langCode;
             setLocaleCallBack?.call(context);
           }
         }
@@ -1748,7 +1748,7 @@ class GridOfLanguages extends StatelessWidget {
           return Card(
             child: InkWell(
               onTap: () {
-                CurrentLocale.current = locNameFlag;
+                LocaleSwitcher.current = locNameFlag;
                 setLocaleCallBack?.call(context);
               },
               child: Column(
@@ -1826,13 +1826,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
           );
         },
       ).toList(),
-      selected: {CurrentLocale.current},
+      selected: {LocaleSwitcher.current},
       multiSelectionEnabled: false,
       onSelectionChanged: (Set<LocaleNameFlag> newSelection) {
         if (newSelection.first.name == showOtherLocales) {
           showSelectLocaleDialog(context, setLocaleCallBack: setLocaleCallBack);
         } else {
-          CurrentLocale.current = newSelection.first;
+          LocaleSwitcher.current = newSelection.first;
           setLocaleCallBack?.call(context);
         }
       },
@@ -1884,7 +1884,7 @@ class SelectLocaleButton extends StatelessWidget {
           icon: useStaticIcon ??
               LangIconWithToolTip(
                 toolTipPrefix: toolTipPrefix,
-                localeNameFlag: CurrentLocale.current,
+                localeNameFlag: LocaleSwitcher.current,
                 radius: radius,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,

@@ -120,7 +120,7 @@ Widget animatedToggleSwitchBuilder(
 
   return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
     values: langCodes,
-    current: CurrentLocale.current,
+    current: LocaleSwitcher.current,
     onChanged: (langCode) {
       if (langCode.name == showOtherLocales) {
         showSelectLocaleDialog(
@@ -129,7 +129,7 @@ Widget animatedToggleSwitchBuilder(
               context.setLocale(LocaleSwitcher.localeBestMatch),
         );
       } else {
-        CurrentLocale.current = langCode;
+        LocaleSwitcher.current = langCode;
         context.setLocale(LocaleSwitcher.localeBestMatch);
       }
     },

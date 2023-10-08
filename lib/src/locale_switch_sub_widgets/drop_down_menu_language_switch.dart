@@ -51,13 +51,13 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleNameFlag>(
-      initialSelection: CurrentLocale.current,
+      initialSelection: LocaleSwitcher.current,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
                 // key: const ValueKey('DDMLeading'), // todo: bugreport this duplicate
-                localeNameFlag: CurrentLocale.current,
+                localeNameFlag: LocaleSwitcher.current,
                 radius: 32,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
@@ -73,7 +73,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
             showSelectLocaleDialog(context,
                 setLocaleCallBack: setLocaleCallBack);
           } else {
-            CurrentLocale.current = langCode;
+            LocaleSwitcher.current = langCode;
             setLocaleCallBack?.call(context);
           }
         }

@@ -47,13 +47,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
           );
         },
       ).toList(),
-      selected: {CurrentLocale.current},
+      selected: {LocaleSwitcher.current},
       multiSelectionEnabled: false,
       onSelectionChanged: (Set<LocaleNameFlag> newSelection) {
         if (newSelection.first.name == showOtherLocales) {
           showSelectLocaleDialog(context, setLocaleCallBack: setLocaleCallBack);
         } else {
-          CurrentLocale.current = newSelection.first;
+          LocaleSwitcher.current = newSelection.first;
           setLocaleCallBack?.call(context);
         }
       },
