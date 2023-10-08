@@ -8,7 +8,7 @@ String writeFilteredFile(
     return input;
   } else {
     final out = input
-        .replaceAll("Flag(\n      '''", "Flag(      '''")
+        .replaceAll("\n      '''<svg ", " '''<svg ")
         .split('\n')
         .where((element) {
       if (element.contains(filter)) {
