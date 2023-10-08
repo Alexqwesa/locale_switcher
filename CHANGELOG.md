@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0
+
+* Extension Locale.flag,
+* helper TitleForLocaleSwitch,
+* LocaleMatcher,
+* hide CurrentLocale use LocaleSwitcher instead.
+
 ## 0.11.4
 
 * sync with `locale_switcher`:
