@@ -2,6 +2,7 @@
 
 ## 0.12.0
 
+* sync with `locale_switcher`:
 * Extension Locale.flag,
 * helper TitleForLocaleSwitch,
 * LocaleMatcher,
