@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       valueListenable: LocaleSwitcher.locale,
       builder: (BuildContext context, locale, Widget? child) {
         return MaterialApp(
-          locale: locale,
+          locale: LocaleSwitcher.localeBestMatch,
           supportedLocales: AppLocalizations.supportedLocales,
           // ...
           localizationsDelegates: AppLocalizations.localizationsDelegates,
