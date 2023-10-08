@@ -200,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 height: 130,
                                 // =============== THIS LINE ===============
                                 child: LocaleSwitcher.segmentedButton(
+                                  title: loc.chooseLanguage,
                                   useNLettersInsteadOfIcon: showNletters,
                                   numberOfShown: 2,
                                   shape: circleOrSquare
