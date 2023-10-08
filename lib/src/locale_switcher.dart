@@ -43,9 +43,9 @@ class LocaleSwitcher extends StatefulWidget {
   /// use [LocaleSwitcher.trySetLocale].
   ///
   /// The notifier [localeIndex] is the underlying notifier for this value.
-  static LocaleName get current => LocaleSwitcher.current;
+  static LocaleName get current => CurrentLocale.current;
 
-  static set current(LocaleName value) => LocaleSwitcher.current = value;
+  static set current(LocaleName value) => CurrentLocale.current = value;
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
@@ -56,12 +56,13 @@ class LocaleSwitcher extends StatefulWidget {
   // add localizationCallback (with/withOutContext)
   // todo:
   static List<Locale> readLocales(List<Locale> supportedLocales) {
-    if (supportedLocales.isEmpty) {
+    if (supportedLocales.isEmpty && LocaleStore.supportedLocales.isEmpty) {
       supportedLocales = const [Locale('en')];
     }
 
     if (!identical(LocaleStore.supportedLocales, supportedLocales)) {
-      LocaleStore.setSupportedLocales(supportedLocales);
+      LocaleStore.supportedLocales = supportedLocales;
+      LocaleStore.supportedLocaleNames = SupportedLocaleNames(supportedLocales);
     }
 
     return supportedLocales;
@@ -76,18 +77,27 @@ class LocaleSwitcher extends StatefulWidget {
   static SupportedLocaleNames get supportedLocaleNames =>
       LocaleStore.supportedLocaleNames;
 
-  /// A ReadOnly [ValueListenable] with current locale.
+  /// A ReadOnly [ValueNotifier] with current locale.
   ///
   /// If selected systemLocale - value can be outside of range of supportedLocales.
   /// Use [localeBestMatch] if you needed locale in range of supportedLocales.
   ///
-  /// Use [LocaleSwitcher.current] to update this notifier.
+  /// Use [LocaleSwitcher.current] or [LocaleSwitcher.localeIndex].value to update this notifier.
   static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   /// A ReadOnly [Locale], in range of supportedLocales, if selected systemLocale it try to guess.
   ///
   /// Use [LocaleSwitcher.current] to update this value.
   static Locale get localeBestMatch => LocaleSwitcher.current.bestMatch;
+
+  /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
+  ///
+  /// You can update it by using any value in [supportedLocaleNames],
+  /// if you are not sure that your locale exist in list of supportedLocales(in [supportedLocaleNames]):
+  /// use [LocaleSwitcher.trySetLocale].
+  ///
+  /// The notifier [localeIndex] is the underlying notifier for this value.
+  // static   find = LocaleMatcher;
 
   /// A text describing switcher
   ///
@@ -388,7 +398,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
             throw UnsupportedError(
                 'MaterialApp should have initialized supportedLocales parameter');
           }
-          LocaleStore.setSupportedLocales(supportedLocales);
+          LocaleSwitcher.readLocales(supportedLocales);
         } else if (child.runtimeType == CupertinoApp) {
           final supportedLocales =
               (child as CupertinoApp).supportedLocales.toList(growable: false);
@@ -396,7 +406,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
             throw UnsupportedError(
                 'CupertinoApp should have initialized supportedLocales parameter');
           }
-          LocaleStore.setSupportedLocales(supportedLocales);
+          LocaleSwitcher.readLocales(supportedLocales);
         }
       }
     }

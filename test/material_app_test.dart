@@ -65,8 +65,7 @@ void main() {
 
     testWidgets('it change locale via popUp dialog',
         (WidgetTester tester) async {
-      SharedPreferences.setMockInitialValues(
-          {LocaleStore.innerSharedPreferenceName: "system"});
+      SharedPreferences.setMockInitialValues({LocaleStore.prefName: "system"});
       // Build our app and trigger a frame.
       await SharedPreferences.getInstance();
       // verify(SharedPreferences.getInstance()).called(1);

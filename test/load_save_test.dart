@@ -18,8 +18,7 @@ void main() {
   group('Material tests loads', () {
     testWidgets('it load locale and change via menu',
         (WidgetTester tester) async {
-      SharedPreferences.setMockInitialValues(
-          {LocaleStore.innerSharedPreferenceName: "vi"});
+      SharedPreferences.setMockInitialValues({LocaleStore.prefName: "vi"});
       // Build our app and trigger a frame.
       // await LocaleStore.init();
       await SharedPreferences.getInstance();

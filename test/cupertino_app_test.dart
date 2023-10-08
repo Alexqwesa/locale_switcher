@@ -27,7 +27,7 @@ class MyAppCupertinoTest extends StatelessWidget {
     // ============= THIS 5 LINES REQUIRED =============
     return LocaleManager(
       child: CupertinoApp(
-        locale: LocaleSwitcher.current.locale!,
+        locale: LocaleSwitcher.localeBestMatch,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // ...
@@ -86,11 +86,11 @@ void main() {
 
     testWidgets('it load locale and change via menu',
         (WidgetTester tester) async {
-      SharedPreferences.setMockInitialValues(
-          {LocaleStore.innerSharedPreferenceName: "vi"});
-      // Build our app and trigger a frame.
-      await SharedPreferences.getInstance();
+      SharedPreferences.setMockInitialValues({LocaleStore.prefName: "vi"});
+      final pref = await SharedPreferences.getInstance();
+      expect(pref.getString(LocaleStore.prefName), 'vi');
       await LocaleStore.init(); // why MaterialApp works without this ??
+      // Build our app and trigger a frame.
       await tester.pumpWidget(const MyAppCupertinoTest());
       await tester.pumpAndSettle();
 
@@ -144,8 +144,7 @@ void main() {
 
     testWidgets('it change locale via popUp dialog',
         (WidgetTester tester) async {
-      SharedPreferences.setMockInitialValues(
-          {LocaleStore.innerSharedPreferenceName: "system"});
+      SharedPreferences.setMockInitialValues({LocaleStore.prefName: "system"});
       // Build our app and trigger a frame.
       await SharedPreferences.getInstance();
       // verify(SharedPreferences.getInstance()).called(1);

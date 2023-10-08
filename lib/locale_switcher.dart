@@ -4,6 +4,7 @@ library locale_switcher;
 
 export 'package:locale_switcher/src/lang_icon_with_tool_tip.dart';
 export 'package:locale_switcher/src/locale_manager.dart';
+export 'package:locale_switcher/src/locale_matcher.dart';
 export 'package:locale_switcher/src/locale_name.dart';
 export 'package:locale_switcher/src/locale_switcher.dart';
 export 'package:locale_switcher/src/public_extensions.dart';

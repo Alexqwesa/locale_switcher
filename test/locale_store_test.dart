@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/locale_observable.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,8 +25,7 @@ void main() {
   // });
 
   test('it load preference: de', () async {
-    SharedPreferences.setMockInitialValues(
-        {LocaleStore.innerSharedPreferenceName: "de"});
+    SharedPreferences.setMockInitialValues({LocaleStore.prefName: "de"});
     await LocaleStore.init(
         supportedLocales: const [Locale('de'), Locale('en')]);
 
@@ -45,8 +43,7 @@ void main() {
         platformDispatcher: WidgetsBinding.instance.platformDispatcher);
     TestablePlatformDispatcher.overridePlatformDispatcher = platform;
     platform.localeTestValue = const Locale('vi');
-    SharedPreferences.setMockInitialValues(
-        {LocaleStore.innerSharedPreferenceName: "de"});
+    SharedPreferences.setMockInitialValues({LocaleStore.prefName: "de"});
     await LocaleStore.init(
         supportedLocales: const [Locale('de'), Locale('en'), Locale('vi')]);
 
@@ -55,7 +52,7 @@ void main() {
     expect(LocaleSwitcher.current.name, "de");
     expect(LocaleSwitcher.current.locale, deLoc);
 
-    LocaleSwitcher.current = CurrentLocale.byName(systemLocale)!;
+    LocaleSwitcher.current = LocaleMatcher.byName(systemLocale)!;
     expect(LocaleSwitcher.current.name, "system");
     expect(LocaleSwitcher.current.locale!.languageCode, 'vi');
 

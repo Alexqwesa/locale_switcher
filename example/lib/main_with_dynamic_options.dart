@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: SizedBox(
-            height: 600,
+            height: 800,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Center(
                     child: Table(
                       columnWidths: const <int, TableColumnWidth>{
-                        0: FixedColumnWidth(400),
+                        0: FixedColumnWidth(350),
                         1: FixedColumnWidth(450),
                       },
                       defaultVerticalAlignment:
@@ -197,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             TableCell(
                               child: SizedBox(
                                 width: 400,
-                                height: 130,
+                                height: 140,
                                 // =============== THIS LINE ===============
                                 child: LocaleSwitcher.segmentedButton(
                                   title: loc.chooseLanguage,
@@ -211,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             TableCell(
                               child: SizedBox(
-                                height: 130,
+                                // height: 140,
                                 child: Row(
                                   children: [
                                     Text(loc.circleOrSquare),

@@ -49,7 +49,7 @@ class LocaleName {
           return const Locale('en');
         }
       case systemLocale:
-        return CurrentLocale.tryFindLocale(locale!.toString())?.locale ??
+        return LocaleMatcher.tryFindLocale(locale!.toString())?.locale ??
             const Locale('en');
       default:
         return locale ?? const Locale('en');

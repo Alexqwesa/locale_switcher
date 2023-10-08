@@ -5,12 +5,6 @@ import 'package:locale_switcher/src/preference_repository.dart';
 
 /// Inner storage.
 abstract class LocaleStore {
-  /// A ReadOnly [ValueListenable] with current locale.
-  ///
-  /// Use [LocaleSwitcher.current] to update this notifier.
-  // here just for test and backward compatibility
-  static ValueNotifier<Locale> get locale => CurrentLocale.locale;
-
   /// List of supported locales.
   ///
   /// Usually setup by [LocaleManager], but have fallBack setup in [LocaleSwitcher].
@@ -28,7 +22,8 @@ abstract class LocaleStore {
   /// A name of key used to store locale in [SharedPreferences].
   ///
   /// Set it via [LocaleManager].[sharedPreferenceName]
-  static String innerSharedPreferenceName = 'LocaleSwitcherCurrentLocale';
+  static String prefName = 'LocaleSwitcherCurrentLocaleName';
+  static const defaultPrefName = 'LocaleSwitcherCurrentLocaleName';
 
   /// Init [LocaleStore] class.
   ///
@@ -36,36 +31,28 @@ abstract class LocaleStore {
   static Future<void> init({
     List<Locale>? supportedLocales,
     // LocalizationsDelegate? delegate,
-    sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
+    sharedPreferenceName = defaultPrefName,
   }) async {
     if (_pref == null) {
       //
       // > init inner vars
       //
-      setSupportedLocales(supportedLocales);
+      if (supportedLocales != null) {
+        LocaleSwitcher.readLocales(supportedLocales);
+      }
       //
       // > init shared preference
       //
-      innerSharedPreferenceName = sharedPreferenceName;
+      prefName = sharedPreferenceName;
       await PreferenceRepository.init();
       //
       // > read locale from sharedPreference
       //
       String langCode = systemLocale;
       if (_pref != null) {
-        langCode =
-            PreferenceRepository.read(innerSharedPreferenceName) ?? langCode;
-        CurrentLocale.trySetLocale(langCode);
+        langCode = PreferenceRepository.read(prefName) ?? langCode;
+        LocaleMatcher.trySetLocale(langCode);
       }
-    }
-  }
-
-  static void setSupportedLocales(
-    List<Locale>? supportedLocales,
-  ) {
-    if (supportedLocales != null) {
-      LocaleStore.supportedLocales = supportedLocales;
-      LocaleStore.supportedLocaleNames = SupportedLocaleNames(supportedLocales);
     }
   }
 

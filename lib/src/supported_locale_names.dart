@@ -55,7 +55,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     LocaleName? entry = localeName;
 
     if (str != null) {
-      entry ??= CurrentLocale.byName(str);
+      entry ??= LocaleMatcher.byName(str);
     }
     if (entry != null) {
       locales.last = entry.locale;
@@ -73,12 +73,10 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
       names.add(showOtherLocales);
       entries.add(
         LocaleName(
-            name: names.last,
-            locale: locales.last,
-            flag: CurrentLocale.buttonFlagForOtherLocales),
+            name: names.last, locale: locales.last, flag: flagForOtherLocales),
       );
     } else {
-      final entry = CurrentLocale.byName(str);
+      final entry = LocaleMatcher.byName(str);
       if (entry != null) {
         locales.add(entry.locale);
         names.add(entry.name);
@@ -124,8 +122,14 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
       LocaleName(
           name: names.last,
           locale: locales.last,
-          flag: flag ?? CurrentLocale.buttonFlagForOtherLocales),
+          flag: flag ?? flagForOtherLocales),
       // setLocaleCallBack: setLocaleCallBack
     );
   }
+
+  /// Just flag for [showOtherLocales].
+  static Widget get flagForOtherLocales =>
+      ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
+          ? LocaleStore.languageToCountry[showOtherLocales]![2]
+          : const Icon(Icons.expand_more);
 }
