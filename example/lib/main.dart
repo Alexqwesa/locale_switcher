@@ -62,8 +62,8 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.menu(title: loc.chooseLanguage),
             ),
             const Divider(),
-            SizedBox(
-              width: 400,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
@@ -71,12 +71,11 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            SizedBox(
-              width: 450,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
-                title: loc.chooseLanguage,
               ),
             ),
           ],

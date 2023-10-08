@@ -168,26 +168,23 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             TableCell(
-                              child: SizedBox(
-                                height: 130,
-                                child: Row(
-                                  children: [
-                                    Text(loc.showIcons),
-                                    Switch(
-                                      key: const ValueKey('letterSwitch'),
-                                      value: (showNletters == 0),
-                                      onChanged: (val) {
-                                        setState(() {
-                                          if (val) {
-                                            showNletters = 0;
-                                          } else {
-                                            showNletters = 2;
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
+                              child: Row(
+                                children: [
+                                  Text(loc.showIcons),
+                                  Switch(
+                                    key: const ValueKey('letterSwitch'),
+                                    value: (showNletters == 0),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        if (val) {
+                                          showNletters = 0;
+                                        } else {
+                                          showNletters = 2;
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -195,12 +192,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         TableRow(
                           children: <Widget>[
                             TableCell(
-                              child: SizedBox(
-                                width: 400,
-                                height: 140,
+                              child: TitleForLocaleSwitch(
+                                title: loc.chooseLanguage,
                                 // =============== THIS LINE ===============
                                 child: LocaleSwitcher.segmentedButton(
-                                  title: loc.chooseLanguage,
                                   useNLettersInsteadOfIcon: showNletters,
                                   numberOfShown: 2,
                                   shape: circleOrSquare
@@ -210,21 +205,18 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             TableCell(
-                              child: SizedBox(
-                                // height: 140,
-                                child: Row(
-                                  children: [
-                                    Text(loc.circleOrSquare),
-                                    Switch(
-                                      value: !circleOrSquare,
-                                      onChanged: (val) {
-                                        setState(() {
-                                          circleOrSquare = !val;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
+                              child: Row(
+                                children: [
+                                  Text(loc.circleOrSquare),
+                                  Switch(
+                                    value: !circleOrSquare,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        circleOrSquare = !val;
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ],

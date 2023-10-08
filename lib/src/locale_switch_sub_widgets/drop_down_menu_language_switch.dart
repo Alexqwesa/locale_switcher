@@ -65,7 +65,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
             )
           : null,
       // controller: colorController,
-      label: const Text('Language'),
+      label: title != null ? Text(title!) : null,
       dropdownMenuEntries: localeEntries,
       onSelected: (LocaleName? langCode) {
         if (langCode != null) {

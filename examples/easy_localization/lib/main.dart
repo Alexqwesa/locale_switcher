@@ -83,9 +83,8 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            SizedBox(
-              width: 400,
-              // =============== THIS LINE ===============
+            TitleForLocaleSwitch(
+              title: LocaleKeys.chooseLanguage.tr(),
               child: LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
@@ -94,12 +93,11 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            SizedBox(
-              width: 450,
+            TitleForLocaleSwitch(
+              title: LocaleKeys.chooseLanguage.tr(),
               // =============== THIS LINE ===============
               child: LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
-                title: LocaleKeys.chooseLanguage.tr(),
                 setLocaleCallBack: (context) =>
                     context.setLocale(LocaleSwitcher.localeBestMatch),
               ),

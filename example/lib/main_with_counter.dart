@@ -58,12 +58,15 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
-              // =============== THIS LINE ===============
-              child: LocaleSwitcher.menu(title: loc.chooseLanguage),
+              child: TitleForLocaleSwitch(
+                title: loc.chooseLanguage,
+                // =============== THIS LINE ===============
+                child: LocaleSwitcher.menu(title: loc.chooseLanguage),
+              ),
             ),
             const Divider(),
-            SizedBox(
-              width: 400,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,

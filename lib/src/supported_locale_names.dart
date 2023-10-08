@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
 /// A list of generated [LocaleName]s for supportedLocales.

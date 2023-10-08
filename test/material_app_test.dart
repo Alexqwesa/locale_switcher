@@ -70,6 +70,7 @@ void main() {
       await SharedPreferences.getInstance();
       // verify(SharedPreferences.getInstance()).called(1);
       // Build our app and trigger a frame.
+      await LocaleStore.init();
       await tester.pumpWidget(const MyApp());
 
       // final deLoc = const Locale('de').tr;

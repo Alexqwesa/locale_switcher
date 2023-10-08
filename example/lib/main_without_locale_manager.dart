@@ -66,8 +66,8 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.menu(title: loc.chooseLanguage),
             ),
             const Divider(),
-            SizedBox(
-              width: 400,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.custom(
                 numberOfShown: 2,

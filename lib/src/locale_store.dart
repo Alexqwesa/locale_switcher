@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 /// Inner storage.

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:locale_switcher/locale_switcher.dart';
-import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:locale_switcher/src/system_locale_name.dart';
 
