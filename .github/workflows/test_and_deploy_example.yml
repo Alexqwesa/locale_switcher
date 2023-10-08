@@ -67,7 +67,7 @@ jobs:
         run: |
           rm -rf 'docs/'
           cd example/
-          flutter build web --release lib/main_with_dynamic_options.dart --base-href /locale_switcher/
+          flutter build web --release --target=lib/main_with_dynamic_options.dart --base-href /locale_switcher/
           mv 'build/web/' '../docs/'
 
       - name: Commit files
