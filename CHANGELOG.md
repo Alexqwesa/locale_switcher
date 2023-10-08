@@ -5,7 +5,8 @@
 * Extension Locale.flag,
 * helper TitleForLocaleSwitch,
 * LocaleMatcher,
-* hide CurrentLocale use LocaleSwitcher instead.
+* hide CurrentLocale use LocaleSwitcher instead,
+* MIT LICENSE.
 
 ## 0.11.4
 
