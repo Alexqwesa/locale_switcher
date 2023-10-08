@@ -29,45 +29,47 @@ class LocaleManager extends StatefulWidget {
   /// Example:
   /// {'en': ['GB', 'English', <Icon>]}
   /// (first two options are required, third is optional)
+  ///
   /// Note: keys are in lower cases.
+  ///
+  /// Note 2: prebuilt map here: [LocaleStore.languageToCountry]
   final Map<String, List>? reassignFlags;
 
-  final List<Locale>? _supportedLocales;
+  /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
+  /// or [CupertinoApp].
+  ///
+  /// Note: [MaterialApp] or [CupertinoApp] and this widget should still be inside the
+  /// same `build` method, otherwise it will not listen to [locale] notifier!
+  ///
+  /// Example:
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  /// return LocaleManager(
+  ///     child: MaterialApp(
+  ///       locale: LocaleSwitcher.current.locale,
+  ///       supportedLocales: AppLocalizations.supportedLocales,
+  /// ```
+  ///
+  /// Another Example:
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  /// return LocaleManager(
+  ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
+  ///   child: SomeOtherWidget(
+  ///     child: MaterialApp(
+  ///       locale: LocaleSwitcher.current.locale,
+  ///       supportedLocales: AppLocalizations.supportedLocales,
+  /// ```
+  final List<Locale>? supportedLocales;
 
   const LocaleManager({
     super.key,
     required this.child,
     this.reassignFlags,
     this.storeLocale = true,
-    this.sharedPreferenceName = 'LocaleSwitcherCurrentLocale',
-
-    /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
-    /// or [CupertinoApp].
-    ///
-    /// Note: [MaterialApp] or [CupertinoApp] and this widget should still be inside the
-    /// same `build` method, otherwise it will not listen to [locale] notifier!
-    ///
-    /// Example:
-    /// ```dart
-    /// Widget build(BuildContext context) {
-    /// return LocaleManager(
-    ///     child: MaterialApp(
-    ///       locale: CurrentLocale.current.locale,
-    ///       supportedLocales: AppLocalizations.supportedLocales,
-    /// ```
-    ///
-    /// Another Example:
-    /// ```dart
-    /// Widget build(BuildContext context) {
-    /// return LocaleManager(
-    ///   supportedLocales: AppLocalizations.supportedLocales, // in this case it required
-    ///   child: SomeOtherWidget(
-    ///     child: MaterialApp(
-    ///       locale: CurrentLocale.current.locale,
-    ///       supportedLocales: AppLocalizations.supportedLocales,
-    /// ```
-    List<Locale>? supportedLocales,
-  }) : _supportedLocales = supportedLocales;
+    this.sharedPreferenceName = LocaleStore.defaultPrefName,
+    this.supportedLocales,
+  });
 
   @override
   State<LocaleManager> createState() => _LocaleManagerState();
@@ -84,8 +86,9 @@ class _LocaleManagerState extends State<LocaleManager> {
   /// init [LocaleStore]'s supportedLocales
   void _readAppLocalization(Widget child) {
     // LocaleStore.initSystemLocaleObserverAndLocaleUpdater();
-    if (widget._supportedLocales != null) {
-      LocaleStore.setSupportedLocales(widget._supportedLocales!);
+    if (widget.supportedLocales != null) {
+      LocaleSwitcher.readLocales(
+          widget.supportedLocales ?? [const Locale('en')]);
     } else if (child.runtimeType == MaterialApp) {
       final supportedLocales =
           (child as MaterialApp).supportedLocales.toList(growable: false);
@@ -93,7 +96,7 @@ class _LocaleManagerState extends State<LocaleManager> {
         throw UnsupportedError(
             'MaterialApp should have initialized supportedLocales parameter');
       }
-      LocaleStore.setSupportedLocales(supportedLocales);
+      LocaleSwitcher.readLocales(supportedLocales);
     } else if (child.runtimeType == CupertinoApp) {
       final supportedLocales =
           (child as CupertinoApp).supportedLocales.toList(growable: false);
@@ -101,7 +104,7 @@ class _LocaleManagerState extends State<LocaleManager> {
         throw UnsupportedError(
             'CupertinoApp should have initialized supportedLocales parameter');
       }
-      LocaleStore.setSupportedLocales(supportedLocales);
+      LocaleSwitcher.readLocales(supportedLocales);
     } else {
       throw UnimplementedError(
           "The child should be either CupertinoApp or MaterialApp class");
@@ -124,7 +127,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
     super.initState();
 
-    CurrentLocale.allNotifiers.addListener(updateParent);
+    LocaleSwitcher.locale.addListener(updateParent);
 
     if (!LocaleManager.isInitialized) {
       if (widget.storeLocale) {
@@ -139,7 +142,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 
   @override
   void dispose() {
-    CurrentLocale.allNotifiers.removeListener(updateParent);
+    LocaleSwitcher.locale.removeListener(updateParent);
     super.dispose();
   }
 

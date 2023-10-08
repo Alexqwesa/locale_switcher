@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -8,11 +9,14 @@ import 'locale_switch_sub_widgets/drop_down_menu_language_switch.dart';
 import 'locale_switch_sub_widgets/grid_of_languages.dart';
 import 'locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'locale_switch_sub_widgets/select_locale_button.dart';
-import 'locale_switch_sub_widgets/title_of_lang_switch.dart';
 
+/// A special name for wrapper [LocaleName] to use as system locale.
 const showOtherLocales = 'show_other_locales_button';
 
-enum _Switcher {
+/// A special name for wrapper [LocaleName] to use as button that show other locales.
+const systemLocale = 'system';
+
+enum LocaleSwitcherType {
   menu,
   custom,
   grid,
@@ -20,7 +24,8 @@ enum _Switcher {
   segmentedButton,
 }
 
-typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
+typedef LocaleSwitchBuilder = Widget Function(
+    SupportedLocaleNames, BuildContext);
 
 /// A Widget to switch locale of App.
 ///
@@ -30,6 +35,17 @@ typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 /// - [LocaleSwitcher.menu],
 /// - [LocaleSwitcher.custom].
 class LocaleSwitcher extends StatefulWidget {
+  /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
+  ///
+  /// You can update it by using any value in [supportedLocaleNames],
+  /// if you are not sure that your locale exist in list of supportedLocales(in [supportedLocaleNames]):
+  /// use [LocaleSwitcher.trySetLocale].
+  ///
+  /// The notifier [localeIndex] is the underlying notifier for this value.
+  static LocaleName get current => CurrentLocale.current;
+
+  static set current(LocaleName value) => CurrentLocale.current = value;
+
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
   /// Update supportedLocales.
@@ -39,58 +55,56 @@ class LocaleSwitcher extends StatefulWidget {
   // add localizationCallback (with/withOutContext)
   // todo:
   static List<Locale> readLocales(List<Locale> supportedLocales) {
-    if (supportedLocales.isEmpty) {
+    if (supportedLocales.isEmpty && LocaleStore.supportedLocales.isEmpty) {
       supportedLocales = const [Locale('en')];
     }
 
     if (!identical(LocaleStore.supportedLocales, supportedLocales)) {
-      LocaleStore.setSupportedLocales(supportedLocales);
+      LocaleStore.supportedLocales = supportedLocales;
+      LocaleStore.supportedLocaleNames = SupportedLocaleNames(supportedLocales);
     }
 
     return supportedLocales;
   }
 
-  /// [ValueNotifier] with index of [localeNameFlags] currently used.
+  /// [ValueNotifier] with index of [supportedLocaleNames] currently used.
   static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
 
-  /// A list of generated [LocaleNameFlag]s for supportedLocales.
+  /// A list of generated [LocaleName]s for supportedLocales.
   ///
   /// Note: [supportedLocales] should be the same as [MaterialApp].supportedLocales
-  static LocaleNameFlagList get localeNameFlags => LocaleStore.localeNameFlags;
+  static SupportedLocaleNames get supportedLocaleNames =>
+      LocaleStore.supportedLocaleNames;
 
-  /// A ReadOnly [ValueListenable] with current locale.
+  /// A ReadOnly [ValueNotifier] with current locale.
   ///
   /// If selected systemLocale - value can be outside of range of supportedLocales.
   /// Use [localeBestMatch] if you needed locale in range of supportedLocales.
   ///
-  /// Use [CurrentLocale.current] to update this notifier.
+  /// Use [LocaleSwitcher.current] or [LocaleSwitcher.localeIndex].value to update this notifier.
   static ValueNotifier<Locale> get locale => CurrentLocale.locale;
 
   /// A ReadOnly [Locale], in range of supportedLocales, if selected systemLocale it try to guess.
   ///
-  /// Use [CurrentLocale.current] to update this value.
-  static Locale get localeBestMatch => CurrentLocale.current.bestMatch;
+  /// Use [LocaleSwitcher.current] to update this value.
+  static Locale get localeBestMatch => LocaleSwitcher.current.bestMatch;
+
+  /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
+  ///
+  /// You can update it by using any value in [supportedLocaleNames],
+  /// if you are not sure that your locale exist in list of supportedLocales(in [supportedLocaleNames]):
+  /// use [LocaleSwitcher.trySetLocale].
+  ///
+  /// The notifier [localeIndex] is the underlying notifier for this value.
+  // static   find = LocaleMatcher;
 
   /// A text describing switcher
-  ///
-  /// default: 'Choose the language:'
-  /// pass null if not needed.
   final String? title;
-
-  /// Title position,
-  ///
-  /// default `true` - on Top
-  /// use `false` to show at Left side
-  final bool titlePositionTop;
 
   /// Number of shown flags
   final int numberOfShown;
 
-  final CrossAxisAlignment crossAxisAlignment;
-  final EdgeInsets padding;
-  final EdgeInsets titlePadding;
-
-  final _Switcher _type;
+  final LocaleSwitcherType type;
 
   /// Show option to use language of OS.
   final bool showOsLocale;
@@ -121,7 +135,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Only for [LocaleSwitcher.grid] constructor
   final SliverGridDelegate? gridDelegate;
 
-  /// Function called after choosing new current `Locale` (actually [LocaleNameFlag]).
+  /// Function called after choosing new current `Locale` (actually [LocaleName]).
   ///
   /// Useful for [LocaleSwitcher.grid] - if you want to close popup window after new selection.
   ///
@@ -163,11 +177,7 @@ class LocaleSwitcher extends StatefulWidget {
     this.showOsLocale = true,
     this.title = 'Choose language:',
     this.numberOfShown = 4,
-    this.titlePositionTop = true,
-    this.crossAxisAlignment = CrossAxisAlignment.stretch,
-    this.padding = const EdgeInsets.all(8),
-    this.titlePadding = const EdgeInsets.all(4),
-    type = _Switcher.segmentedButton,
+    this.type = LocaleSwitcherType.segmentedButton,
     this.builder,
     this.gridDelegate,
     this.setLocaleCallBack,
@@ -177,18 +187,16 @@ class LocaleSwitcher extends StatefulWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
-  }) : _type = type;
+  });
 
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/), [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
   factory LocaleSwitcher.menu({
     GlobalKey? key,
-    String? title = 'Choose language:',
+    String? title = 'Language:',
     int numberOfShown = 200,
     bool showOsLocale = true,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
-    EdgeInsets padding = const EdgeInsets.all(8),
     int? useNLettersInsteadOfIcon,
     bool showLeading = true,
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
@@ -199,9 +207,7 @@ class LocaleSwitcher extends StatefulWidget {
       title: title,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
-      crossAxisAlignment: crossAxisAlignment,
-      padding: padding,
-      type: _Switcher.menu,
+      type: LocaleSwitcherType.menu,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       showLeading: showLeading,
       shape: shape,
@@ -226,7 +232,7 @@ class LocaleSwitcher extends StatefulWidget {
       key: key ?? GlobalKey(),
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
-      type: _Switcher.grid,
+      type: LocaleSwitcherType.grid,
       gridDelegate: gridDelegate,
       setLocaleCallBack: setLocaleCallBack,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
@@ -266,10 +272,9 @@ class LocaleSwitcher extends StatefulWidget {
   }) {
     return LocaleSwitcher._(
       key: key ?? GlobalKey(),
-      title: null,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
-      type: _Switcher.custom,
+      type: LocaleSwitcherType.custom,
       builder: builder,
       // setLocaleCallBack: null,
     );
@@ -284,6 +289,8 @@ class LocaleSwitcher extends StatefulWidget {
   factory LocaleSwitcher.iconButton({
     GlobalKey? key,
     String? toolTipPrefix = 'Current language: ',
+
+    /// Title of popup dialog.
     String? title = 'Select language: ',
     Icon? useStaticIcon,
     double? iconRadius = 32,
@@ -302,7 +309,7 @@ class LocaleSwitcher extends StatefulWidget {
       numberOfShown: numberOfShown,
       useStaticIcon: useStaticIcon,
       iconRadius: iconRadius,
-      type: _Switcher.iconButton,
+      type: LocaleSwitcherType.iconButton,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
@@ -318,27 +325,17 @@ class LocaleSwitcher extends StatefulWidget {
     GlobalKey? key,
     // double? iconRadius = 32,
     // required LocaleSwitchBuilder builder,
-    String? title = 'Choose language:',
     int numberOfShown = 4,
     bool showOsLocale = true,
-    bool titlePositionTop = true,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.stretch,
-    EdgeInsets padding = const EdgeInsets.all(8),
-    EdgeInsets titlePadding = const EdgeInsets.all(4),
     int? useNLettersInsteadOfIcon,
     ShapeBorder? shape,
     Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
       key: key ?? GlobalKey(),
-      title: title,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
-      titlePositionTop: titlePositionTop,
-      crossAxisAlignment: crossAxisAlignment,
-      padding: padding,
-      titlePadding: titlePadding,
-      type: _Switcher.segmentedButton,
+      type: LocaleSwitcherType.segmentedButton,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
@@ -370,7 +367,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
             throw UnsupportedError(
                 'MaterialApp should have initialized supportedLocales parameter');
           }
-          LocaleStore.setSupportedLocales(supportedLocales);
+          LocaleSwitcher.readLocales(supportedLocales);
         } else if (child.runtimeType == CupertinoApp) {
           final supportedLocales =
               (child as CupertinoApp).supportedLocales.toList(growable: false);
@@ -378,7 +375,7 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
             throw UnsupportedError(
                 'CupertinoApp should have initialized supportedLocales parameter');
           }
-          LocaleStore.setSupportedLocales(supportedLocales);
+          LocaleSwitcher.readLocales(supportedLocales);
         }
       }
     }
@@ -387,8 +384,8 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   Widget build(BuildContext context) {
     final skip = widget.showOsLocale ? 0 : 1;
-    final staticLocales = LocaleNameFlagList.fromEntries(
-      LocaleStore.localeNameFlags.entries
+    final staticLocales = SupportedLocaleNames.fromEntries(
+      LocaleStore.supportedLocaleNames.entries
           .skip(skip) // first is system locale
           .take(widget.numberOfShown + 1 - skip) // chose most used
       ,
@@ -397,9 +394,9 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
     return ValueListenableBuilder(
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
-        var locales = LocaleNameFlagList.fromEntries(staticLocales.entries);
-        if (!locales.names.contains(CurrentLocale.current.name)) {
-          locales.replaceLast(localeName: CurrentLocale.current);
+        var locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
+        if (!locales.names.contains(LocaleSwitcher.current.name)) {
+          locales.replaceLast(localeName: LocaleSwitcher.current);
         }
         if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
           locales
@@ -407,9 +404,9 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
         }
         // todo: add 0.5 second delayed check of app locale ?
 
-        return switch (widget._type) {
-          _Switcher.custom => widget.builder!(locales, context),
-          _Switcher.menu => DropDownMenuLanguageSwitch(
+        return switch (widget.type) {
+          LocaleSwitcherType.custom => widget.builder!(locales, context),
+          LocaleSwitcherType.menu => DropDownMenuLanguageSwitch(
               locales: locales,
               title: widget.title,
               useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
@@ -417,12 +414,12 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
             ),
-          _Switcher.grid => GridOfLanguages(
+          LocaleSwitcherType.grid => GridOfLanguages(
               gridDelegate: widget.gridDelegate,
               setLocaleCallBack: widget.setLocaleCallBack,
               shape: widget.shape,
             ),
-          _Switcher.iconButton => SelectLocaleButton(
+          LocaleSwitcherType.iconButton => SelectLocaleButton(
               radius: widget.iconRadius ?? 32,
               popUpWindowTitle: widget.title ?? '',
               updateIconOnChange: (widget.useStaticIcon != null),
@@ -432,18 +429,11 @@ class LocaleSwitcherState extends State<LocaleSwitcher> {
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
             ),
-          _Switcher.segmentedButton => TitleOfLangSwitch(
-              padding: widget.padding,
-              crossAxisAlignment: widget.crossAxisAlignment,
-              titlePositionTop: widget.titlePositionTop,
-              titlePadding: widget.titlePadding,
-              title: widget.title,
-              child: SegmentedButtonSwitch(
-                locales: locales,
-                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-                shape: widget.shape,
-                setLocaleCallBack: widget.setLocaleCallBack,
-              ),
+          LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
+              locales: locales,
+              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+              shape: widget.shape,
+              setLocaleCallBack: widget.setLocaleCallBack,
             ),
         };
       },

@@ -32,9 +32,9 @@ class PreferenceRepository {
   static Future<bool>? write(
       String innerSharedPreferenceName, languageCode) async {
     final context = _lastUsedKey?.currentState?.context;
-    if (context != null && CurrentLocale.current.locale != null) {
+    if (context != null && LocaleSwitcher.current.locale != null) {
       await EasyLocalization.of(context)
-          ?.setLocale(CurrentLocale.current.locale!);
+          ?.setLocale(LocaleSwitcher.current.locale!);
       return true;
     }
 

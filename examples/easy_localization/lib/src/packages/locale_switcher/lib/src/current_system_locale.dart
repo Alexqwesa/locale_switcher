@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/src/locale_observable.dart';
 
+/// Observe change in system locale.
+///
 /// Public access to it notifier via [CurrentLocale.byName(LocaleManager.systemLocale)]
 abstract class CurrentSystemLocale {
   static LocaleObserver? __observer;

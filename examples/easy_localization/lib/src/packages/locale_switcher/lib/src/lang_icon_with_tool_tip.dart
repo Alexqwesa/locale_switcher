@@ -30,8 +30,8 @@ class LangIconWithToolTip extends StatelessWidget {
   /// (assigned to language in [LocaleManager].reassignFlags)
   final Widget? child;
 
-  /// An entry of [LocaleNameFlagList].
-  final LocaleNameFlag? localeNameFlag;
+  /// An entry of [SupportedLocaleNames].
+  final LocaleName? localeNameFlag;
 
   /// Analog [LangIconWithToolTip] but for Strings.
   const LangIconWithToolTip.forStringIconBuilder(
@@ -79,7 +79,7 @@ class LangIconWithToolTip extends StatelessWidget {
     final locCode = localeNameFlag?.name ?? langCode ?? '??';
 
     if (locCode == showOtherLocales) {
-      return CurrentLocale.buttonFlagForOtherLocales;
+      return SupportedLocaleNames.flagForOtherLocales;
     }
     final lang = LocaleStore.languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
@@ -95,7 +95,7 @@ class LangIconWithToolTip extends StatelessWidget {
             size: radius ?? 48,
             child: Flags.instance[(lang[0]).toLowerCase()]!.svg)
         : null;
-    if (locCode != LocaleStore.systemLocale && locCode != showOtherLocales) {
+    if (locCode != systemLocale && locCode != showOtherLocales) {
       if (flag == null || useNLettersInsteadOfIcon > 0) {
         flag = child ??
             Padding(

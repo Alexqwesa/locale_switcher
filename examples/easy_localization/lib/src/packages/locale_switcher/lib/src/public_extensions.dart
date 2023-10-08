@@ -26,51 +26,58 @@ extension StringToLocale on String {
   }
 }
 
-enum LocaleNotFoundFallBack {
+enum FlagNotFoundFallBack {
   full,
   countryCodeThenFull,
   countryCodeThenNull,
 }
 
-Widget? findFlagFor(String input) {
-  final str = input.toLowerCase();
-  final value = LocaleStore.languageToCountry[str] ?? const [''];
-  if (value.length > 2 && value[2] != null) return value[2];
-
-  if (countryCodeToContent.containsKey(str)) {
-    return Flags.instance[str]?.svg;
-  } else if (countryCodeToContent
-      .containsKey((value[0] as String).toLowerCase())) {
-    return Flags.instance[value[0]]?.svg;
+Widget? findFlagFor({String? language, String? country}) {
+  if (language != null) {
+    final str = language.toLowerCase();
+    if (LocaleStore.languageToCountry.containsKey(str)) {
+      final value = LocaleStore.languageToCountry[str];
+      if (value != null) {
+        if (value.length > 2 && value[2] != null) return value[2];
+        return findFlagFor(country: value[0]);
+      }
+    }
+  }
+  if (country != null) {
+    final str = country.toLowerCase();
+    if (countryCodeToContent.containsKey(str)) {
+      return Flags.instance[str]?.svg;
+    }
   }
   return null;
 }
 
 extension LocaleFlag on Locale {
   /// Search for flag for given locale
-  Widget? flag(
-      {LocaleNotFoundFallBack? fallBack = LocaleNotFoundFallBack.full}) {
+  Widget? flag({FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.full}) {
     final str = toString();
     // check full
-    final flag = findFlagFor(str);
+    var flag = findFlagFor(language: str);
+
     if (flag != null) return flag;
 
     final localeList = str.split('_');
     // create fallback
     Widget? fb;
     if (fallBack != null) {
-      if (fallBack == LocaleNotFoundFallBack.full) {
+      if (fallBack == FlagNotFoundFallBack.full) {
         fb = Text(str);
-      } else if (fallBack == LocaleNotFoundFallBack.countryCodeThenFull) {
+      } else if (fallBack == FlagNotFoundFallBack.countryCodeThenFull) {
         if (localeList.length > 1) {
           fb = Text(localeList.last);
         } else {
           fb = Text(str);
         }
       }
-      // else {
-      //   fb = Text(str.substring(0, 2));
-      // }
+    }
+
+    if (str.length > 2) {
+      fb = findFlagFor(language: str.substring(0, 2)) ?? fb;
     }
 
     switch (localeList.length) {
@@ -79,14 +86,12 @@ extension LocaleFlag on Locale {
       case 2:
         if (localeList.last.length != 4) {
           // second is not scriptCode
-          return findFlagFor(localeList.last) ?? fb;
+          return findFlagFor(country: localeList.last) ?? fb;
         } else {
-          return findFlagFor(localeList.first) ?? fb;
+          return fb;
         }
       case 3:
-        final flag = findFlagFor(localeList.last);
-        if (flag != null) return flag;
-        return findFlagFor(localeList.first) ?? fb;
+        return findFlagFor(country: localeList.last) ?? fb;
       default:
         return fb;
     }

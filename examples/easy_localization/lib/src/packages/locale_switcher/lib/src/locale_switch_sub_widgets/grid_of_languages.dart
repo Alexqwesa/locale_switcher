@@ -18,7 +18,7 @@ class GridOfLanguages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locales = LocaleStore.localeNameFlags;
+    final locales = LocaleStore.supportedLocaleNames;
 
     return GridView(
       gridDelegate: gridDelegate ??
@@ -32,7 +32,7 @@ class GridOfLanguages extends StatelessWidget {
           return Card(
             child: InkWell(
               onTap: () {
-                CurrentLocale.current = locNameFlag;
+                LocaleSwitcher.current = locNameFlag;
                 setLocaleCallBack?.call(context);
               },
               child: Column(
