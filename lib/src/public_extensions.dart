@@ -54,8 +54,7 @@ Widget? findFlagFor({String? language, String? country}) {
 
 extension LocaleFlag on Locale {
   /// Search for flag for given locale
-  Widget? flag(
-      {FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.full}) {
+  Widget? flag({FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.full}) {
     final str = toString();
     // check full
     var flag = findFlagFor(language: str);

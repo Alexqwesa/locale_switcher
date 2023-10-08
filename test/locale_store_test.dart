@@ -63,7 +63,6 @@ void main() {
     expect(CurrentLocale.current.locale!.languageCode, 'es');
   });
 
-
   // test('it convert string to locale', () async {
   //   final names = ['en', 'vi', 'de'];
   //   await tester.pumpWidget(LocaleManager(
@@ -81,5 +80,4 @@ void main() {
   //   //   expect(locName.flag?.key, Flags.instance[locName.name]?.svg.key);
   //   // }
   // });
-
 }
