@@ -156,6 +156,11 @@ class LocaleNameFlag {
   /// Is [Locale] for ordinary locales, null for [showOtherLocales], dynamic for systemLocale.
   final Locale? locale;
 
+  @override
+  String toString() {
+    return '$name|${locale?.languageCode}';
+  }
+
   Locale get bestMatch {
     // exact search
     if (name != LocaleStore.systemLocale &&

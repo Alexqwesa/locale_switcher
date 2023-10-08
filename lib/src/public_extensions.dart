@@ -26,7 +26,7 @@ extension StringToLocale on String {
   }
 }
 
-enum LocaleNotFoundFallBack {
+enum FlagNotFoundFallBack {
   full,
   countryCodeThenFull,
   countryCodeThenNull,
@@ -55,28 +55,30 @@ Widget? findFlagFor({String? language, String? country}) {
 extension LocaleFlag on Locale {
   /// Search for flag for given locale
   Widget? flag(
-      {LocaleNotFoundFallBack? fallBack = LocaleNotFoundFallBack.full}) {
+      {FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.full}) {
     final str = toString();
     // check full
     var flag = findFlagFor(language: str);
-    if (str.length > 2) {
-      flag ??= findFlagFor(language: str.substring(0, 2));
-    }
+
     if (flag != null) return flag;
 
     final localeList = str.split('_');
     // create fallback
     Widget? fb;
     if (fallBack != null) {
-      if (fallBack == LocaleNotFoundFallBack.full) {
+      if (fallBack == FlagNotFoundFallBack.full) {
         fb = Text(str);
-      } else if (fallBack == LocaleNotFoundFallBack.countryCodeThenFull) {
+      } else if (fallBack == FlagNotFoundFallBack.countryCodeThenFull) {
         if (localeList.length > 1) {
           fb = Text(localeList.last);
         } else {
           fb = Text(str);
         }
       }
+    }
+
+    if (str.length > 2) {
+      fb = findFlagFor(language: str.substring(0, 2)) ?? fb;
     }
 
     switch (localeList.length) {

@@ -62,4 +62,24 @@ void main() {
     expect(CurrentLocale.current.name, "system");
     expect(CurrentLocale.current.locale!.languageCode, 'es');
   });
+
+
+  // test('it convert string to locale', () async {
+  //   final names = ['en', 'vi', 'de'];
+  //   await tester.pumpWidget(LocaleManager(
+  //     supportedLocales: names.map((e) => Locale(e)).toList(),
+  //     child: const MyApp(),
+  //   ));
+  //
+  //   final namesSystem = ['system', 'en', 'vi', 'de'];
+  //   final lnf = LocaleSwitcher.localeNameFlags;
+  //   expect(lnf.names, namesSystem);
+  //   expect(lnf[1].flag?.key, Flags.instance['us']?.svg.key);
+  //   expect(lnf[2].flag?.key, Flags.instance['vn']?.svg.key);
+  //   expect(lnf[3].flag?.key, Flags.instance['de']?.svg.key);
+  //   // for (final locName in lnf.skip(1)) {
+  //   //   expect(locName.flag?.key, Flags.instance[locName.name]?.svg.key);
+  //   // }
+  // });
+
 }

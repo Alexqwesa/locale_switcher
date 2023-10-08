@@ -77,7 +77,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
     }
   }
 
-  /// Current [LocaleNameFlag] what contains current locale.
+  /// Currently selected entry in [LocaleNameFlag].
   ///
   /// You can update this value directly, or
   /// if you are not sure that your locale exist in list of supportedLocales:

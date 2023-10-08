@@ -30,6 +30,17 @@ typedef LocaleSwitchBuilder = Widget Function(LocaleNameFlagList, BuildContext);
 /// - [LocaleSwitcher.menu],
 /// - [LocaleSwitcher.custom].
 class LocaleSwitcher extends StatefulWidget {
+  /// Currently selected entry in [localeNameFlags] that contains [Locale].
+  ///
+  /// You can update it by using any value in [localeNameFlags],
+  /// if you are not sure that your locale exist in list of supportedLocales(in [localeNameFlags]):
+  /// use [LocaleSwitcher.trySetLocale].
+  ///
+  /// The notifier [localeIndex] is the underlying notifier for this value.
+  static LocaleNameFlag get current => CurrentLocale.current;
+
+  static set current(LocaleNameFlag value) => CurrentLocale.current = value;
+
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
   /// Update supportedLocales.
