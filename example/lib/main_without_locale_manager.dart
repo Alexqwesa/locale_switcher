@@ -66,8 +66,8 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.menu(title: loc.chooseLanguage),
             ),
             const Divider(),
-            SizedBox(
-              width: 400,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.custom(
                 numberOfShown: 2,
@@ -77,14 +77,14 @@ class MyHomePage extends StatelessWidget {
                     langCodes.addShowOtherLocales();
                   }
 
-                  return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
-                    values: LocaleSwitcher.localeNameFlags,
-                    current: CurrentLocale.current,
+                  return AnimatedToggleSwitch<LocaleName>.rolling(
+                    values: LocaleSwitcher.supportedLocaleNames,
+                    current: LocaleSwitcher.current,
                     onChanged: (langCode) {
                       if (langCode.name == showOtherLocales) {
                         showSelectLocaleDialog(context);
                       } else {
-                        CurrentLocale.current = langCode;
+                        LocaleSwitcher.current = langCode;
                       }
                     },
                     iconBuilder: LangIconWithToolTip.forIconBuilder,

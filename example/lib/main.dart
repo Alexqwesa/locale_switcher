@@ -62,8 +62,8 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.menu(title: loc.chooseLanguage),
             ),
             const Divider(),
-            SizedBox(
-              width: 400,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
@@ -71,12 +71,11 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            SizedBox(
-              width: 450,
+            TitleForLocaleSwitch(
+              title: loc.chooseLanguage,
               // =============== THIS LINE ===============
               child: LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
-                title: loc.chooseLanguage,
               ),
             ),
           ],
@@ -87,20 +86,20 @@ class MyHomePage extends StatelessWidget {
 }
 
 Widget animatedToggleSwitchBuilder(
-    LocaleNameFlagList langCodes, BuildContext context) {
+    SupportedLocaleNames langCodes, BuildContext context) {
   if (langCodes.length <= 1) {
     // AnimatedToggleSwitch crash with one value
     langCodes.addShowOtherLocales();
   }
 
-  return AnimatedToggleSwitch<LocaleNameFlag>.rolling(
+  return AnimatedToggleSwitch<LocaleName>.rolling(
     values: langCodes,
-    current: CurrentLocale.current,
+    current: LocaleSwitcher.current,
     onChanged: (langCode) {
       if (langCode.name == showOtherLocales) {
         showSelectLocaleDialog(context);
       } else {
-        CurrentLocale.current = langCode;
+        LocaleSwitcher.current = langCode;
       }
     },
     iconBuilder: LangIconWithToolTip.forIconBuilder,
