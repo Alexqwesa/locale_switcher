@@ -29,7 +29,10 @@ class LocaleManager extends StatefulWidget {
   /// Example:
   /// {'en': ['GB', 'English', <Icon>]}
   /// (first two options are required, third is optional)
+  ///
   /// Note: keys are in lower cases.
+  ///
+  /// Note 2: prebuilt map here: [LocaleStore.languageToCountry]
   final Map<String, List>? reassignFlags;
 
   final List<Locale>? _supportedLocales;

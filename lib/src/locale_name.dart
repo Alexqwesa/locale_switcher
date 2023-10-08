@@ -1,4 +1,3 @@
-
 import 'package:flutter/widgets.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
@@ -16,10 +15,13 @@ class LocaleName {
   /// cache
   Widget? _flag;
 
-  /// [Locale].toString() or one of special names, like: systemLocale or [showOtherLocales].
+  /// Either [Locale].toString() or one of special names, like: [systemLocale] or [showOtherLocales].
   final String name;
 
-  /// Is [Locale] for ordinary locales, null for [showOtherLocales], dynamic for systemLocale.
+  /// Is [Locale] for ordinary locales, null for [showOtherLocales], dynamic for [systemLocale].
+  ///
+  /// For [systemLocale] it can return unsupported locale,
+  /// use [bestMatch] to be sure that returned locale is in [supportedLocales] list.
   final Locale? locale;
 
   @override
@@ -27,8 +29,11 @@ class LocaleName {
     return '$name|${locale?.languageCode}';
   }
 
+  /// Exact [Locale] for regular locales, and guess for [systemLocale].
+  ///
+  /// Unlike [locale] properties, it try to find matching locale in [supportedLocales].
   Locale get bestMatch {
-    // exact search
+    // exact
     if (name != systemLocale &&
         name != showOtherLocales &&
         LocaleStore.supportedLocaleNames.names.contains(name)) {
@@ -78,6 +83,7 @@ class LocaleName {
     return _flag;
   }
 
+  /// Search in [LocaleManager.reassignFlags] first, and if not found return [name].
   String get language {
     _language ??= (LocaleStore.languageToCountry[name.toLowerCase()]?[1] ??
             LocaleStore.languageToCountry[name.substring(0, 2).toLowerCase()]
@@ -87,7 +93,7 @@ class LocaleName {
   }
 
   /// A special [LocaleName] for [systemLocale].
-  factory LocaleName.system(Widget? flag) {
+  factory LocaleName.system({Widget? flag}) {
     return SystemLocaleName(flag: flag);
   }
 }

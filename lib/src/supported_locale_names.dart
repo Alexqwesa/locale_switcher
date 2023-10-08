@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
-import 'package:locale_switcher/src/system_locale_name.dart';
 
 /// A list of generated [LocaleName]s for supportedLocales.
 ///
@@ -13,9 +12,6 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
   final List<Locale> supportedLocales;
   final locales = <Locale?>[];
   final names = <String>[];
-
-// final flags = <Widget?>[];
-
   final entries = <LocaleName>[];
 
   SupportedLocaleNames(this.supportedLocales, {bool showOsLocale = true}) {
@@ -23,7 +19,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
       locales.add(null);
       names.add(systemLocale);
       entries.add(
-        SystemLocaleName(flag: findFlagFor(language: systemLocale)),
+        LocaleName.system(flag: findFlagFor(language: systemLocale)),
       );
     }
 
@@ -45,10 +41,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
       locales.add(null);
       names.add(systemLocale);
       entries.add(
-        LocaleName(
-            name: names.last,
-            locale: locales.last,
-            flag: findFlagFor(language: systemLocale)),
+        LocaleName.system(flag: findFlagFor(language: systemLocale)),
       );
     }
     entries.addAll(list);
@@ -71,11 +64,6 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
       return true;
     }
     return false;
-// final loc = str.toLocale();
-// locales.last = loc;
-// names.last = loc.toString();
-// entries.last = LocaleName(
-//     name: names.last, locale: locales.last, flag: flags.last);
   }
 
   /// Will search [LocaleStore.supportedLocaleNames] for name and add it.
@@ -109,7 +97,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
 
   @override
   void operator []=(int index, LocaleName entry) {
-    locales[index] = entry.locale;
+    locales[index] = entry.name == systemLocale ? null : entry.locale;
     names[index] = entry.name;
     entries[index] = entry;
   }
