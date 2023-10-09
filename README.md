@@ -77,7 +77,7 @@ a widget to switch locale:
     - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html)
       class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
     - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
-    - Extension for Locale show flag - Locale.flag 
+    - Extension for Locale show flag - [Locale.flag](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleFlag.html)
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.12.0
+## 0.12.1
 
 * sync with `locale_switcher`:
 * Extension Locale.flag,
