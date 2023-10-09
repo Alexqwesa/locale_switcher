@@ -69,7 +69,7 @@ void main() {
     ));
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
 
-    final namesSystem = ['system','en_gb', 'vi_vn', 'de_de'];
+    final namesSystem = ['system', 'en_gb', 'vi_vn', 'de_de'];
     final lnf = LocaleSwitcher.supportedLocaleNames;
     expect(lnf.names, namesSystem);
 

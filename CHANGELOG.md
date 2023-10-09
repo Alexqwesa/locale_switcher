@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.12.0
+## 0.12.1
 
 * Extension Locale.flag,
 * helper TitleForLocaleSwitch,
