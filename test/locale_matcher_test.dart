@@ -7,7 +7,7 @@ void main() {
   // setUp(() async {});
   // tearDown(() async {});
 
-  test('it load preference: de', () async {
+  test('it works with SupportedLocaleNames', () async {
     // LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
 
     final names = <String>['en_gb', 'vi_vn', 'de_de'];
@@ -27,5 +27,20 @@ void main() {
     expect(lnf2.addName('de_DE'), true);
 
     expect(lnf2.names, ['en_gb', 'vi_vn', 'de_de']);
+  });
+
+  test('it works with LocaleMatcher', () async {
+    // LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
+
+    final names = <String>['en_gb', 'vi_vn', 'de_de'];
+
+    LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
+    final lnf = LocaleSwitcher.supportedLocaleNames;
+    final namesSystem = ['system', 'en_gb', 'vi_vn', 'de_de'];
+    expect(lnf.length, namesSystem.length);
+    expect(lnf.names, namesSystem);
+
+    expect(LocaleMatcher.tryFindLocale('vi')?.locale?.countryCode, 'vn');
+    expect(LocaleMatcher.byLanguage('vi')?.locale?.countryCode, 'vn');
   });
 }

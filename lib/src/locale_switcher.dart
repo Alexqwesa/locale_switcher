@@ -246,16 +246,16 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (locales) {
-  ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.languageCode.value,
-  ///       values: locales,
+  ///   builder: (supportedLocNames) {
+  ///     return AnimatedToggleSwitch<LocaleName>.rolling(
+  ///       current: LocaleSwitcher.current,
+  ///       values: supportedLocNames,
   ///       loading: false,
-  ///       onChanged: (langCode) {
-  ///         if (langCode == showOtherLocales) {
+  ///       onChanged: (curLocaleName) {
+  ///         if (curLocaleName.name == showOtherLocales)
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.languageCode.value = langCode;
+  ///           LocaleSwitcher.current = curLocaleName;
   ///           // next line for locale_switcher used with easy_localization ONLY - NOT for locale_switcher_dev !
   ///           // context.setLocale(LocaleSwitcher.localeBestMatch);
   ///         }

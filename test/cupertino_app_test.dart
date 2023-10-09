@@ -40,6 +40,40 @@ class MyAppCupertinoTest extends StatelessWidget {
 
 void main() {
   group('Cupertino tests', () {
+    testWidgets('it change locale without LocaleManager',
+        (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(
+        CupertinoApp(
+          locale: LocaleSwitcher.localeBestMatch,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          // ...
+          title: LocaleSwitcher.current.locale!.tr.example,
+          home: MyHomePage(title: LocaleSwitcher.current.locale!.tr.example),
+        ),
+      );
+
+      // final deLoc = const Locale('de').tr;
+      final enLoc = const Locale('en').tr;
+
+      // test start with english locale
+      expect(find.text(enLoc.counterDescription), findsOneWidget);
+      expect(LocaleSwitcher.current.name, "system");
+
+      // Verify that vi locale is loaded
+      final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
+      expect(viFlag, findsNWidgets(2));
+      await tester.tap(viFlag.at(1));
+      expect(LocaleSwitcher.current.locale?.languageCode, "vi");
+      expect(LocaleSwitcher.current.name, "vi");
+      await tester.pumpAndSettle();
+
+      final sysFlag =
+          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      await tester.tap(sysFlag.at(1)); // restore ?
+    });
+
     testWidgets('it change locale via toggle switcher',
         (WidgetTester tester) async {
       // Build our app and trigger a frame.

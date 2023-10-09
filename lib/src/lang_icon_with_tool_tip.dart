@@ -33,21 +33,10 @@ class LangIconWithToolTip extends StatelessWidget {
   /// An entry of [SupportedLocaleNames].
   final LocaleName? localeNameFlag;
 
-  /// Analog [LangIconWithToolTip] but for Strings.
-  const LangIconWithToolTip.forStringIconBuilder(
-    this.langCode,
-    bool _, {
-    super.key,
-    this.toolTipPrefix = '',
-    this.radius,
-    this.useNLettersInsteadOfIcon = 0,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.child,
-    this.localeNameFlag,
-  });
-
-  /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders
-  /// in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
+  /// Just a shortcut to use as tear-off in builders of
+  /// widgets that generate lists of elements.
+  ///
+  /// See example for [LocaleSwitcher.custom].
   const LangIconWithToolTip.forIconBuilder(
     this.localeNameFlag,
     bool _, {
