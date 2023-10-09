@@ -15,8 +15,8 @@ class LocaleMatcher {
   static SupportedLocaleNames get supported => LocaleStore.supportedLocaleNames;
 
   static LocaleName? byName(String name) {
-    if (supported.names.contains(name)) {
-      return supported.entries[supported.names.indexOf(name)];
+    if (supported.names.contains(name.toLowerCase())) {
+      return supported.entries[supported.names.indexOf(name.toLowerCase())];
     }
     return null;
   }

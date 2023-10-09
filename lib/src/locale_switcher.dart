@@ -87,6 +87,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// A ReadOnly [Locale], in range of supportedLocales, if selected systemLocale it try to guess.
   ///
   /// Use [LocaleSwitcher.current] to update this value.
+  // Todo: just locale? currentSupportedLocale? allowedLocale? matchedLocale?
   static Locale get localeBestMatch => LocaleSwitcher.current.bestMatch;
 
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].

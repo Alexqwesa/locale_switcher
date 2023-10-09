@@ -28,7 +28,7 @@ void main() {
 
   testWidgets('it detect flags for locale with country',
       (WidgetTester tester) async {
-    final names = <String>['en_GB', 'vi_VN', 'de_lu'];
+    final names = <String>['en_gb', 'vi_vn', 'de_lu'];
     await tester.pumpWidget(LocaleManager(
       supportedLocales: names.map((String e) => e.toLocale()).toList(),
       child: const MyApp(),
@@ -39,7 +39,7 @@ void main() {
     // it update supportedLocales
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
     final lnf = LocaleSwitcher.supportedLocaleNames;
-    final namesSystem = ['system', 'en_GB', 'vi_VN', 'de_lu'];
+    final namesSystem = ['system', 'en_gb', 'vi_vn', 'de_lu'];
     expect(lnf.names, namesSystem);
 
     // it show flags
@@ -48,7 +48,7 @@ void main() {
     expect(lnf[3].flag?.key, Flags.instance['lu']?.svg.key);
 
     // it update SupportedLocaleNames indexes works
-    final namesSystem1 = ['system', 'de', 'vi_VN', 'de_lu'];
+    final namesSystem1 = ['system', 'de', 'vi_vn', 'de_lu'];
     lnf[1] = lnf1[3];
     expect(lnf.names, namesSystem1);
   });
@@ -62,14 +62,14 @@ void main() {
     // SharedPreferences.setMockInitialValues(
     //     {LocaleStore.innerSharedPreferenceName: "de"});
 
-    final names = <String>['en_GB', 'vi_VN', 'de_De'];
+    final names = <String>['en_gb', 'vi_vn', 'de_de'];
     await tester.pumpWidget(LocaleManager(
       supportedLocales: names.map((String e) => e.toLocale()).toList(),
       child: const MyApp(),
     ));
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
 
-    final namesSystem = ['system', 'en_GB', 'vi_VN', 'de_De'];
+    final namesSystem = ['system','en_gb', 'vi_vn', 'de_de'];
     final lnf = LocaleSwitcher.supportedLocaleNames;
     expect(lnf.names, namesSystem);
 
@@ -90,15 +90,16 @@ void main() {
     // SharedPreferences.setMockInitialValues(
     //     {LocaleStore.innerSharedPreferenceName: "de"});
 
-    final names = <String>['en_GB', 'vi_VN', 'de_De'];
+    final names = <String>['en_gb', 'vi_vn', 'de_de'];
     await tester.pumpWidget(LocaleManager(
       supportedLocales: names.map((String e) => e.toLocale()).toList(),
       child: const MyApp(),
     ));
     LocaleSwitcher.readLocales(names.map((String e) => e.toLocale()).toList());
 
-    final namesSystem = ['system', 'en_GB', 'vi_VN', 'de_De'];
+    final namesSystem = ['system', 'en_gb', 'vi_vn', 'de_de'];
     final lnf = LocaleSwitcher.supportedLocaleNames;
+    expect(lnf.length, namesSystem.length);
     expect(lnf.names, namesSystem);
 
     LocaleSwitcher.current = LocaleSwitcher.supportedLocaleNames[0];
