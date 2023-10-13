@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.2
+
+* update docs.
+
 ## 0.12.1
 
 * Extension Locale.flag,

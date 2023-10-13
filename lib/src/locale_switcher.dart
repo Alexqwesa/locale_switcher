@@ -10,12 +10,15 @@ import 'locale_switch_sub_widgets/grid_of_languages.dart';
 import 'locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'locale_switch_sub_widgets/select_locale_button.dart';
 
-/// A special name for wrapper [LocaleName] to use as system locale.
+/// A special name for wrapper [LocaleName] to use as button that show other locales.
 const showOtherLocales = 'show_other_locales_button';
 
-/// A special name for wrapper [LocaleName] to use as button that show other locales.
+/// A special name for wrapper [LocaleName] to use as system locale option.
 const systemLocale = 'system';
 
+/// Names of possible [LocaleSwitcher] constructors.
+///
+/// Mostly used internally by [LocaleSwitcher].
 enum LocaleSwitcherType {
   menu,
   custom,
@@ -48,9 +51,9 @@ class LocaleSwitcher extends StatefulWidget {
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
-  /// Update supportedLocales.
+  /// Update supportedLocales (that used to generated [LocaleStore.supportedLocaleNames]).
   ///
-  /// Should be used in case [MaterialApp].supportedLocales changed.
+  /// Use in case [MaterialApp].supportedLocales changed.
   // or readSupportedLocales
   // add localizationCallback (with/withOutContext)
   // todo:
@@ -105,6 +108,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Number of shown flags
   final int numberOfShown;
 
+  /// What constructor was used to create this instance.
   final LocaleSwitcherType type;
 
   /// Show option to use language of OS.
@@ -256,7 +260,7 @@ class LocaleSwitcher extends StatefulWidget {
   ///           showSelectLocaleDialog(context);
   ///         } else {
   ///           LocaleSwitcher.current = curLocaleName;
-  ///           // next line for locale_switcher used with easy_localization ONLY - NOT for locale_switcher_dev !
+  ///           // next for easy_localization with locale_switcher ONLY - NOT for locale_switcher_dev !
   ///           // context.setLocale(LocaleSwitcher.localeBestMatch);
   ///         }
   ///       },

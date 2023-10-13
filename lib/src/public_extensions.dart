@@ -26,12 +26,14 @@ extension StringToLocale on String {
   }
 }
 
+/// Parameter for [Locale.flag] extension.
 enum FlagNotFoundFallBack {
   full,
   countryCodeThenFull,
   countryCodeThenNull,
 }
 
+/// Try to found flag by language or country string.
 Widget? findFlagFor({String? language, String? country}) {
   if (language != null) {
     final str = language.toLowerCase();
