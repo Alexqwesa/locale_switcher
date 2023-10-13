@@ -171,21 +171,10 @@ class LangIconWithToolTip extends StatelessWidget {
   /// An entry of [SupportedLocaleNames].
   final LocaleName? localeNameFlag;
 
-  /// Analog [LangIconWithToolTip] but for Strings.
-  const LangIconWithToolTip.forStringIconBuilder(
-    this.langCode,
-    bool _, {
-    super.key,
-    this.toolTipPrefix = '',
-    this.radius,
-    this.useNLettersInsteadOfIcon = 0,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.child,
-    this.localeNameFlag,
-  });
-
-  /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders
-  /// in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
+  /// Just a shortcut to use as tear-off in builders of
+  /// widgets that generate lists of elements.
+  ///
+  /// See example for [LocaleSwitcher.custom].
   const LangIconWithToolTip.forIconBuilder(
     this.localeNameFlag,
     bool _, {
@@ -430,6 +419,7 @@ class _LocaleManagerState extends State<LocaleManager> {
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
+/// Parameter for [LocaleMatcher.trySetLocale] and [LocaleMatcher.tryfindLocale].
 enum IfLocaleNotFound {
   doNothing,
   useFirst,
@@ -442,8 +432,8 @@ class LocaleMatcher {
   static SupportedLocaleNames get supported => LocaleStore.supportedLocaleNames;
 
   static LocaleName? byName(String name) {
-    if (supported.names.contains(name)) {
-      return supported.entries[supported.names.indexOf(name)];
+    if (supported.names.contains(name.toLowerCase())) {
+      return supported.entries[supported.names.indexOf(name.toLowerCase())];
     }
     return null;
   }
@@ -518,8 +508,9 @@ import 'package:locale_switcher/src/system_locale_name.dart';
 
 /// Wrapper around [Locale], it's name, flag, language and few helpers.
 ///
-/// Created to allow special names, like: [showOtherLocales] and [systemLocale]
-/// [bestMatch] is either locale itself OR for system locale - closest match.
+/// Created to allow special names, like: [showOtherLocales] and [systemLocale].
+///
+/// A [bestMatch] is either locale itself OR - for system locale - closest match.
 class LocaleName {
   /// cache
   String? _language;
@@ -777,12 +768,15 @@ import 'locale_switch_sub_widgets/grid_of_languages.dart';
 import 'locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'locale_switch_sub_widgets/select_locale_button.dart';
 
-/// A special name for wrapper [LocaleName] to use as system locale.
+/// A special name for wrapper [LocaleName] to use as button that show other locales.
 const showOtherLocales = 'show_other_locales_button';
 
-/// A special name for wrapper [LocaleName] to use as button that show other locales.
+/// A special name for wrapper [LocaleName] to use as system locale option.
 const systemLocale = 'system';
 
+/// Names of possible [LocaleSwitcher] constructors.
+///
+/// Mostly used internally by [LocaleSwitcher].
 enum LocaleSwitcherType {
   menu,
   custom,
@@ -815,9 +809,9 @@ class LocaleSwitcher extends StatefulWidget {
 
   // final void Function(BuildContext)? readLocaleCallback;// todo:
 
-  /// Update supportedLocales.
+  /// Update supportedLocales (that used to generated [LocaleStore.supportedLocaleNames]).
   ///
-  /// Should be used in case [MaterialApp].supportedLocales changed.
+  /// Use in case [MaterialApp].supportedLocales changed.
   // or readSupportedLocales
   // add localizationCallback (with/withOutContext)
   // todo:
@@ -854,6 +848,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// A ReadOnly [Locale], in range of supportedLocales, if selected systemLocale it try to guess.
   ///
   /// Use [LocaleSwitcher.current] to update this value.
+  // Todo: just locale? currentSupportedLocale? allowedLocale? matchedLocale?
   static Locale get localeBestMatch => LocaleSwitcher.current.bestMatch;
 
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
@@ -871,6 +866,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Number of shown flags
   final int numberOfShown;
 
+  /// What constructor was used to create this instance.
   final LocaleSwitcherType type;
 
   /// Show option to use language of OS.
@@ -1012,17 +1008,17 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (locales) {
-  ///     return AnimatedToggleSwitch<String>.rolling(
-  ///       current: LocaleManager.languageCode.value,
-  ///       values: locales,
+  ///   builder: (supportedLocNames) {
+  ///     return AnimatedToggleSwitch<LocaleName>.rolling(
+  ///       current: LocaleSwitcher.current,
+  ///       values: supportedLocNames,
   ///       loading: false,
-  ///       onChanged: (langCode) {
-  ///         if (langCode == showOtherLocales) {
+  ///       onChanged: (curLocaleName) {
+  ///         if (curLocaleName.name == showOtherLocales)
   ///           showSelectLocaleDialog(context);
   ///         } else {
-  ///           LocaleManager.languageCode.value = langCode;
-  ///           // next line for locale_switcher used with easy_localization ONLY - NOT for locale_switcher_dev !
+  ///           LocaleSwitcher.current = curLocaleName;
+  ///           // next for easy_localization with locale_switcher ONLY - NOT for locale_switcher_dev !
   ///           // context.setLocale(LocaleSwitcher.localeBestMatch);
   ///         }
   ///       },
@@ -1333,12 +1329,14 @@ extension StringToLocale on String {
   }
 }
 
+/// Parameter for [Locale.flag] extension.
 enum FlagNotFoundFallBack {
   full,
   countryCodeThenFull,
   countryCodeThenNull,
 }
 
+/// Try to found flag by language or country string.
 Widget? findFlagFor({String? language, String? country}) {
   if (language != null) {
     final str = language.toLowerCase();
@@ -1492,7 +1490,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
 
     for (final loc in supportedLocales) {
       locales.add(loc);
-      names.add(loc.toString());
+      names.add(loc.toString().toLowerCase());
       entries.add(
         LocaleName(name: names.last, locale: locales.last),
       );
@@ -1534,22 +1532,20 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
   }
 
   /// Will search [LocaleStore.supportedLocaleNames] for name and add it.
-  void addName(String str) {
+  bool addName(String str) {
     if (str == showOtherLocales) {
-      locales.add(null);
-      names.add(showOtherLocales);
-      entries.add(
-        LocaleName(
-            name: names.last, locale: locales.last, flag: flagForOtherLocales),
-      );
+      addShowOtherLocales();
+      return true;
     } else {
       final entry = LocaleMatcher.byName(str);
-      if (entry != null) {
+      if (entry != null && !entries.contains(entry)) {
         locales.add(entry.locale);
         names.add(entry.name);
         entries.add(entry);
+        return true;
       }
     }
+    return false;
   }
 
   @override
