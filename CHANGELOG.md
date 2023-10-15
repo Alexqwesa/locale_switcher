@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+* no breaking changes - v1.0 just to indication what it is stable,
+* all major localization system tested (intl, easy_localization, slang),
+and have examples.
+
 ## 0.12.2
 
 * update docs.
