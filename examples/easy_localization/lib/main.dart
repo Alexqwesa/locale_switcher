@@ -5,6 +5,12 @@ import 'package:locale_switcher/locale_switcher.dart';
 
 import 'generated/locale_keys.g.dart';
 
+// =============== THESE LINES ===============
+// not needed for `locale_switcher_dev`
+void activateSelectedLocale(BuildContext context) {
+  context.setLocale(LocaleSwitcher.localeBestMatch);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -65,8 +71,7 @@ class MyHomePage extends StatelessWidget {
         actions: [
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(
-            setLocaleCallBack: (context) =>
-                context.setLocale(LocaleSwitcher.localeBestMatch),
+            setLocaleCallBack: activateSelectedLocale,
           ),
         ],
       ),
@@ -78,8 +83,7 @@ class MyHomePage extends StatelessWidget {
               // =============== THIS LINE ===============
               child: LocaleSwitcher.menu(
                 title: LocaleKeys.chooseLanguage.tr(),
-                setLocaleCallBack: (context) =>
-                    context.setLocale(LocaleSwitcher.localeBestMatch),
+                setLocaleCallBack: activateSelectedLocale,
               ),
             ),
             const Divider(),
@@ -88,8 +92,6 @@ class MyHomePage extends StatelessWidget {
               child: LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
-                // setLocaleCallBack: (context) =>
-                //     context.setLocale(LocaleSwitcher.localeBestMatch),
               ),
             ),
             const Divider(),
@@ -98,8 +100,7 @@ class MyHomePage extends StatelessWidget {
               // =============== THIS LINE ===============
               child: LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
-                setLocaleCallBack: (context) =>
-                    context.setLocale(LocaleSwitcher.localeBestMatch),
+                setLocaleCallBack: activateSelectedLocale,
               ),
             ),
           ],
@@ -123,12 +124,11 @@ Widget animatedToggleSwitchBuilder(
       if (langCode.name == showOtherLocales) {
         showSelectLocaleDialog(
           context,
-          setLocaleCallBack: (context) =>
-              context.setLocale(LocaleSwitcher.localeBestMatch),
+          setLocaleCallBack: activateSelectedLocale,
         );
       } else {
         LocaleSwitcher.current = langCode;
-        context.setLocale(LocaleSwitcher.localeBestMatch);
+        activateSelectedLocale(context);
       }
     },
     iconBuilder: LangIconWithToolTip.forIconBuilder,
