@@ -1,0 +1,16 @@
+{
+  "mainScreen": {
+    "title": "Ein deutscher Titel",
+    "counter": {
+      "one": "Du hast einmal gedrückt.",
+      "other": "Du hast $n mal gedrückt."
+    },
+    "tapMe": "Drück mich"
+  },
+  "example": "Ein Beispiel für die Verwendung von locale_switcher",
+  "chooseLanguage": "Bitte wählen Sie die Sprache aus",
+  "increment": "Erhöhen",
+  "counterDescription": "Sie haben den Knopf so oft gedrückt:",
+  "showIcons": "Symbole anzeigen: ",
+  "circleOrSquare": "Kreis oder Quadrat: "
+}

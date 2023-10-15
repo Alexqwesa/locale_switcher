@@ -1,0 +1,10 @@
+# This is how it would look like if you use slang_build_runner + build.yaml
+#
+# targets:
+#  $default:
+#    builders:
+#      slang_build_runner:
+#        options:
+#          base_locale: en
+#          maps:
+#            - locales
