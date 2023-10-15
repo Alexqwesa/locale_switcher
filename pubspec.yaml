@@ -27,6 +27,7 @@ dev_dependencies:         # for tests and examples
     sdk: flutter
   intl:
   easy_localization:
+  slang:
 
 # The following section is specific to Flutter packages.
 flutter:
