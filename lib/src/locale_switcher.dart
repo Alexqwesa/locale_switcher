@@ -349,10 +349,10 @@ class LocaleSwitcher extends StatefulWidget {
   }
 
   @override
-  State<LocaleSwitcher> createState() => LocaleSwitcherState();
+  State<LocaleSwitcher> createState() => _LocaleSwitcherState();
 }
 
-class LocaleSwitcherState extends State<LocaleSwitcher> {
+class _LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   void initState() {
     super.initState();
