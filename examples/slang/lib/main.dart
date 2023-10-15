@@ -4,6 +4,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:slang_example/i18n/strings.g.dart';
 
+// =============== THESE LINES ===============
+void activateSelectedLocale([_]) {
+  final locale = LocaleSwitcher.localeBestMatch.languageCode;
+  LocaleSettings.setLocale(LocaleSettings.setLocale(AppLocale.values
+      .firstWhere((element) => element.languageCode == locale)));
+}
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale(); // initialize with the right locale
@@ -66,13 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(14.0),
               child: Text(t.mainScreen.counter(n: _counter)),
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                // lets loop over all supported locales
-                children: [
-                  SwitchWidget(),
-                ]),
+            SwitchWidget(),
           ],
         ),
       ),
@@ -102,10 +103,7 @@ class SwitchWidget extends StatelessWidget {
             // =============== THIS LINE ===============
             child: LocaleSwitcher.menu(
               title: context.t.chooseLanguage,
-              setLocaleCallBack: (context) => LocaleSettings.setLocale(
-                  AppLocale.values.firstWhere((element) =>
-                      element.languageCode ==
-                      LocaleSwitcher.localeBestMatch.languageCode)),
+              setLocaleCallBack: activateSelectedLocale,
             ),
           ),
           const Divider(),
@@ -114,8 +112,6 @@ class SwitchWidget extends StatelessWidget {
             child: LocaleSwitcher.custom(
               builder: animatedToggleSwitchBuilder,
               numberOfShown: 2,
-              // setLocaleCallBack: (context) =>
-              //     LocaleSettings.setLocale(LocaleSwitcher.localeBestMatch),
             ),
           ),
           const Divider(),
@@ -124,12 +120,7 @@ class SwitchWidget extends StatelessWidget {
             // =============== THIS LINE ===============
             child: LocaleSwitcher.segmentedButton(
               numberOfShown: 2,
-              setLocaleCallBack: (context) => LocaleSettings.setLocale(
-                LocaleSettings.setLocale(AppLocale.values.firstWhere(
-                    (element) =>
-                        element.languageCode ==
-                        LocaleSwitcher.localeBestMatch.languageCode)),
-              ),
+              setLocaleCallBack: activateSelectedLocale,
             ),
           ),
         ],
@@ -150,20 +141,13 @@ Widget animatedToggleSwitchBuilder(
     current: LocaleSwitcher.current,
     onChanged: (langCode) {
       if (langCode.name == showOtherLocales) {
-        showSelectLocaleDialog(context,
-            setLocaleCallBack: (context) => LocaleSettings.setLocale(
-                  LocaleSettings.setLocale(AppLocale.values.firstWhere(
-                      (element) =>
-                          element.languageCode ==
-                          LocaleSwitcher.localeBestMatch.languageCode)),
-                ));
+        showSelectLocaleDialog(
+          context,
+          setLocaleCallBack: activateSelectedLocale,
+        );
       } else {
         LocaleSwitcher.current = langCode;
-        LocaleSettings.setLocale(
-          LocaleSettings.setLocale(AppLocale.values.firstWhere((element) =>
-              element.languageCode ==
-              LocaleSwitcher.localeBestMatch.languageCode)),
-        );
+        activateSelectedLocale();
       }
     },
     iconBuilder: LangIconWithToolTip.forIconBuilder,
