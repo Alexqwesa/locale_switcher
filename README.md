@@ -13,7 +13,7 @@ A widget for switching the locale of your application.
 - [Setup](#setup)
 - [Features](#features)
 - [Usage](#usage)
-- [Example](#example)
+- [Examples](#examples)
 - [Todo](#todo)
 - [FAQ](#faq)
 
@@ -62,7 +62,7 @@ functionality of localization systems, such as: [intl](https://pub.dev/packages/
 
 - [LocaleManager](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleManager-class.html) widget:
     - optionally: load/stores the last selected locale in `SharedPreferences`,
-    - update locale of app (listen to `notifier` and rebuild `MaterialApp`),
+    - update locale of app (it listen to `notifier` and rebuild `MaterialApp`),
     - observes changes in the system locale,
 
 - [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html) - 
@@ -77,7 +77,7 @@ a widget to switch locale:
     - [LangIconWithToolTip](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html)
       class with additional constructor [forIconBuilder](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LangIconWithToolTip/LangIconWithToolTip.forIconBuilder.html) ,
     - [showSelectLocaleDialog](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/showSelectLocaleDialog.html).
-    - Extension for Locale show flag - [Locale.flag](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleFlag.html)
+    - Extension for Locale return flag - [Locale.flag](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleFlag.html)
 
 ## Usage
 
@@ -99,70 +99,71 @@ Widget build(BuildContext context, WidgetRef ref) {
 2) Add [LocaleSwitcher](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher-class.html)
    widget anywhere into your app.
 
-## Troubleshooting
+### Troubleshooting
 
 Note: localization should be set up before you start to use this package,
 if there some problems - please, check next section and/or documentation of localization system you use,
 before reporting bug.
 
-### Check that intl package is setup correctly:
+#### For intl package
 
-The following instructions are from [intl](https://pub.dev/packages/intl) package, so you probably already did them:
+Check that [intl](https://pub.dev/packages/intl) package is set up correctly,
+here is an example setup of [pubspec.yaml](example/pubspec.yaml)
+and [l10n.yaml](example/l10n.yaml)
 
-In `pubspec.yaml`:
+#### For easy_localization package
 
-```yaml  
+Check that [easy_localization](https://pub.dev/packages/easy_localization) package is set up correctly,
+here is an example setup of [pubspec.yaml](examples/easy_localization/pubspec.yaml).
 
-dependencies: # in this section
-  intl:
-  flutter_localizations:
-    sdk: flutter
-dev_dependencies: # in this section 
-  build_runner:
-flutter: # in this section 
-  generate: true  
-```
+Note: if you use [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev)
+you don't need to
+use [LocaleSwitcher.setLocaleCallBack](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html).
 
-Optionally - in [l10n.yaml](example/l10n.yaml):
+But for [locale_switcher](https://pub.dev/packages/locale_switcher) it is required
+`setLocaleCallBack: (context) => context.setLocale(LocaleSwitcher.localeBestMatch)`
 
-```yaml
-arb-dir: lib/src/l10n
-template-arb-file: intl_en.arb
-output-dir: lib/src/l10n/generated
-output-localization-file: app_localizations.dart
-untranslated-messages-file: desiredFileName.txt
-preferred-supported-locales: [ "en", "vi", "de" ]
-nullable-getter: false
-```
+#### For slang package
 
-## Example
+Check that [slang](https://pub.dev/packages/slang) package is set up correctly,
+here is an example setup of [pubspec.yaml](examples/slang/pubspec.yaml).
+
+Currently it didn't work without: [LocaleSwitcher.setLocaleCallBack](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html),
+see example how to setup it - [here](https://github.com/Alexqwesa/locale_switcher/tree/main/examples/slang/lib/main.dart)
+
+
+## Examples
+
+> [Online Example here](https://alexqwesa.github.io/locale_switcher/)
 
 ### With [intl](https://pub.dev/packages/intl) package:
 
-[Online Example here](https://alexqwesa.github.io/locale_switcher/)
+- [Example Code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) (recommended)
 
-- [Example Code (recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
+- [LocaleSwitcher used without LocaleManager](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_without_locale_manager.dart)
+  (not recommended)
 
-Another example code: [LocaleSwitcher used without
-LocaleManager(not recommended)](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_without_locale_manager.dart).
-
-Example with dynamic option switch:
-[here](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart).
+- Example with dynamic options switch:
+  [here](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart)
 
 ### With [easy_localization](https://pub.dev/packages/easy_localization) package:
 
-[locale_switcher_dev](https://pub.dev/packages/locale_switcher) + easy_localization:
-[https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization](https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization) (recommended)
+- Example of [locale_switcher_dev](https://pub.dev/packages/locale_switcher_dev) + easy_localization:
+  [here](https://github.com/Alexqwesa/locale_switcher/tree/builder/examples/easy_localization) (recommended)
 
-[locale_switcher](https://pub.dev/packages/locale_switcher) + easy_localization:
-[https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization](https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization)
+- Example of [locale_switcher](https://pub.dev/packages/locale_switcher) + easy_localization:
+  [here](https://github.com/Alexqwesa/locale_switcher/tree/main/examples/easy_localization)
+
+### With [slang](https://pub.dev/packages/slang) package:
+
+- [https://github.com/Alexqwesa/locale_switcher/tree/main/examples/slang](https://github.com/Alexqwesa/locale_switcher/tree/main/examples/slang)
 
 ## TODO:
 
-- [ ] Test with other localization system (currently: tested only intl and easy_localization)
-- [ ] Support slang
+- [ ] Improve rectangle flags!
+- [ ] Allow emoji as flags
+- [ ] Improve slang support
 - [ ] Option to use .svg.vec instead of .svg
-- [ ] LocaleSwitcher: callback to all constructors
 
 [//]: # (- [ ] detect cupertino/material in dev package)
 
@@ -170,7 +171,9 @@ Example with dynamic option switch:
 
 #### - How to change order of languages?
 
-Languages are shown in the same order as they listed in [l10n.yaml](example/l10n.yaml).
+Languages are shown in the same order as they listed in [l10n.yaml](example/l10n.yaml),
+or dynamically
+via [LocaleSwitcher.custom](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/LocaleSwitcher.custom.html).
 
 #### - How to change flag of language?
 
