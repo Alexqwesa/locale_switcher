@@ -250,8 +250,8 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (supportedLocNames) {
-  ///     return AnimatedToggleSwitch<LocaleName>.rolling(
+  ///   builder: (supportedLocNames) { // widget AnimatedToggleSwitch from package:
+  ///     return AnimatedToggleSwitch<LocaleName>.rolling( // animated_toggle_switch
   ///       current: LocaleSwitcher.current,
   ///       values: supportedLocNames,
   ///       loading: false,
