@@ -70,7 +70,7 @@ class LocaleSwitcher extends StatefulWidget {
     return supportedLocales;
   }
 
-  /// [ValueNotifier] with index of [supportedLocaleNames] currently used.
+  /// [ValueNotifier] with index of currently used [LocaleName] in list [supportedLocaleNames].
   static ValueNotifier<int> get localeIndex => CurrentLocale.notifier;
 
   /// A list of generated [LocaleName]s for supportedLocales.

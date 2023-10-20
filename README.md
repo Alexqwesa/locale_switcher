@@ -12,7 +12,7 @@ A widget for switching the locale of your application.
 - [About](#about)
 - [Features](#features)
 - [Usage](#usage)
-- [Example](#examples)
+- [Examples](#examples)
 - [Todo](#todo)
 - [FAQ](#faq)
 

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
-/// Parameter for [LocaleMatcher.trySetLocale] and [LocaleMatcher.tryfindLocale].
+/// Parameter for [LocaleMatcher.trySetLocale] and [LocaleMatcher.tryFindLocale].
 enum IfLocaleNotFound {
   doNothing,
   useFirst,

@@ -33,7 +33,7 @@ enum FlagNotFoundFallBack {
   countryCodeThenNull,
 }
 
-/// Try to found flag by language or country string.
+/// Try to find a flag by language or country string.
 Widget? findFlagFor({String? language, String? country}) {
   if (language != null) {
     final str = language.toLowerCase();
@@ -55,7 +55,7 @@ Widget? findFlagFor({String? language, String? country}) {
 }
 
 extension LocaleFlag on Locale {
-  /// Search for flag for given locale
+  /// Search for a flag for the given locale
   Widget? flag({FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.full}) {
     final str = toString();
     // check full
