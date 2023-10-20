@@ -25,10 +25,8 @@ void main() {
       expect(switches, findsNWidgets(3));
 
       await tester.tap(switches.at(0));
-      await tester
-          .tap(find.byTooltip(LocaleStore.languageToCountry['vi']![1]).at(3));
-      await tester.tap(
-          find.byTooltip(LocaleStore.languageToCountry['system']![1]).at(3));
+      await tester.tap(find.byTooltip(languageToCountry['vi']![1]).at(3));
+      await tester.tap(find.byTooltip(languageToCountry['system']![1]).at(3));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 3));
       expect(find.byType(SvgPicture), findsNWidgets(6)); // 1+1+2+2
@@ -41,7 +39,7 @@ void main() {
       expect(find.text("VI"), findsNWidgets(4));
 
       // Verify that vi locale is loaded
-      final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
+      final viFlag = find.byTooltip(languageToCountry['vi']![1]);
       expect(viFlag, findsNWidgets(4));
       await tester.tap(viFlag.at(1));
       expect(LocaleSwitcher.current.locale?.languageCode, "vi");
@@ -52,10 +50,9 @@ void main() {
       expect(find.text(const Locale('en').tr.counterDescription), findsNothing);
 
       // Verify that en locale is loaded
-      final enFlag = find.byTooltip(LocaleStore.languageToCountry['en']![1]);
+      final enFlag = find.byTooltip(languageToCountry['en']![1]);
 
-      final sysFlag =
-          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      final sysFlag = find.byTooltip(languageToCountry['system']![1]);
       await tester.tap(enFlag.at(1));
 
       await tester.pumpAndSettle();

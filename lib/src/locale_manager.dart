@@ -3,6 +3,83 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
+/// Map language to country, (and -optionally- a custom flag).
+///
+/// Keys are in lowerCase!, can be just language or full locale name.
+/// Value is a list of: country code, language name and (optionally) flag widget.
+///
+/// You can also use [LocaleManager.reassignFlags] to update these values.
+///
+/// Do not remove first two keys!
+// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+final Map<String, List<dynamic>> languageToCountry = {
+  /// special entry name for [LocaleSwitcher.supportedLocaleNames] - OS locale
+  systemLocale: [
+    'System',
+    'OS locale',
+    // if (!kIsWeb && Platform.isAndroid) const Icon(Icons.android),
+    // if (!kIsWeb && Platform.isIOS) const Icon(Icons.phone_iphone),
+    const Icon(Icons.language),
+  ],
+
+  /// special entry name for [LocaleSwitcher.supportedLocaleNames]
+  showOtherLocales: [
+    'Other',
+    'Show other locales',
+    const Icon(Icons.expand_more)
+  ],
+  // English
+  'en': ['US', 'English'],
+  // Spanish
+  'es': ['ES', 'Español'],
+  // French
+  'fr': ['FR', 'Français'],
+  // German
+  'de': ['DE', 'Deutsch'],
+  // Italian
+  'it': ['IT', 'Italiano'],
+  // Portuguese
+  'pt': ['BR', 'Português'],
+  // Dutch
+  'nl': ['NL', 'Nederlands'],
+  // Russian
+  'ru': ['RU', 'Русский'],
+  // Chinese (Simplified)
+  'zh': ['CN', '中文'],
+  // Japanese
+  'ja': ['JP', '日本語'],
+  // Korean
+  'ko': ['KR', '한국어'],
+  // Arabic
+  'ar': ['SA', 'العربية'],
+  // Hindi
+  'hi': ['IN', 'हिन्दी'],
+  // Bengali
+  'bn': ['BD', 'বাঙালি'],
+  // Turkish
+  'tr': ['TR', 'Türkçe'],
+  // Vietnamese
+  'vi': ['VN', 'Tiếng Việt'],
+  // Greek
+  'el': ['GR', 'Ελληνικά'],
+  // Polish
+  'pl': ['PL', 'Polski'],
+  // Ukrainian
+  'uk': ['UA', 'Українська'],
+  // Thai
+  'th': ['TH', 'ไทย'],
+  // Indonesian
+  'id': ['ID', 'Bahasa Indonesia'],
+  // Malay
+  'ms': ['MY', 'Bahasa Melayu'],
+  // Swedish
+  'sv': ['SE', 'Svenska'],
+  // Finnish
+  'fi': ['FI', 'Suomi'],
+  // Norwegian
+  'no': ['NO', 'Norsk'],
+};
+
 /// This should be a parent to either [MaterialApp] or [CupertinoApp].
 ///
 /// It:
@@ -32,7 +109,7 @@ class LocaleManager extends StatefulWidget {
   ///
   /// Note: keys are in lower cases.
   ///
-  /// Note 2: prebuilt map here: [LocaleStore.languageToCountry]
+  /// Note 2: prebuilt map here: [languageToCountry]
   final Map<String, List>? reassignFlags;
 
   /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
@@ -117,7 +194,7 @@ class _LocaleManagerState extends State<LocaleManager> {
       // reassign flags
       if (widget.reassignFlags != null) {
         for (final MapEntry(:key, :value) in widget.reassignFlags!.entries) {
-          LocaleStore.languageToCountry[key.toLowerCase()] = value;
+          languageToCountry[key.toLowerCase()] = value;
         }
       }
 

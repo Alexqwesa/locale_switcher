@@ -34,7 +34,7 @@ void main() {
       expect(LocaleSwitcher.current.name, "system");
 
       // Verify that vi locale is loaded
-      final viFlag = find.byTooltip(LocaleStore.languageToCountry['vi']![1]);
+      final viFlag = find.byTooltip(languageToCountry['vi']![1]);
       expect(viFlag, findsNWidgets(2));
       await tester.tap(viFlag.at(1));
       expect(LocaleSwitcher.current.locale?.languageCode, "vi");
@@ -45,7 +45,7 @@ void main() {
 
       // Verify that en locale is loaded
 
-      final enFlag = find.byTooltip(LocaleStore.languageToCountry['en']![1]);
+      final enFlag = find.byTooltip(languageToCountry['en']![1]);
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
@@ -53,8 +53,7 @@ void main() {
       // expect(find.text(enLoc.counterDescription), findsOneWidget);
       // expect(find.text(deLoc.counterDescription), findsNothing);
 
-      final sysFlag =
-          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      final sysFlag = find.byTooltip(languageToCountry['system']![1]);
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
@@ -92,7 +91,7 @@ void main() {
       // tap item
       final deOption = find.descendant(
         of: grid,
-        matching: find.text(LocaleStore.languageToCountry['de']![1]),
+        matching: find.text(languageToCountry['de']![1]),
       );
       expect(deOption, findsOneWidget);
       await tester.tap(deOption);
@@ -106,7 +105,7 @@ void main() {
           find.text(const Locale('de').tr.counterDescription), findsOneWidget);
       expect(find.text(enLoc.counterDescription), findsNothing);
 
-      // final sysFlag = find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      // final sysFlag = find.byTooltip(languageToCountry['system']![1]);
       // await tester.tap(sysFlag); // restore ?
     });
   });

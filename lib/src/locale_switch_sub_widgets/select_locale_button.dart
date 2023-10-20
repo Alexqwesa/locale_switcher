@@ -48,8 +48,6 @@ class SelectLocaleButton extends StatelessWidget {
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                 shape: shape,
               ),
-          // tooltip: LocaleStore.languageToCountry[showOtherLocales]?[1] ??
-          //     "Other locales",
           onPressed: () => showSelectLocaleDialog(
             context,
             title: popUpWindowTitle,

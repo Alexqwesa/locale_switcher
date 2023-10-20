@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
-import 'package:locale_switcher/src/locale_store.dart';
 
 /// Icon representing the language.
 ///
@@ -70,7 +69,7 @@ class LangIconWithToolTip extends StatelessWidget {
     if (locCode == showOtherLocales) {
       return SupportedLocaleNames.flagForOtherLocales;
     }
-    final lang = LocaleStore.languageToCountry[locCode] ??
+    final lang = languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
 
     var flag = child;

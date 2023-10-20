@@ -71,9 +71,9 @@ class LocaleName {
   /// For systemLocale or [showOtherLocales] only look into [LocaleManager.reassignFlags].
   Widget? get flag {
     if (name == showOtherLocales || name == systemLocale) {
-      if (LocaleStore.languageToCountry[name] != null &&
-          LocaleStore.languageToCountry[name]!.length > 2) {
-        _flag = LocaleStore.languageToCountry[name]?[2];
+      if (languageToCountry[name] != null &&
+          languageToCountry[name]!.length > 2) {
+        _flag = languageToCountry[name]?[2];
       }
     }
     _flag ??= locale?.flag(fallBack: null);
@@ -85,9 +85,8 @@ class LocaleName {
 
   /// Search in [LocaleManager.reassignFlags] first, and if not found return [name].
   String get language {
-    _language ??= (LocaleStore.languageToCountry[name.toLowerCase()]?[1] ??
-            LocaleStore.languageToCountry[name.substring(0, 2).toLowerCase()]
-                ?[1]) ??
+    _language ??= (languageToCountry[name.toLowerCase()]?[1] ??
+            languageToCountry[name.substring(0, 2).toLowerCase()]?[1]) ??
         name;
     return _language!;
   }

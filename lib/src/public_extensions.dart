@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
-import 'package:locale_switcher/src/locale_store.dart';
 
 extension StringToLocale on String {
   /// Convert string to [Locale] object
@@ -37,8 +37,8 @@ enum FlagNotFoundFallBack {
 Widget? findFlagFor({String? language, String? country}) {
   if (language != null) {
     final str = language.toLowerCase();
-    if (LocaleStore.languageToCountry.containsKey(str)) {
-      final value = LocaleStore.languageToCountry[str];
+    if (languageToCountry.containsKey(str)) {
+      final value = languageToCountry[str];
       if (value != null) {
         if (value.length > 2 && value[2] != null) return value[2];
         return findFlagFor(country: value[0]);

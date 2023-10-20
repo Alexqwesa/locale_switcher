@@ -31,8 +31,7 @@ void main() {
       expect(find.text(viLoc.counterDescription), findsOneWidget);
       expect(LocaleSwitcher.current.name, "vi");
 
-      expect(
-          find.text(LocaleStore.languageToCountry['de']![1]), findsOneWidget);
+      expect(find.text(languageToCountry['de']![1]), findsOneWidget);
 
       // tap menu
       final dropMenu = find.byType(DropdownMenu<LocaleName>);
@@ -46,10 +45,10 @@ void main() {
       final options = find.descendant(
         of: dropMenu,
         matching: find.byType(LangIconWithToolTip),
-        // matching: find.text(LocaleStore.languageToCountry['de']![1]),
+        // matching: find.text(languageToCountry['de']![1]),
       );
       expect(options, findsNWidgets(6)); // 4 + current + 1??? todo: bugreport
-      // await tester.tap(find.text(LocaleStore.languageToCountry['de']![1]).at(0));
+      // await tester.tap(find.text(languageToCountry['de']![1]).at(0));
       // await tester.ensureVisible(deOption.at(4));
       // await tester.pumpAndSettle();
       // await tester.tap(deOption.at(4));
@@ -58,8 +57,7 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
 
       // selected todo:
-      expect(
-          find.text(LocaleStore.languageToCountry['de']![1]), findsNWidgets(2));
+      expect(find.text(languageToCountry['de']![1]), findsNWidgets(2));
       expect(LocaleSwitcher.current.name, "de");
       expect(LocaleSwitcher.current.locale?.languageCode, "de");
 
@@ -67,8 +65,7 @@ void main() {
       expect(find.text(deLoc.counterDescription), findsOneWidget);
 
       // ??
-      final sysFlag =
-          find.byTooltip(LocaleStore.languageToCountry['system']![1]);
+      final sysFlag = find.byTooltip(languageToCountry['system']![1]);
       await tester.tap(sysFlag.at(0)); // restore ?
     });
   });
