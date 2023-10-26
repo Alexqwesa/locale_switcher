@@ -11,6 +11,8 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   final Function(BuildContext)? setLocaleCallBack;
 
+  final bool useEmoji;
+
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
@@ -18,6 +20,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
     this.radius = 32,
     this.shape,
     this.setLocaleCallBack,
+    this.useEmoji = false,
   });
 
   @override
@@ -38,6 +41,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
                   //     :
                   const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
+                useEmoji: useEmoji,
                 localeNameFlag: e,
                 radius: curRadius,
                 useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,

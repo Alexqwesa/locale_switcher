@@ -9,11 +9,14 @@ class GridOfLanguages extends StatelessWidget {
 
   final ShapeBorder? shape;
 
+  final bool useEmoji;
+
   const GridOfLanguages({
     super.key,
     this.gridDelegate,
     this.setLocaleCallBack,
     this.shape = const CircleBorder(eccentricity: 0),
+    this.useEmoji = false,
   });
 
   @override
@@ -41,7 +44,10 @@ class GridOfLanguages extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: LangIconWithToolTip(
-                          localeNameFlag: locNameFlag, shape: shape),
+                        useEmoji: useEmoji,
+                        localeNameFlag: locNameFlag,
+                        shape: shape,
+                      ),
                     ),
                   ),
                   Padding(

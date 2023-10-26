@@ -22,6 +22,8 @@ class SelectLocaleButton extends StatelessWidget {
 
   final Function(BuildContext)? setLocaleCallBack;
 
+  final bool useEmoji;
+
   const SelectLocaleButton({
     super.key,
     this.updateIconOnChange = true,
@@ -32,6 +34,7 @@ class SelectLocaleButton extends StatelessWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
+    this.useEmoji = false,
   });
 
   @override
@@ -42,6 +45,7 @@ class SelectLocaleButton extends StatelessWidget {
         return IconButton(
           icon: useStaticIcon ??
               LangIconWithToolTip(
+                useEmoji: useEmoji,
                 toolTipPrefix: toolTipPrefix,
                 localeNameFlag: LocaleSwitcher.current,
                 radius: radius,
@@ -52,6 +56,7 @@ class SelectLocaleButton extends StatelessWidget {
             context,
             title: popUpWindowTitle,
             setLocaleCallBack: setLocaleCallBack,
+            useEmoji: useEmoji,
           ),
         );
       },

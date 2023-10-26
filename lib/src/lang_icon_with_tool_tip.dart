@@ -16,6 +16,7 @@ class LangIconWithToolTip extends StatelessWidget {
   /// If zero - used Icon, otherwise first N letters of language code.
   ///
   /// Have no effect if [child] is not null.
+  /// Can not be used with [useEmoji].
   final int useNLettersInsteadOfIcon;
 
   /// Clip the flag by [ShapeBorder], default: [CircleBorder].
@@ -32,6 +33,12 @@ class LangIconWithToolTip extends StatelessWidget {
   /// An entry of [SupportedLocaleNames].
   final LocaleName? localeNameFlag;
 
+  /// Use Emoji instead of svg flag.
+  ///
+  /// Have no effect if [child] is not null
+  /// Can not be used with [useNLettersInsteadOfIcon]..
+  final bool useEmoji;
+
   /// Just a shortcut to use as tear-off in builders of
   /// widgets that generate lists of elements.
   ///
@@ -46,6 +53,7 @@ class LangIconWithToolTip extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.child,
     this.langCode,
+    this.useEmoji = false,
   });
 
   const LangIconWithToolTip({
@@ -57,7 +65,9 @@ class LangIconWithToolTip extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.child,
     this.localeNameFlag,
-  }) : assert(langCode != null || localeNameFlag != null);
+    this.useEmoji = false,
+  })  : assert(langCode != null || localeNameFlag != null),
+        assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// Have no effect if [localeNameFlag] is provided.
   final String? langCode;
@@ -73,6 +83,10 @@ class LangIconWithToolTip extends StatelessWidget {
         <String>[locCode, 'Unknown language code: $locCode'];
 
     var flag = child;
+    if (useEmoji && locCode != systemLocale) {
+      final emoji = localeNameFlag?.locale?.emoji;
+      flag ??= (emoji != null) ? Text(emoji) : null;
+    }
     flag ??= localeNameFlag?.flag != null
         ? CircleFlag(
             shape: shape, size: radius ?? 48, child: localeNameFlag?.flag!)

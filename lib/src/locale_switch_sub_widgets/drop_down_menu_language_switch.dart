@@ -12,6 +12,8 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   final Function(BuildContext)? setLocaleCallBack;
 
+  final bool useEmoji;
+
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
@@ -20,6 +22,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
+    this.useEmoji = false,
   });
 
   final SupportedLocaleNames locales;
@@ -39,6 +42,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                     key: ValueKey('item-${e.name}'),
                     child: FittedBox(
                         child: LangIconWithToolTip(
+                      useEmoji: useEmoji,
                       localeNameFlag: e,
                       radius: radius,
                       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
@@ -56,6 +60,8 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: LangIconWithToolTip(
+                useEmoji: useEmoji,
+                // key: GlobalKey(),  // post frame callback error - bugreport
                 // key: const ValueKey('DDMLeading'), // todo: bugreport this duplicate
                 localeNameFlag: LocaleSwitcher.current,
                 radius: 32,
@@ -70,8 +76,11 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       onSelected: (LocaleName? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
-            showSelectLocaleDialog(context,
-                setLocaleCallBack: setLocaleCallBack);
+            showSelectLocaleDialog(
+              context,
+              useEmoji: useEmoji,
+              setLocaleCallBack: setLocaleCallBack,
+            );
           } else {
             LocaleSwitcher.current = langCode;
             setLocaleCallBack?.call(context);

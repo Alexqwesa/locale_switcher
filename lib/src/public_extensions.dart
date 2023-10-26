@@ -186,7 +186,6 @@ extension LocaleFlag on Locale {
 
     // check full
     var flag = findFlagFor(language: str);
-
     if (flag != null) return flag;
 
     final localeList = str.split('_');

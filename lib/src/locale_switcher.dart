@@ -38,6 +38,11 @@ typedef LocaleSwitchBuilder = Widget Function(
 /// - [LocaleSwitcher.menu],
 /// - [LocaleSwitcher.custom].
 class LocaleSwitcher extends StatefulWidget {
+  /// Use Emoji instead of svg flag.
+  ///
+  /// Can not be used with [useNLettersInsteadOfIcon].
+  final bool useEmoji;
+
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
   ///
   /// You can update it by using any value in [supportedLocaleNames],
@@ -164,6 +169,8 @@ class LocaleSwitcher extends StatefulWidget {
   final double? iconRadius;
 
   /// If null or 0 - used Icon, otherwise first N letters of language code.
+  ///
+  /// Can not be used with [useEmoji].
   final int useNLettersInsteadOfIcon;
 
   /// Show leading icon in drop down menu
@@ -192,7 +199,8 @@ class LocaleSwitcher extends StatefulWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
-  });
+    this.useEmoji = false,
+  }) : assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
   ///
@@ -203,6 +211,7 @@ class LocaleSwitcher extends StatefulWidget {
     int numberOfShown = 200,
     bool showOsLocale = true,
     int? useNLettersInsteadOfIcon,
+    bool useEmoji = false,
     bool showLeading = true,
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
     Function(BuildContext)? setLocaleCallBack,
@@ -217,6 +226,7 @@ class LocaleSwitcher extends StatefulWidget {
       showLeading: showLeading,
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
+      useEmoji: useEmoji,
     );
   }
 
@@ -232,6 +242,7 @@ class LocaleSwitcher extends StatefulWidget {
     Function(BuildContext)? setLocaleCallBack,
     int? useNLettersInsteadOfIcon,
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
+    useEmoji = false,
   }) {
     return LocaleSwitcher._(
       key: key ?? GlobalKey(),
@@ -242,6 +253,7 @@ class LocaleSwitcher extends StatefulWidget {
       setLocaleCallBack: setLocaleCallBack,
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       shape: shape,
+      useEmoji: useEmoji,
     );
   }
 
@@ -294,6 +306,7 @@ class LocaleSwitcher extends StatefulWidget {
   factory LocaleSwitcher.iconButton({
     GlobalKey? key,
     String? toolTipPrefix = 'Current language: ',
+    bool useEmoji = false,
 
     /// Title of popup dialog.
     String? title = 'Select language: ',
@@ -318,6 +331,7 @@ class LocaleSwitcher extends StatefulWidget {
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
+      useEmoji: useEmoji,
       // builder: builder,
     );
   }
@@ -328,6 +342,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
   factory LocaleSwitcher.segmentedButton({
     GlobalKey? key,
+    bool useEmoji = false,
     // double? iconRadius = 32,
     // required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
@@ -344,6 +359,7 @@ class LocaleSwitcher extends StatefulWidget {
       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
+      useEmoji: useEmoji,
       // builder: builder,
     );
   }
@@ -407,7 +423,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
           locales
               .addShowOtherLocales(); //setLocaleCallBack: widget.setLocaleCallBack);
         }
-        // todo: add 0.5 second delayed check of app locale ?
+        // todo: add 0.5 second delayed check of app locale ? post frame callback ?
 
         return switch (widget.type) {
           LocaleSwitcherType.custom => widget.builder!(locales, context),
@@ -418,11 +434,13 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               showLeading: widget.showLeading,
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
+              useEmoji: widget.useEmoji,
             ),
           LocaleSwitcherType.grid => GridOfLanguages(
               gridDelegate: widget.gridDelegate,
               setLocaleCallBack: widget.setLocaleCallBack,
               shape: widget.shape,
+              useEmoji: widget.useEmoji,
             ),
           LocaleSwitcherType.iconButton => SelectLocaleButton(
               radius: widget.iconRadius ?? 32,
@@ -433,12 +451,14 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
+              useEmoji: widget.useEmoji,
             ),
           LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
               locales: locales,
               useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
+              useEmoji: widget.useEmoji,
             ),
         };
       },
