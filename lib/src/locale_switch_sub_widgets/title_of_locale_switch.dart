@@ -47,9 +47,7 @@ class TitleForLocaleSwitch extends StatelessWidget {
 
     return LayoutBuilder(builder: (context, constrains) {
       if ((width ?? 0) > constrains.maxWidth) {
-        width = constrains.maxWidth -
-            padding.left -
-            padding.right;
+        width = constrains.maxWidth - padding.left - padding.right;
       }
       return Center(
         child: Padding(

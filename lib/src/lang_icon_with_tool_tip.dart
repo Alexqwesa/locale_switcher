@@ -77,7 +77,9 @@ class LangIconWithToolTip extends StatelessWidget {
     final locCode = localeNameFlag?.name ?? langCode ?? '??';
 
     if (locCode == showOtherLocales) {
-      return SupportedLocaleNames.flagForOtherLocales;
+      return SizedBox(
+          height: (radius ?? 28) * 0.7,
+          child: FittedBox(child: SupportedLocaleNames.flagForOtherLocales));
     }
     final lang = languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
@@ -85,7 +87,9 @@ class LangIconWithToolTip extends StatelessWidget {
     var flag = child;
     if (useEmoji && locCode != systemLocale) {
       final emoji = localeNameFlag?.locale?.emoji;
-      flag ??= (emoji != null) ? Text(emoji) : null;
+      flag ??= (emoji != null)
+          ? SizedBox(height: radius, child: FittedBox(child: Text(emoji)))
+          : null;
     }
     flag ??= localeNameFlag?.flag != null
         ? CircleFlag(

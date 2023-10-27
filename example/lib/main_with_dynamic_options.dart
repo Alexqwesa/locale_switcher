@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 220,
                     ),
                     Text(loc.showIcons),
@@ -208,7 +208,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ];
               final rc = (constrains.maxWidth < 800);
-              return rc ? SizedBox(height: 800, child: Column(children: children)) : Row(children: children);
+              return rc
+                  ? SizedBox(height: 800, child: Column(children: children))
+                  : Row(children: children);
             },
           ),
         ),
