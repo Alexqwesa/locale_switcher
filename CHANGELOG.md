@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0
+
+* LocaleSwitch support emoji,
+* improve sizes calculation,
+* width option for LocaleSwitch menu and segmentedButton constructors,
+* fix minor bug in LocaleSwitch.menu,
+* fix easy_localization bug,
+* map languageToCountry now public.
+
 ## 1.0.0
 
 * no breaking changes - v1.0 just to indication what it is stable,
