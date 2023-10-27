@@ -210,7 +210,7 @@ class LocaleSwitcher extends StatefulWidget {
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/), [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
   factory LocaleSwitcher.menu({
-    GlobalKey? key,
+    Key? key,
     String? title = 'Language:',
     int numberOfShown = 200,
     bool showOsLocale = true,
@@ -222,7 +222,7 @@ class LocaleSwitcher extends StatefulWidget {
     Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
-      key: key ?? GlobalKey(),
+      key: key,
       title: title,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
@@ -241,7 +241,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
   /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - click on icon in AppBar to see this widget.
   factory LocaleSwitcher.grid({
-    GlobalKey? key,
+    Key? key,
     int numberOfShown = 200,
     bool showOsLocale = true,
     SliverGridDelegate? gridDelegate,
@@ -251,7 +251,7 @@ class LocaleSwitcher extends StatefulWidget {
     useEmoji = false,
   }) {
     return LocaleSwitcher._(
-      key: key ?? GlobalKey(),
+      key: key,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
       type: LocaleSwitcherType.grid,
@@ -287,14 +287,14 @@ class LocaleSwitcher extends StatefulWidget {
   ///   })
   /// ```
   factory LocaleSwitcher.custom({
-    GlobalKey? key,
+    Key? key,
     required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
     bool showOsLocale = true,
     // Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
-      key: key ?? GlobalKey(),
+      key: key,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
       type: LocaleSwitcherType.custom,
@@ -310,7 +310,7 @@ class LocaleSwitcher extends StatefulWidget {
   ///
   /// In popup window will be displayed [LocaleSwitcher.grid].
   factory LocaleSwitcher.iconButton({
-    GlobalKey? key,
+    Key? key,
     String? toolTipPrefix = 'Current language: ',
     bool useEmoji = false,
 
@@ -326,7 +326,7 @@ class LocaleSwitcher extends StatefulWidget {
     Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
-      key: key ?? GlobalKey(),
+      key: key,
       title: title,
       toolTipPrefix: toolTipPrefix,
       showOsLocale: showOsLocale,
@@ -347,7 +347,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
   /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
   factory LocaleSwitcher.segmentedButton({
-    GlobalKey? key,
+    Key? key,
     bool useEmoji = false,
 
     /// Width of widget, null for auto.
@@ -361,7 +361,7 @@ class LocaleSwitcher extends StatefulWidget {
     Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
-      key: key ?? GlobalKey(),
+      key: key,
       showOsLocale: showOsLocale,
       numberOfShown: numberOfShown,
       type: LocaleSwitcherType.segmentedButton,
@@ -379,11 +379,20 @@ class LocaleSwitcher extends StatefulWidget {
 }
 
 class _LocaleSwitcherState extends State<LocaleSwitcher> {
+  final globalKey = GlobalKey();
+  late final SizedBox globalContextBox;
+
+  late final SupportedLocaleNames staticLocales;
+  late final SupportedLocaleNames locales;
+
   @override
   void initState() {
     super.initState();
 
-    PreferenceRepository.sendGlobalKeyToRepository(widget.key as GlobalKey);
+    // send globalKey
+    globalContextBox = SizedBox(key: globalKey, width: 0, height: 0);
+    PreferenceRepository.sendGlobalKeyToRepository(globalKey);
+
     // check: is it inited?
     if (LocaleStore.supportedLocales.isEmpty) {
       // todo: use CurrentLocale
@@ -410,29 +419,39 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
         }
       }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     final skip = widget.showOsLocale ? 0 : 1;
-    final staticLocales = SupportedLocaleNames.fromEntries(
+    staticLocales = SupportedLocaleNames.fromEntries(
       LocaleStore.supportedLocaleNames.entries
           .skip(skip) // first is system locale
           .take(widget.numberOfShown + 1 - skip) // chose most used
       ,
     );
 
+    locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
+    if (!locales.names.contains(LocaleSwitcher.current.name)) {
+      locales.replaceLast(localeName: LocaleSwitcher.current);
+    }
+    if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
+      locales
+          .addShowOtherLocales(); //setLocaleCallBack: widget.setLocaleCallBack);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
-        var locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
+        // always show current locale
         if (!locales.names.contains(LocaleSwitcher.current.name)) {
-          locales.replaceLast(localeName: LocaleSwitcher.current);
+          if (locales.last.name == showOtherLocales) {
+            locales[locales.length - 2] = LocaleSwitcher.current;
+          } else {
+            locales.replaceLast(localeName: LocaleSwitcher.current);
+          }
         }
-        if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
-          locales
-              .addShowOtherLocales(); //setLocaleCallBack: widget.setLocaleCallBack);
-        }
+
         // todo: add 0.5 second delayed check of app locale ? post frame callback ?
 
         return switch (widget.type) {
