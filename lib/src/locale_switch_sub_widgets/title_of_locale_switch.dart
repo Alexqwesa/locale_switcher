@@ -31,14 +31,17 @@ class TitleForLocaleSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double? width;
-    if (childSize == null && child is LocaleSwitcher) {
-      if ((child as LocaleSwitcher).type == LocaleSwitcherType.menu) {
-        width = 300;
-      } else {
-        final shown = min((child as LocaleSwitcher).numberOfShown,
-            LocaleSwitcher.supportedLocaleNames.length);
-        width = shown * 2.5 * 48;
-        width += (child as LocaleSwitcher).showOsLocale ? 48 : 0;
+    if (child is LocaleSwitcher) {
+      width = (child as LocaleSwitcher).width;
+      if (childSize == null && width == null) {
+        if ((child as LocaleSwitcher).type == LocaleSwitcherType.menu) {
+          width = 300;
+        } else {
+          final shown = min((child as LocaleSwitcher).numberOfShown,
+              LocaleSwitcher.supportedLocaleNames.length);
+          width = shown * 2.5 * 48;
+          width += (child as LocaleSwitcher).showOsLocale ? 48 : 0;
+        }
       }
     }
 

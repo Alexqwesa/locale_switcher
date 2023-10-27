@@ -13,6 +13,8 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   final bool useEmoji;
 
+  final double? width;
+
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
@@ -21,11 +23,12 @@ class SegmentedButtonSwitch extends StatelessWidget {
     this.shape,
     this.setLocaleCallBack,
     this.useEmoji = false,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<LocaleName>(
+    final segmentedButton = SegmentedButton<LocaleName>(
       emptySelectionAllowed: false,
       showSelectedIcon: false,
       segments: locales.map<ButtonSegment<LocaleName>>(
@@ -62,5 +65,14 @@ class SegmentedButtonSwitch extends StatelessWidget {
         }
       },
     );
+
+    if (width != null) {
+      return SizedBox(
+        width: width,
+        child: segmentedButton,
+      );
+    } else {
+      return segmentedButton;
+    }
   }
 }

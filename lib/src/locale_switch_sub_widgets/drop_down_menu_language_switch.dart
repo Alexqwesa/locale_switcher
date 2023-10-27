@@ -14,6 +14,8 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   final bool useEmoji;
 
+  final double width;
+
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
@@ -23,6 +25,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
     this.useEmoji = false,
+    this.width = 250,
   });
 
   final SupportedLocaleNames locales;
@@ -55,6 +58,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleName>(
+      width: width,
       initialSelection: LocaleSwitcher.current,
       leadingIcon: showLeading
           ? Padding(

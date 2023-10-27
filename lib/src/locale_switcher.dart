@@ -43,6 +43,9 @@ class LocaleSwitcher extends StatefulWidget {
   /// Can not be used with [useNLettersInsteadOfIcon].
   final bool useEmoji;
 
+  /// Just width of the widget.
+  final double? width;
+
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
   ///
   /// You can update it by using any value in [supportedLocaleNames],
@@ -200,6 +203,7 @@ class LocaleSwitcher extends StatefulWidget {
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
     this.useEmoji = false,
+    this.width,
   }) : assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
@@ -212,6 +216,7 @@ class LocaleSwitcher extends StatefulWidget {
     bool showOsLocale = true,
     int? useNLettersInsteadOfIcon,
     bool useEmoji = false,
+    double width = 250,
     bool showLeading = true,
     ShapeBorder? shape = const CircleBorder(eccentricity: 0),
     Function(BuildContext)? setLocaleCallBack,
@@ -227,6 +232,7 @@ class LocaleSwitcher extends StatefulWidget {
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
       useEmoji: useEmoji,
+      width: width,
     );
   }
 
@@ -343,6 +349,9 @@ class LocaleSwitcher extends StatefulWidget {
   factory LocaleSwitcher.segmentedButton({
     GlobalKey? key,
     bool useEmoji = false,
+
+    /// Width of widget, null for auto.
+    double? width,
     // double? iconRadius = 32,
     // required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
@@ -360,6 +369,7 @@ class LocaleSwitcher extends StatefulWidget {
       shape: shape,
       setLocaleCallBack: setLocaleCallBack,
       useEmoji: useEmoji,
+      width: width,
       // builder: builder,
     );
   }
@@ -435,6 +445,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
               useEmoji: widget.useEmoji,
+              width: widget.width!,
             ),
           LocaleSwitcherType.grid => GridOfLanguages(
               gridDelegate: widget.gridDelegate,
@@ -459,6 +470,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
               useEmoji: widget.useEmoji,
+              width: widget.width,
             ),
         };
       },
