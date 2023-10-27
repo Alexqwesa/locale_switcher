@@ -53,7 +53,7 @@ void main() {
 
   testWidgets('Test Locale.flag FlagNotFoundFallBack options',
       (WidgetTester tester) async {
-    final locale = Locale('xyz_XYZ');
+    const locale = Locale('xyz_XYZ');
 
     await tester.pumpWidget(
       MaterialApp(
