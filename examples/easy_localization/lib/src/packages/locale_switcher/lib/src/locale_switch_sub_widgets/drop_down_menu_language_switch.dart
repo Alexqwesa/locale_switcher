@@ -12,6 +12,10 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   final Function(BuildContext)? setLocaleCallBack;
 
+  final bool useEmoji;
+
+  final double width;
+
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
@@ -20,6 +24,8 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
+    this.useEmoji = false,
+    this.width = 250,
   });
 
   final SupportedLocaleNames locales;
@@ -27,6 +33,10 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const radius = 38.0;
+    int indexOfSelected = locales.indexOf(LocaleSwitcher.current);
+    if (indexOfSelected == -1) {
+      indexOfSelected = 0;
+    }
     final localeEntries = locales
         .map<DropdownMenuEntry<LocaleName>>(
           (e) => DropdownMenuEntry<LocaleName>(
@@ -39,6 +49,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
                     key: ValueKey('item-${e.name}'),
                     child: FittedBox(
                         child: LangIconWithToolTip(
+                      useEmoji: useEmoji,
                       localeNameFlag: e,
                       radius: radius,
                       useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
@@ -51,16 +62,16 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleName>(
+      width: width,
       initialSelection: LocaleSwitcher.current,
       leadingIcon: showLeading
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: LangIconWithToolTip(
-                // key: const ValueKey('DDMLeading'), // todo: bugreport this duplicate
-                localeNameFlag: LocaleSwitcher.current,
-                radius: 32,
-                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                shape: shape,
+              child: SizedBox(
+                height: radius - 8,
+                child: FittedBox(
+                  child: localeEntries[indexOfSelected].leadingIcon!,
+                ),
               ),
             )
           : null,
@@ -70,8 +81,11 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
       onSelected: (LocaleName? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
-            showSelectLocaleDialog(context,
-                setLocaleCallBack: setLocaleCallBack);
+            showSelectLocaleDialog(
+              context,
+              useEmoji: useEmoji,
+              setLocaleCallBack: setLocaleCallBack,
+            );
           } else {
             LocaleSwitcher.current = langCode;
             setLocaleCallBack?.call(context);
@@ -82,3 +96,40 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     );
   }
 }
+
+// class LeadingIcon extends StatelessWidget {
+//   const LeadingIcon({
+//     super.key,
+//     required this.radius,
+//     required this.localeEntries,
+//     required this.indexOfSelected,
+//   });
+//
+//   final double radius;
+//   final List<DropdownMenuEntry<LocaleName>> localeEntries;
+//   final int indexOfSelected;
+//
+//   @override
+//   bool operator ==(Object other) {
+//     if (identical(this, other)) return true;
+//     if (runtimeType != other.runtimeType) return false;
+//     return (other as LeadingIcon).key == key;
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: SizedBox(
+//         height: radius - 8,
+//         child: FittedBox(
+//           child: ValueListenableBuilder(
+//               valueListenable: LocaleSwitcher.localeIndex,
+//               builder: (context, index, _) {
+//                 return localeEntries[indexOfSelected].leadingIcon!;
+//               }),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -9,6 +9,7 @@ Future<void> showSelectLocaleDialog(
   double? height,
   SliverGridDelegate? gridDelegate,
   Function(BuildContext)? setLocaleCallBack,
+  bool useEmoji = false,
 }) {
   final size = MediaQuery.of(context).size;
   return showDialog<void>(
@@ -20,6 +21,7 @@ Future<void> showSelectLocaleDialog(
           width: width ?? size.width * 0.6,
           height: height ?? size.height * 0.6,
           child: LocaleSwitcher.grid(
+            useEmoji: useEmoji,
             gridDelegate: gridDelegate,
             setLocaleCallBack: (context) {
               setLocaleCallBack?.call(context);

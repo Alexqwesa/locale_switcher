@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
+/// Parameter for [LocaleMatcher.trySetLocale] and [LocaleMatcher.tryFindLocale].
 enum IfLocaleNotFound {
   doNothing,
   useFirst,
@@ -15,8 +16,8 @@ class LocaleMatcher {
   static SupportedLocaleNames get supported => LocaleStore.supportedLocaleNames;
 
   static LocaleName? byName(String name) {
-    if (supported.names.contains(name)) {
-      return supported.entries[supported.names.indexOf(name)];
+    if (supported.names.contains(name.toLowerCase())) {
+      return supported.entries[supported.names.indexOf(name.toLowerCase())];
     }
     return null;
   }

@@ -24,7 +24,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
 
     for (final loc in supportedLocales) {
       locales.add(loc);
-      names.add(loc.toString());
+      names.add(loc.toString().toLowerCase());
       entries.add(
         LocaleName(name: names.last, locale: locales.last),
       );
@@ -66,22 +66,20 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
   }
 
   /// Will search [LocaleStore.supportedLocaleNames] for name and add it.
-  void addName(String str) {
+  bool addName(String str) {
     if (str == showOtherLocales) {
-      locales.add(null);
-      names.add(showOtherLocales);
-      entries.add(
-        LocaleName(
-            name: names.last, locale: locales.last, flag: flagForOtherLocales),
-      );
+      addShowOtherLocales();
+      return true;
     } else {
       final entry = LocaleMatcher.byName(str);
-      if (entry != null) {
+      if (entry != null && !entries.contains(entry)) {
         locales.add(entry.locale);
         names.add(entry.name);
         entries.add(entry);
+        return true;
       }
     }
+    return false;
   }
 
   @override
@@ -128,7 +126,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
 
   /// Just flag for [showOtherLocales].
   static Widget get flagForOtherLocales =>
-      ((LocaleStore.languageToCountry[showOtherLocales]?.length ?? 0) > 2)
-          ? LocaleStore.languageToCountry[showOtherLocales]![2]
+      ((languageToCountry[showOtherLocales]?.length ?? 0) > 2)
+          ? languageToCountry[showOtherLocales]![2]
           : const Icon(Icons.expand_more);
 }

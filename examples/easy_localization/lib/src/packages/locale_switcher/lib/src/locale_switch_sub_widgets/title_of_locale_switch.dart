@@ -31,45 +31,53 @@ class TitleForLocaleSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double? width;
-    if (childSize == null && child is LocaleSwitcher) {
-      if ((child as LocaleSwitcher).type == LocaleSwitcherType.menu) {
-        width = 300;
-      } else {
-        final shown = min((child as LocaleSwitcher).numberOfShown,
-            LocaleSwitcher.supportedLocaleNames.length);
-        width = shown * 2.5 * 48;
-        width += (child as LocaleSwitcher).showOsLocale ? 48 : 0;
+    if (child is LocaleSwitcher) {
+      width = (child as LocaleSwitcher).width;
+      if (childSize == null && width == null) {
+        if ((child as LocaleSwitcher).type == LocaleSwitcherType.menu) {
+          width = 300;
+        } else {
+          final shown = min((child as LocaleSwitcher).numberOfShown,
+              LocaleSwitcher.supportedLocaleNames.length);
+          width = shown * 2.5 * 48;
+          width += (child as LocaleSwitcher).showOsLocale ? 48 : 0;
+        }
       }
     }
 
-    return Center(
-      child: Padding(
-        padding: padding,
-        child: Column(
-          crossAxisAlignment: crossAxisAlignment,
-          children: [
-            if (titlePositionTop)
-              Padding(
-                padding: titlePadding,
-                child: Center(child: Text(title ?? '')),
+    return LayoutBuilder(builder: (context, constrains) {
+      if ((width ?? 0) > constrains.maxWidth) {
+        width = constrains.maxWidth - padding.left - padding.right;
+      }
+      return Center(
+        child: Padding(
+          padding: padding,
+          child: Column(
+            crossAxisAlignment: crossAxisAlignment,
+            children: [
+              if (titlePositionTop)
+                Padding(
+                  padding: titlePadding,
+                  child: Center(child: Text(title ?? '')),
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (!titlePositionTop)
+                    Padding(
+                      padding: titlePadding,
+                      child: Center(child: Text(title ?? '')),
+                    ),
+                  SizedBox(
+                      width: childSize?.width ?? width,
+                      height: childSize?.height ?? 48,
+                      child: child),
+                ],
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (!titlePositionTop)
-                  Padding(
-                    padding: titlePadding,
-                    child: Center(child: Text(title ?? '')),
-                  ),
-                SizedBox(
-                    width: childSize?.width ?? width,
-                    height: childSize?.height ?? 48,
-                    child: child),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

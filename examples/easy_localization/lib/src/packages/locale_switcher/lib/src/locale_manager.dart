@@ -32,7 +32,7 @@ class LocaleManager extends StatefulWidget {
   ///
   /// Note: keys are in lower cases.
   ///
-  /// Note 2: prebuilt map here: [LocaleStore.languageToCountry]
+  /// Note 2: prebuilt map here: [languageToCountry]
   final Map<String, List>? reassignFlags;
 
   /// This parameter is ONLY needed if the [child] parameter is not [MaterialApp]
@@ -117,7 +117,7 @@ class _LocaleManagerState extends State<LocaleManager> {
       // reassign flags
       if (widget.reassignFlags != null) {
         for (final MapEntry(:key, :value) in widget.reassignFlags!.entries) {
-          LocaleStore.languageToCountry[key.toLowerCase()] = value;
+          languageToCountry[key.toLowerCase()] = value;
         }
       }
 

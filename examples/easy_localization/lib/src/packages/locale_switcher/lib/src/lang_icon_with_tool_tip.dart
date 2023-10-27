@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
-import 'package:locale_switcher/src/locale_store.dart';
 
 /// Icon representing the language.
 ///
@@ -17,6 +16,7 @@ class LangIconWithToolTip extends StatelessWidget {
   /// If zero - used Icon, otherwise first N letters of language code.
   ///
   /// Have no effect if [child] is not null.
+  /// Can not be used with [useEmoji].
   final int useNLettersInsteadOfIcon;
 
   /// Clip the flag by [ShapeBorder], default: [CircleBorder].
@@ -33,21 +33,16 @@ class LangIconWithToolTip extends StatelessWidget {
   /// An entry of [SupportedLocaleNames].
   final LocaleName? localeNameFlag;
 
-  /// Analog [LangIconWithToolTip] but for Strings.
-  const LangIconWithToolTip.forStringIconBuilder(
-    this.langCode,
-    bool _, {
-    super.key,
-    this.toolTipPrefix = '',
-    this.radius,
-    this.useNLettersInsteadOfIcon = 0,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.child,
-    this.localeNameFlag,
-  });
+  /// Use Emoji instead of svg flag.
+  ///
+  /// Have no effect if [child] is not null
+  /// Can not be used with [useNLettersInsteadOfIcon]..
+  final bool useEmoji;
 
-  /// Can be used as tear-off inside [LocaleSwitcher.custom] for builders
-  /// in classes like [AnimatedToggleSwitch](https://pub.dev/documentation/animated_toggle_switch/latest/animated_toggle_switch/AnimatedToggleSwitch-class.html).
+  /// Just a shortcut to use as tear-off in builders of
+  /// widgets that generate lists of elements.
+  ///
+  /// See example for [LocaleSwitcher.custom].
   const LangIconWithToolTip.forIconBuilder(
     this.localeNameFlag,
     bool _, {
@@ -58,6 +53,7 @@ class LangIconWithToolTip extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.child,
     this.langCode,
+    this.useEmoji = false,
   });
 
   const LangIconWithToolTip({
@@ -69,7 +65,9 @@ class LangIconWithToolTip extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.child,
     this.localeNameFlag,
-  }) : assert(langCode != null || localeNameFlag != null);
+    this.useEmoji = false,
+  })  : assert(langCode != null || localeNameFlag != null),
+        assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// Have no effect if [localeNameFlag] is provided.
   final String? langCode;
@@ -79,12 +77,20 @@ class LangIconWithToolTip extends StatelessWidget {
     final locCode = localeNameFlag?.name ?? langCode ?? '??';
 
     if (locCode == showOtherLocales) {
-      return SupportedLocaleNames.flagForOtherLocales;
+      return SizedBox(
+          height: (radius ?? 28) * 0.7,
+          child: FittedBox(child: SupportedLocaleNames.flagForOtherLocales));
     }
-    final lang = LocaleStore.languageToCountry[locCode] ??
+    final lang = languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
 
     var flag = child;
+    if (useEmoji && locCode != systemLocale) {
+      final emoji = localeNameFlag?.locale?.emoji;
+      flag ??= (emoji != null)
+          ? SizedBox(height: radius, child: FittedBox(child: Text(emoji)))
+          : null;
+    }
     flag ??= localeNameFlag?.flag != null
         ? CircleFlag(
             shape: shape, size: radius ?? 48, child: localeNameFlag?.flag!)
