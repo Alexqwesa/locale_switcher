@@ -45,34 +45,41 @@ class TitleForLocaleSwitch extends StatelessWidget {
       }
     }
 
-    return Center(
-      child: Padding(
-        padding: padding,
-        child: Column(
-          crossAxisAlignment: crossAxisAlignment,
-          children: [
-            if (titlePositionTop)
-              Padding(
-                padding: titlePadding,
-                child: Center(child: Text(title ?? '')),
+    return LayoutBuilder(builder: (context, constrains) {
+      if ((width ?? 0) > constrains.maxWidth) {
+        width = constrains.maxWidth -
+            padding.left -
+            padding.right;
+      }
+      return Center(
+        child: Padding(
+          padding: padding,
+          child: Column(
+            crossAxisAlignment: crossAxisAlignment,
+            children: [
+              if (titlePositionTop)
+                Padding(
+                  padding: titlePadding,
+                  child: Center(child: Text(title ?? '')),
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (!titlePositionTop)
+                    Padding(
+                      padding: titlePadding,
+                      child: Center(child: Text(title ?? '')),
+                    ),
+                  SizedBox(
+                      width: childSize?.width ?? width,
+                      height: childSize?.height ?? 48,
+                      child: child),
+                ],
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (!titlePositionTop)
-                  Padding(
-                    padding: titlePadding,
-                    child: Center(child: Text(title ?? '')),
-                  ),
-                SizedBox(
-                    width: childSize?.width ?? width,
-                    height: childSize?.height ?? 48,
-                    child: child),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

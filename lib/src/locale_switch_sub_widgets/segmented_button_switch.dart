@@ -28,41 +28,60 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final segmentedButton = SegmentedButton<LocaleName>(
-      emptySelectionAllowed: false,
-      showSelectedIcon: false,
-      segments: locales.map<ButtonSegment<LocaleName>>(
-        (e) {
-          final curRadius = radius;
-          return ButtonSegment<LocaleName>(
-            value: e,
-            tooltip: e.language,
-            label: Padding(
-              padding:
-                  // e.name == systemLocale
-                  //     ? const EdgeInsets.all(0.0)
-                  //     :
-                  const EdgeInsets.all(8.0),
-              child: LangIconWithToolTip(
-                useEmoji: useEmoji,
-                localeNameFlag: e,
-                radius: curRadius,
-                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                shape: shape,
-              ),
-            ),
-          );
-        },
-      ).toList(),
-      selected: {LocaleSwitcher.current},
-      multiSelectionEnabled: false,
-      onSelectionChanged: (Set<LocaleName> newSelection) {
-        if (newSelection.first.name == showOtherLocales) {
-          showSelectLocaleDialog(context, setLocaleCallBack: setLocaleCallBack);
-        } else {
-          LocaleSwitcher.current = newSelection.first;
-          setLocaleCallBack?.call(context);
+    final segmentedButton = LayoutBuilder(
+      builder: (context, constrains) {
+        double scale = 1;
+        if (constrains.maxWidth < (width ?? 0)) {
+          scale = constrains.maxWidth / width! / 3;
+        } else if (constrains.maxWidth <
+            ((radius ?? 32) * 3 * locales.length)) {
+          scale =
+              constrains.maxWidth / ((radius ?? 32) * 3 * locales.length) / 3;
         }
+
+        return SegmentedButton<LocaleName>(
+          emptySelectionAllowed: false,
+          showSelectedIcon: false,
+          segments: locales.map<ButtonSegment<LocaleName>>(
+            (e) {
+              final curRadius = radius;
+              return ButtonSegment<LocaleName>(
+                value: e,
+                tooltip: e.language,
+                label: Padding(
+                  padding:
+                      // e.name == systemLocale
+                      //     ? const EdgeInsets.all(0.0)
+                      //     :
+                      EdgeInsets.fromLTRB(
+                    8 * scale,
+                    8,
+                    8 * scale,
+                    8,
+                  ),
+                  child: LangIconWithToolTip(
+                    useEmoji: useEmoji,
+                    localeNameFlag: e,
+                    radius: curRadius,
+                    useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
+                    shape: shape,
+                  ),
+                ),
+              );
+            },
+          ).toList(),
+          selected: {LocaleSwitcher.current},
+          multiSelectionEnabled: false,
+          onSelectionChanged: (Set<LocaleName> newSelection) {
+            if (newSelection.first.name == showOtherLocales) {
+              showSelectLocaleDialog(context,
+                  setLocaleCallBack: setLocaleCallBack);
+            } else {
+              LocaleSwitcher.current = newSelection.first;
+              setLocaleCallBack?.call(context);
+            }
+          },
+        );
       },
     );
 
