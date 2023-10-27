@@ -19,7 +19,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
     super.key,
     required this.locales,
     this.useNLettersInsteadOfIcon = 0,
-    this.radius = 32,
+    this.radius,
     this.shape,
     this.setLocaleCallBack,
     this.useEmoji = false,
@@ -28,15 +28,15 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = (radius ?? (useEmoji ? 42 : 34));
     final segmentedButton = LayoutBuilder(
       builder: (context, constrains) {
+        final inSet = (constrains.maxHeight - height) / 2;
         double scale = 1;
         if (constrains.maxWidth < (width ?? 0)) {
           scale = constrains.maxWidth / width! / 3;
-        } else if (constrains.maxWidth <
-            ((radius ?? 32) * 3 * locales.length)) {
-          scale =
-              constrains.maxWidth / ((radius ?? 32) * 3 * locales.length) / 3;
+        } else if (constrains.maxWidth < (height * 3 * locales.length)) {
+          scale = constrains.maxWidth / (height * 3 * locales.length) / 3;
         }
 
         return SegmentedButton<LocaleName>(
@@ -44,7 +44,6 @@ class SegmentedButtonSwitch extends StatelessWidget {
           showSelectedIcon: false,
           segments: locales.map<ButtonSegment<LocaleName>>(
             (e) {
-              final curRadius = radius;
               return ButtonSegment<LocaleName>(
                 value: e,
                 tooltip: e.language,
@@ -54,15 +53,11 @@ class SegmentedButtonSwitch extends StatelessWidget {
                       //     ? const EdgeInsets.all(0.0)
                       //     :
                       EdgeInsets.fromLTRB(
-                    8 * scale,
-                    8,
-                    8 * scale,
-                    8,
-                  ),
+                          inSet * scale, inSet, inSet * scale, inSet),
                   child: LangIconWithToolTip(
                     useEmoji: useEmoji,
                     localeNameFlag: e,
-                    radius: curRadius,
+                    radius: e.name == systemLocale ? (radius ?? 36) : height,
                     useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
                     shape: shape,
                   ),
