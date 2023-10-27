@@ -5,5 +5,7 @@
   "increment": "Increment",
   "counterDescription": "You have pushed the button this many times:",
   "showIcons": "Show icons: ",
- "circleOrSquare" : "Circle or square: "
+  "showLetters": "Show letters: ",
+  "showEmoji": "Show Emoji: ",
+  "circleOrSquare": "Circle or square: "
 }

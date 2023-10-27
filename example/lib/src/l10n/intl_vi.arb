@@ -5,5 +5,7 @@
   "increment": "Tăng",
   "counterDescription": "Bạn đã nhấn nút này nhiều lần:",
   "showIcons": "Hiển thị biểu tượng: ",
-  "circleOrSquare" : "Tròn hoặc vuông: "
+  "showLetters": "Hiển thị chữ: ",
+  "showEmoji": "Hiển thị Emoji: ",
+  "circleOrSquare": "Tròn hoặc vuông: "
 }

@@ -55,6 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool circleOrSquare = true;
 
+  bool useEmoji = false;
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context); // localization shortcut
@@ -67,167 +69,147 @@ class _MyHomePageState extends State<MyHomePage> {
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(
             useNLettersInsteadOfIcon: showNletters,
+            useEmoji: useEmoji,
             shape: circleOrSquare ? const CircleBorder(eccentricity: 0) : null,
           ),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-            height: 800,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 30, 20, 10),
+          child: LayoutBuilder(
+            builder: (context, constrains) {
+              final children = [
                 Expanded(
                   child: Center(
-                    child: Table(
-                      columnWidths: const <int, TableColumnWidth>{
-                        0: FixedColumnWidth(350),
-                        1: FixedColumnWidth(450),
-                      },
-                      defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
-                      children: <TableRow>[
-                        TableRow(
-                          children: <Widget>[
-                            TableCell(
-                              // =============== THIS LINE ===============
-                              child: Center(
-                                child: LocaleSwitcher.menu(
-                                  title: loc.chooseLanguage,
-                                  useNLettersInsteadOfIcon: showNletters,
-                                  showLeading: showLeading,
-                                  shape: circleOrSquare
-                                      ? const CircleBorder(eccentricity: 0)
-                                      : null,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                                child: SizedBox(
-                              height: 130,
-                              child: Row(
-                                children: [
-                                  Text(loc.showIcons),
-                                  Switch(
-                                    value: showLeading,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        showLeading = val;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            )),
-                          ],
+                    child: Column(
+                      children: [
+                        LocaleSwitcher.menu(
+                          width: 310,
+                          title: loc.chooseLanguage,
+                          useNLettersInsteadOfIcon: showNletters,
+                          useEmoji: useEmoji,
+                          showLeading: showLeading,
+                          shape: circleOrSquare
+                              ? const CircleBorder(eccentricity: 0)
+                              : null,
                         ),
-                        TableRow(
-                          children: <Widget>[
-                            TableCell(
-                              child: SizedBox(
-                                width: 400,
-                                // =============== THIS LINE ===============
-                                child: LocaleSwitcher.custom(
-                                  numberOfShown: 2,
-                                  builder: (langCodes, context) {
-                                    if (langCodes.length <= 1) {
-                                      // AnimatedToggleSwitch crash with one value
-                                      langCodes.addShowOtherLocales();
-                                    }
+                        Divider(
+                          color: Theme.of(context).canvasColor,
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 400,
+                          // =============== THIS LINE ===============
+                          child: LocaleSwitcher.custom(
+                            numberOfShown: 2,
+                            builder: (langCodes, context) {
+                              if (langCodes.length <= 1) {
+                                // AnimatedToggleSwitch crash with one value
+                                langCodes.addShowOtherLocales();
+                              }
 
-                                    return AnimatedToggleSwitch<
-                                        LocaleName>.rolling(
-                                      values: langCodes,
-                                      current: LocaleSwitcher.current,
-                                      onChanged: (langCode) {
-                                        if (langCode.name == showOtherLocales) {
-                                          showSelectLocaleDialog(context);
-                                        } else {
-                                          LocaleSwitcher.current = langCode;
-                                        }
-                                      },
-                                      iconBuilder: (lang, foreground) =>
-                                          LangIconWithToolTip(
-                                        localeNameFlag: lang,
-                                        useNLettersInsteadOfIcon: showNletters,
-                                      ),
-                                      allowUnlistedValues: true,
-                                      loading: false,
-                                      style: ToggleStyle(
-                                        backgroundColor: Colors.black12,
-                                        indicatorColor: Theme.of(context)
-                                            .colorScheme
-                                            .primaryContainer,
-                                      ),
-                                    );
-                                  },
-                                  // shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
-                                ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Row(
-                                children: [
-                                  Text(loc.showIcons),
-                                  Switch(
-                                    key: const ValueKey('letterSwitch'),
-                                    value: (showNletters == 0),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        if (val) {
-                                          showNletters = 0;
-                                        } else {
-                                          showNletters = 2;
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            TableCell(
-                              child: TitleForLocaleSwitch(
-                                title: loc.chooseLanguage,
-                                // =============== THIS LINE ===============
-                                child: LocaleSwitcher.segmentedButton(
+                              return AnimatedToggleSwitch<LocaleName>.rolling(
+                                values: langCodes,
+                                current: LocaleSwitcher.current,
+                                onChanged: (langCode) {
+                                  if (langCode.name == showOtherLocales) {
+                                    showSelectLocaleDialog(context);
+                                  } else {
+                                    LocaleSwitcher.current = langCode;
+                                  }
+                                },
+                                iconBuilder: (lang, foreground) =>
+                                    LangIconWithToolTip(
+                                  localeNameFlag: lang,
                                   useNLettersInsteadOfIcon: showNletters,
-                                  numberOfShown: 2,
-                                  shape: circleOrSquare
-                                      ? const CircleBorder(eccentricity: 0)
-                                      : null,
                                 ),
-                              ),
-                            ),
-                            TableCell(
-                              child: Row(
-                                children: [
-                                  Text(loc.circleOrSquare),
-                                  Switch(
-                                    value: !circleOrSquare,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        circleOrSquare = !val;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                allowUnlistedValues: true,
+                                loading: false,
+                                style: ToggleStyle(
+                                  backgroundColor: Colors.black12,
+                                  indicatorColor: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                ),
+                              );
+                            },
+                            // shape: circleOrSquare? const CircleBorder(eccentricity: 0) : null,
+                          ),
                         ),
+                        TitleForLocaleSwitch(
+                          title: loc.chooseLanguage,
+                          child: LocaleSwitcher.segmentedButton(
+                            width: 400,
+                            useNLettersInsteadOfIcon: showNletters,
+                            useEmoji: useEmoji,
+                            numberOfShown: 2,
+                            shape: circleOrSquare
+                                ? const CircleBorder(eccentricity: 0)
+                                : null,
+                          ),
+                        ),
+                        const CounterWidget(),
                       ],
                     ),
                   ),
                 ),
-                const CounterWidget(),
-              ],
-            ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 220,
+                    ),
+                    Text(loc.showIcons),
+                    Switch(
+                      value: showLeading,
+                      onChanged: (val) {
+                        setState(() {
+                          showLeading = val;
+                        });
+                      },
+                    ),
+                    Text(loc.showLetters),
+                    Switch(
+                      key: const ValueKey('letterSwitch'),
+                      value: (showNletters != 0),
+                      onChanged: (val) {
+                        setState(() {
+                          if (!val) {
+                            showNletters = 0;
+                          } else {
+                            showNletters = 2;
+                            useEmoji = false;
+                          }
+                        });
+                      },
+                    ),
+                    Text(loc.circleOrSquare),
+                    Switch(
+                      value: !circleOrSquare,
+                      onChanged: (val) {
+                        setState(() {
+                          circleOrSquare = !val;
+                          showNletters = 0;
+                          useEmoji = false;
+                        });
+                      },
+                    ),
+                    Text(loc.showEmoji),
+                    Switch(
+                      value: useEmoji,
+                      onChanged: (val) {
+                        setState(() {
+                          useEmoji = val;
+                          showNletters = 0;
+                        });
+                      },
+                    ),
+                  ],
+                )
+              ];
+              final rc = (constrains.maxWidth < 800);
+              return rc ? SizedBox(height: 800, child: Column(children: children)) : Row(children: children);
+            },
           ),
         ),
       ),
