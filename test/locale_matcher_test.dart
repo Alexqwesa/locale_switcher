@@ -143,13 +143,19 @@ void main() {
     expect(lnf[4].bestMatch.toString(), "de_de");
   });
 
-  test('LocaleName showOtherLocales failsafe ', () {
+  test('LocaleName SupportedLocaleNames.fromEntries ', () {
     final names = <String>['de_de', 'en_gb', 'vi_vn'];
-    final lnf = SupportedLocaleNames(
+    final lnf1 = SupportedLocaleNames(
         names.map((String e) => e.toLocale()).toList(),
-        showOsLocale: true);
+        showOsLocale: false);
+    final lnf = SupportedLocaleNames.fromEntries(lnf1, addOsLocale: true);
+
     lnf.replaceLast(str: 'de');
     expect(lnf[0].toString(), "system|en");
-    expect(lnf.last.toString(), "vi_vn|vi");
+    expect(lnf.last.toString(), "vi_vn|vi"); // failed
+
+    lnf.replaceLast(str: 'de_de');
+    expect(lnf[0].toString(), "system|en");
+    expect(lnf.last.toString(), "de_de|de"); // succeed
   });
 }
