@@ -1084,7 +1084,6 @@ class LocaleSwitcher extends StatefulWidget {
 
 class _LocaleSwitcherState extends State<LocaleSwitcher> {
   final globalKey = GlobalKey();
-  late final SizedBox globalContextBox;
 
   late final SupportedLocaleNames staticLocales;
   late final SupportedLocaleNames locales;
@@ -1092,10 +1091,6 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   void initState() {
     super.initState();
-
-    // send globalKey
-    globalContextBox = SizedBox(key: globalKey, width: 0, height: 0);
-    PreferenceRepository.sendGlobalKeyToRepository(globalKey);
 
     // check: is it inited?
     if (LocaleStore.supportedLocales.isEmpty) {
@@ -1144,7 +1139,11 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    // send globalKey
+    final stateBox = _StateBoxToAccessContext(key: globalKey);
+    PreferenceRepository.sendGlobalKeyToRepository(globalKey);
+
+    final child = ValueListenableBuilder(
       valueListenable: CurrentLocale.notifier,
       builder: (BuildContext context, index, Widget? child) {
         // always show current locale
@@ -1198,6 +1197,54 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
         };
       },
     );
+
+    return IntrinsicWidth(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(child: child),
+          stateBox,
+        ],
+      ),
+    );
+
+    // return LayoutBuilder(builder: (context, constraints) {
+    //
+    //   Widget sizedChild = ConstrainedBox(
+    //     constraints: BoxConstraints(
+    //       maxWidth: max(constraints.minWidth, constraints.maxWidth - 1),
+    //       maxHeight: constraints.maxHeight,
+    //     ),
+    //     child: child,
+    //   );
+    //
+    //   return IntrinsicWidth(
+    //     child: Row(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: [
+    //         Expanded(child: sizedChild),
+    //         sBox,
+    //       ],
+    //     ),
+    //   );
+    // });
+  }
+}
+
+class _StateBoxToAccessContext extends StatefulWidget {
+  const _StateBoxToAccessContext({
+    super.key,
+  });
+
+  @override
+  State<_StateBoxToAccessContext> createState() =>
+      _StateBoxToAccessContextState();
+}
+
+class _StateBoxToAccessContextState extends State<_StateBoxToAccessContext> {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(width: 1, height: 1);
   }
 }
 ''',
@@ -1261,7 +1308,7 @@ class PreferenceRepository {
     final context = _lastUsedKey?.currentState?.context;
     if (context != null && LocaleSwitcher.current.locale != null) {
       await EasyLocalization.of(context)
-          ?.setLocale(LocaleSwitcher.current.locale!);
+          ?.setLocale(LocaleSwitcher.current.bestMatch);
       return true;
     }
 
@@ -1782,7 +1829,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
 
   final bool useEmoji;
 
-  final double width;
+  final double? width;
 
   const DropDownMenuLanguageSwitch({
     super.key,
@@ -1793,7 +1840,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
     this.useEmoji = false,
-    this.width = 250,
+    this.width,
   });
 
   final SupportedLocaleNames locales;
