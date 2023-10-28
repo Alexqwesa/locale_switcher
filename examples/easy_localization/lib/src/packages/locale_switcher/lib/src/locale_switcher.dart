@@ -442,69 +442,69 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
     PreferenceRepository.sendGlobalKeyToRepository(globalKey);
 
     final child = ValueListenableBuilder(
-        valueListenable: CurrentLocale.notifier,
-        builder: (BuildContext context, index, Widget? child) {
-          // always show current locale
-          if (!locales.names.contains(LocaleSwitcher.current.name)) {
-            if (locales.last.name == showOtherLocales) {
-              locales[locales.length - 2] = LocaleSwitcher.current;
-            } else {
-              locales.replaceLast(localeName: LocaleSwitcher.current);
-            }
+      valueListenable: CurrentLocale.notifier,
+      builder: (BuildContext context, index, Widget? child) {
+        // always show current locale
+        if (!locales.names.contains(LocaleSwitcher.current.name)) {
+          if (locales.last.name == showOtherLocales) {
+            locales[locales.length - 2] = LocaleSwitcher.current;
+          } else {
+            locales.replaceLast(localeName: LocaleSwitcher.current);
           }
+        }
 
-          // todo: add 0.5 second delayed check of app locale ? post frame callback ?
+        // todo: add 0.5 second delayed check of app locale ? post frame callback ?
 
-          return switch (widget.type) {
-            LocaleSwitcherType.custom => widget.builder!(locales, context),
-            LocaleSwitcherType.menu => DropDownMenuLanguageSwitch(
-                locales: locales,
-                title: widget.title,
-                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-                showLeading: widget.showLeading,
-                shape: widget.shape,
-                setLocaleCallBack: widget.setLocaleCallBack,
-                useEmoji: widget.useEmoji,
-                width: widget.width!,
-              ),
-            LocaleSwitcherType.grid => GridOfLanguages(
-                gridDelegate: widget.gridDelegate,
-                setLocaleCallBack: widget.setLocaleCallBack,
-                shape: widget.shape,
-                useEmoji: widget.useEmoji,
-              ),
-            LocaleSwitcherType.iconButton => SelectLocaleButton(
-                radius: widget.iconRadius ?? 32,
-                popUpWindowTitle: widget.title ?? '',
-                updateIconOnChange: (widget.useStaticIcon != null),
-                useStaticIcon: widget.useStaticIcon,
-                toolTipPrefix: widget.toolTipPrefix ?? '',
-                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-                shape: widget.shape,
-                setLocaleCallBack: widget.setLocaleCallBack,
-                useEmoji: widget.useEmoji,
-              ),
-            LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
-                locales: locales,
-                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-                shape: widget.shape,
-                setLocaleCallBack: widget.setLocaleCallBack,
-                useEmoji: widget.useEmoji,
-                width: widget.width,
-              ),
-          };
-        },
-      );
+        return switch (widget.type) {
+          LocaleSwitcherType.custom => widget.builder!(locales, context),
+          LocaleSwitcherType.menu => DropDownMenuLanguageSwitch(
+              locales: locales,
+              title: widget.title,
+              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+              showLeading: widget.showLeading,
+              shape: widget.shape,
+              setLocaleCallBack: widget.setLocaleCallBack,
+              useEmoji: widget.useEmoji,
+              width: widget.width!,
+            ),
+          LocaleSwitcherType.grid => GridOfLanguages(
+              gridDelegate: widget.gridDelegate,
+              setLocaleCallBack: widget.setLocaleCallBack,
+              shape: widget.shape,
+              useEmoji: widget.useEmoji,
+            ),
+          LocaleSwitcherType.iconButton => SelectLocaleButton(
+              radius: widget.iconRadius ?? 32,
+              popUpWindowTitle: widget.title ?? '',
+              updateIconOnChange: (widget.useStaticIcon != null),
+              useStaticIcon: widget.useStaticIcon,
+              toolTipPrefix: widget.toolTipPrefix ?? '',
+              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+              shape: widget.shape,
+              setLocaleCallBack: widget.setLocaleCallBack,
+              useEmoji: widget.useEmoji,
+            ),
+          LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
+              locales: locales,
+              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+              shape: widget.shape,
+              setLocaleCallBack: widget.setLocaleCallBack,
+              useEmoji: widget.useEmoji,
+              width: widget.width,
+            ),
+        };
+      },
+    );
 
-     return IntrinsicWidth(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(child: child),
-            stateBox,
-          ],
-        ),
-      );
+    return IntrinsicWidth(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(child: child),
+          stateBox,
+        ],
+      ),
+    );
 
     // return LayoutBuilder(builder: (context, constraints) {
     //
@@ -535,7 +535,8 @@ class _StateBoxToAccessContext extends StatefulWidget {
   });
 
   @override
-  State<_StateBoxToAccessContext> createState() => _StateBoxToAccessContextState();
+  State<_StateBoxToAccessContext> createState() =>
+      _StateBoxToAccessContextState();
 }
 
 class _StateBoxToAccessContextState extends State<_StateBoxToAccessContext> {
