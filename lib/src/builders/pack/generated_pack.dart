@@ -140,12 +140,20 @@ abstract class CurrentSystemLocale {
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
-/// Icon representing the language.
+/// Icon representing the language (with tooltip).
 ///
-/// For special values like [showOtherLocales] it will provide custom widget.
+/// It will search icon, in this order:
+/// - in [Locale.flag],
+/// - in [languageToCountry],
+/// - or if [useEmoji] will search emoji,
+/// - or if [useNLettersInsteadOfIcon] will just show letters.
 ///
-/// You can use [LocaleManager.reassignFlags] to change global defaults.
-/// or just provide your own [child] widget.
+/// For special values like [showOtherLocales] and [systemLocale]
+/// there are exist special values in [languageToCountry] map.
+///
+/// You can use [LocaleManager.reassignFlags] or [languageToCountry] to change global defaults.
+///
+/// Or just provide your own [child] widget.
 class LangIconWithToolTip extends StatelessWidget {
   final String toolTipPrefix;
 
@@ -164,8 +172,11 @@ class LangIconWithToolTip extends StatelessWidget {
 
   /// OPTIONAL: your custom widget here,
   ///
-  /// If null: will be shown either flag from [localeNameFlag] or flag of country
-  /// (assigned to language in [LocaleManager].reassignFlags)
+  /// If null, it will search icon:
+  /// - in [Locale.flag],
+  /// - in [languageToCountry],
+  /// - or if [useEmoji] will search emoji,
+  /// - or if [useNLettersInsteadOfIcon] will just show letters.
   final Widget? child;
 
   /// An entry of [SupportedLocaleNames].
@@ -527,7 +538,7 @@ import 'package:locale_switcher/src/system_locale_name.dart';
 ///
 /// Created to allow special names, like: [showOtherLocales] and [systemLocale].
 ///
-/// A [bestMatch] is either locale itself OR - for system locale - closest match.
+/// A [bestMatch] is either: locale itself OR closest match (for [systemLocale]).
 class LocaleName {
   /// cache
   String? _language;
@@ -1090,8 +1101,6 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
 
   @override
   void initState() {
-    super.initState();
-
     // check: is it inited?
     if (LocaleStore.supportedLocales.isEmpty) {
       // todo: use CurrentLocale
@@ -1120,14 +1129,13 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
     }
 
     final skip = widget.showOsLocale ? 0 : 1;
-    staticLocales = SupportedLocaleNames.fromEntries(
+    locales = SupportedLocaleNames.fromEntries(
       LocaleStore.supportedLocaleNames.entries
           .skip(skip) // first is system locale
           .take(widget.numberOfShown + 1 - skip) // chose most used
       ,
     );
 
-    locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
     if (!locales.names.contains(LocaleSwitcher.current.name)) {
       locales.replaceLast(localeName: LocaleSwitcher.current);
     }
@@ -1135,6 +1143,8 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
       locales
           .addShowOtherLocales(); //setLocaleCallBack: widget.setLocaleCallBack);
     }
+
+    super.initState();
   }
 
   @override
@@ -1167,7 +1177,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
               useEmoji: widget.useEmoji,
-              width: widget.width!,
+              width: widget.width,
             ),
           LocaleSwitcherType.grid => GridOfLanguages(
               gridDelegate: widget.gridDelegate,
@@ -1198,15 +1208,28 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
       },
     );
 
-    return IntrinsicWidth(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(child: child),
-          stateBox,
-        ],
-      ),
-    );
+    if (widget.width == null) {
+      return IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(child: child),
+            stateBox,
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: widget.width!,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(child: child),
+            stateBox,
+          ],
+        ),
+      );
+    }
 
     // return LayoutBuilder(builder: (context, constraints) {
     //
@@ -1491,7 +1514,7 @@ Widget? findFlagFor({String? language, String? country}) {
   return null;
 }
 
-/// Offset for the emoji flag
+/// Offset of the emoji flags in Unicode table.
 const emojiOffset = 127397;
 
 extension LocaleFlag on Locale {
@@ -1501,8 +1524,9 @@ extension LocaleFlag on Locale {
   /// return [languageCode]
   ///
   /// Note: flag may look different for different platforms!.
+  ///
   /// Note 2: svg images in this package is simplified to look good at small size,
-  /// these emoji are not.
+  /// these emoji may not.
   String get emoji {
     // Emoji for country
     if (countryCode?.length == 2) {
@@ -2182,7 +2206,7 @@ class SelectLocaleButton extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
-/// Just a little helper - title of the widget [LocaleSwitch].
+/// Just a little helper - title for the widget [LocaleSwitch].
 class TitleForLocaleSwitch extends StatelessWidget {
   const TitleForLocaleSwitch(
       {super.key,
