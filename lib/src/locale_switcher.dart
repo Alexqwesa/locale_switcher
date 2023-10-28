@@ -386,8 +386,6 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
 
   @override
   void initState() {
-    super.initState();
-
     // check: is it inited?
     if (LocaleStore.supportedLocales.isEmpty) {
       // todo: use CurrentLocale
@@ -416,14 +414,13 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
     }
 
     final skip = widget.showOsLocale ? 0 : 1;
-    staticLocales = SupportedLocaleNames.fromEntries(
+    locales = SupportedLocaleNames.fromEntries(
       LocaleStore.supportedLocaleNames.entries
           .skip(skip) // first is system locale
           .take(widget.numberOfShown + 1 - skip) // chose most used
       ,
     );
 
-    locales = SupportedLocaleNames.fromEntries(staticLocales.entries);
     if (!locales.names.contains(LocaleSwitcher.current.name)) {
       locales.replaceLast(localeName: LocaleSwitcher.current);
     }
@@ -431,6 +428,8 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
       locales
           .addShowOtherLocales(); //setLocaleCallBack: widget.setLocaleCallBack);
     }
+
+    super.initState();
   }
 
   @override
@@ -463,7 +462,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               shape: widget.shape,
               setLocaleCallBack: widget.setLocaleCallBack,
               useEmoji: widget.useEmoji,
-              width: widget.width!,
+              width: widget.width,
             ),
           LocaleSwitcherType.grid => GridOfLanguages(
               gridDelegate: widget.gridDelegate,
@@ -494,15 +493,28 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
       },
     );
 
-    return IntrinsicWidth(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(child: child),
-          stateBox,
-        ],
-      ),
-    );
+    if (widget.width == null) {
+      return IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(child: child),
+            stateBox,
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: widget.width!,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(child: child),
+            stateBox,
+          ],
+        ),
+      );
+    }
 
     // return LayoutBuilder(builder: (context, constraints) {
     //
