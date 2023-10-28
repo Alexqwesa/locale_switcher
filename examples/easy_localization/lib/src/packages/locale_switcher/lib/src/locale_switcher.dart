@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -380,7 +382,6 @@ class LocaleSwitcher extends StatefulWidget {
 
 class _LocaleSwitcherState extends State<LocaleSwitcher> {
   final globalKey = GlobalKey();
-  late final SizedBox globalContextBox;
 
   late final SupportedLocaleNames staticLocales;
   late final SupportedLocaleNames locales;
@@ -388,10 +389,6 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   void initState() {
     super.initState();
-
-    // send globalKey
-    globalContextBox = SizedBox(key: globalKey, width: 0, height: 0);
-    PreferenceRepository.sendGlobalKeyToRepository(globalKey);
 
     // check: is it inited?
     if (LocaleStore.supportedLocales.isEmpty) {
@@ -440,59 +437,110 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: CurrentLocale.notifier,
-      builder: (BuildContext context, index, Widget? child) {
-        // always show current locale
-        if (!locales.names.contains(LocaleSwitcher.current.name)) {
-          if (locales.last.name == showOtherLocales) {
-            locales[locales.length - 2] = LocaleSwitcher.current;
-          } else {
-            locales.replaceLast(localeName: LocaleSwitcher.current);
+    // send globalKey
+    final stateBox = _StateBoxToAccessContext(key: globalKey);
+    PreferenceRepository.sendGlobalKeyToRepository(globalKey);
+
+    final child = ValueListenableBuilder(
+        valueListenable: CurrentLocale.notifier,
+        builder: (BuildContext context, index, Widget? child) {
+          // always show current locale
+          if (!locales.names.contains(LocaleSwitcher.current.name)) {
+            if (locales.last.name == showOtherLocales) {
+              locales[locales.length - 2] = LocaleSwitcher.current;
+            } else {
+              locales.replaceLast(localeName: LocaleSwitcher.current);
+            }
           }
-        }
 
-        // todo: add 0.5 second delayed check of app locale ? post frame callback ?
+          // todo: add 0.5 second delayed check of app locale ? post frame callback ?
 
-        return switch (widget.type) {
-          LocaleSwitcherType.custom => widget.builder!(locales, context),
-          LocaleSwitcherType.menu => DropDownMenuLanguageSwitch(
-              locales: locales,
-              title: widget.title,
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              showLeading: widget.showLeading,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
-              width: widget.width!,
-            ),
-          LocaleSwitcherType.grid => GridOfLanguages(
-              gridDelegate: widget.gridDelegate,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              shape: widget.shape,
-              useEmoji: widget.useEmoji,
-            ),
-          LocaleSwitcherType.iconButton => SelectLocaleButton(
-              radius: widget.iconRadius ?? 32,
-              popUpWindowTitle: widget.title ?? '',
-              updateIconOnChange: (widget.useStaticIcon != null),
-              useStaticIcon: widget.useStaticIcon,
-              toolTipPrefix: widget.toolTipPrefix ?? '',
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
-            ),
-          LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
-              locales: locales,
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
-              width: widget.width,
-            ),
-        };
-      },
-    );
+          return switch (widget.type) {
+            LocaleSwitcherType.custom => widget.builder!(locales, context),
+            LocaleSwitcherType.menu => DropDownMenuLanguageSwitch(
+                locales: locales,
+                title: widget.title,
+                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+                showLeading: widget.showLeading,
+                shape: widget.shape,
+                setLocaleCallBack: widget.setLocaleCallBack,
+                useEmoji: widget.useEmoji,
+                width: widget.width!,
+              ),
+            LocaleSwitcherType.grid => GridOfLanguages(
+                gridDelegate: widget.gridDelegate,
+                setLocaleCallBack: widget.setLocaleCallBack,
+                shape: widget.shape,
+                useEmoji: widget.useEmoji,
+              ),
+            LocaleSwitcherType.iconButton => SelectLocaleButton(
+                radius: widget.iconRadius ?? 32,
+                popUpWindowTitle: widget.title ?? '',
+                updateIconOnChange: (widget.useStaticIcon != null),
+                useStaticIcon: widget.useStaticIcon,
+                toolTipPrefix: widget.toolTipPrefix ?? '',
+                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+                shape: widget.shape,
+                setLocaleCallBack: widget.setLocaleCallBack,
+                useEmoji: widget.useEmoji,
+              ),
+            LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
+                locales: locales,
+                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+                shape: widget.shape,
+                setLocaleCallBack: widget.setLocaleCallBack,
+                useEmoji: widget.useEmoji,
+                width: widget.width,
+              ),
+          };
+        },
+      );
+
+     return IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(child: child),
+            stateBox,
+          ],
+        ),
+      );
+
+    // return LayoutBuilder(builder: (context, constraints) {
+    //
+    //   Widget sizedChild = ConstrainedBox(
+    //     constraints: BoxConstraints(
+    //       maxWidth: max(constraints.minWidth, constraints.maxWidth - 1),
+    //       maxHeight: constraints.maxHeight,
+    //     ),
+    //     child: child,
+    //   );
+    //
+    //   return IntrinsicWidth(
+    //     child: Row(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: [
+    //         Expanded(child: sizedChild),
+    //         sBox,
+    //       ],
+    //     ),
+    //   );
+    // });
+  }
+}
+
+class _StateBoxToAccessContext extends StatefulWidget {
+  const _StateBoxToAccessContext({
+    super.key,
+  });
+
+  @override
+  State<_StateBoxToAccessContext> createState() => _StateBoxToAccessContextState();
+}
+
+class _StateBoxToAccessContextState extends State<_StateBoxToAccessContext> {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(width: 1, height: 1);
   }
 }
