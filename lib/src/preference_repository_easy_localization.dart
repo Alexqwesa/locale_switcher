@@ -34,7 +34,7 @@ class PreferenceRepository {
     final context = _lastUsedKey?.currentState?.context;
     if (context != null && LocaleSwitcher.current.locale != null) {
       await EasyLocalization.of(context)
-          ?.setLocale(LocaleSwitcher.current.locale!);
+          ?.setLocale(LocaleSwitcher.current.bestMatch);
       return true;
     }
 
