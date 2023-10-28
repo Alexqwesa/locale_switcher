@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
-/// Just a little helper - title of the widget [LocaleSwitch].
+/// Just a little helper - title for the widget [LocaleSwitch].
 class TitleForLocaleSwitch extends StatelessWidget {
   const TitleForLocaleSwitch(
       {super.key,

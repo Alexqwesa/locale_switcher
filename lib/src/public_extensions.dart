@@ -144,7 +144,7 @@ Widget? findFlagFor({String? language, String? country}) {
   return null;
 }
 
-/// Offset for the emoji flag
+/// Offset of the emoji flags in Unicode table.
 const emojiOffset = 127397;
 
 extension LocaleFlag on Locale {
@@ -154,8 +154,9 @@ extension LocaleFlag on Locale {
   /// return [languageCode]
   ///
   /// Note: flag may look different for different platforms!.
+  ///
   /// Note 2: svg images in this package is simplified to look good at small size,
-  /// these emoji are not.
+  /// these emoji may not.
   String get emoji {
     // Emoji for country
     if (countryCode?.length == 2) {

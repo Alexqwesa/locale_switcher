@@ -7,7 +7,7 @@ import 'package:locale_switcher/src/system_locale_name.dart';
 ///
 /// Created to allow special names, like: [showOtherLocales] and [systemLocale].
 ///
-/// A [bestMatch] is either locale itself OR - for system locale - closest match.
+/// A [bestMatch] is either: locale itself OR closest match (for [systemLocale]).
 class LocaleName {
   /// cache
   String? _language;

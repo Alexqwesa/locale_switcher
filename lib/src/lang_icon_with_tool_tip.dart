@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
-/// Icon representing the language.
+/// Icon representing the language (with tooltip).
 ///
-/// For special values like [showOtherLocales] it will provide custom widget.
+/// It will search icon, in this order:
+/// - in [Locale.flag],
+/// - in [languageToCountry],
+/// - or if [useEmoji] will search emoji,
+/// - or if [useNLettersInsteadOfIcon] will just show letters.
 ///
-/// You can use [LocaleManager.reassignFlags] to change global defaults.
-/// or just provide your own [child] widget.
+/// For special values like [showOtherLocales] and [systemLocale]
+/// there are exist special values in [languageToCountry] map.
+///
+/// You can use [LocaleManager.reassignFlags] or [languageToCountry] to change global defaults.
+///
+/// Or just provide your own [child] widget.
 class LangIconWithToolTip extends StatelessWidget {
   final String toolTipPrefix;
 
@@ -26,8 +34,11 @@ class LangIconWithToolTip extends StatelessWidget {
 
   /// OPTIONAL: your custom widget here,
   ///
-  /// If null: will be shown either flag from [localeNameFlag] or flag of country
-  /// (assigned to language in [LocaleManager].reassignFlags)
+  /// If null, it will search icon:
+  /// - in [Locale.flag],
+  /// - in [languageToCountry],
+  /// - or if [useEmoji] will search emoji,
+  /// - or if [useNLettersInsteadOfIcon] will just show letters.
   final Widget? child;
 
   /// An entry of [SupportedLocaleNames].
