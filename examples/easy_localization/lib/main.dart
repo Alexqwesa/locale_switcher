@@ -73,10 +73,15 @@ class MyHomePage extends StatelessWidget {
           children: <Widget>[
             Center(
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.menu(title: LocaleKeys.chooseLanguage.tr()),
+              child: SizedBox(
+                // width: 400,
+                child:
+                    LocaleSwitcher.menu(title: LocaleKeys.chooseLanguage.tr()),
+              ),
             ),
             const Divider(),
             TitleForLocaleSwitch(
+              // childSize: const Size(400,48),
               title: LocaleKeys.chooseLanguage.tr(),
               // =============== THIS LINE ===============
               child: LocaleSwitcher.custom(
@@ -86,6 +91,7 @@ class MyHomePage extends StatelessWidget {
             ),
             const Divider(),
             TitleForLocaleSwitch(
+              // childSize: const Size(400,46),
               title: LocaleKeys.chooseLanguage.tr(),
               // =============== THIS LINE ===============
               child: LocaleSwitcher.segmentedButton(
