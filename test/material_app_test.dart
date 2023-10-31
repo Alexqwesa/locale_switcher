@@ -12,6 +12,7 @@ import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/grid_of_languages.dart';
 import 'package:locale_switcher/src/locale_switch_sub_widgets/select_locale_button.dart';
+import 'package:locale_switcher/src/system_locale_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_relative_lib_imports
@@ -32,6 +33,12 @@ void main() {
       // test start with english locale
       expect(find.text(enLoc.counterDescription), findsOneWidget);
       expect(LocaleSwitcher.current.name, "system");
+      expect(
+          (LocaleSwitcher.current as SystemLocaleName)
+              .notifier
+              .value
+              .toString(),
+          "en_US");
 
       // Verify that vi locale is loaded
       final viFlag = find.byTooltip(languageToCountry['vi']![1]);

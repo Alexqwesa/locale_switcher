@@ -291,7 +291,6 @@ class LocaleSwitcher extends StatefulWidget {
     required LocaleSwitchBuilder builder,
     int numberOfShown = 4,
     bool showOsLocale = true,
-    // Function(BuildContext)? setLocaleCallBack,
   }) {
     return LocaleSwitcher._(
       key: key,
@@ -299,7 +298,6 @@ class LocaleSwitcher extends StatefulWidget {
       numberOfShown: numberOfShown,
       type: LocaleSwitcherType.custom,
       builder: builder,
-      // setLocaleCallBack: null,
     );
   }
 
