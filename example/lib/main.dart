@@ -92,7 +92,7 @@ Widget animatedToggleSwitchBuilder(
     langCodes.addShowOtherLocales();
   }
 
-  return AnimatedToggleSwitch<LocaleName>.rolling(
+  return AnimatedToggleSwitch<LocaleName>.rolling( // package: animated_toggle_switch
     values: langCodes,
     current: LocaleSwitcher.current,
     onChanged: (langCode) {
