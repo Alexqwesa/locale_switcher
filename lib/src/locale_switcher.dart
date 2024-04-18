@@ -11,7 +11,7 @@ import 'locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'locale_switch_sub_widgets/select_locale_button.dart';
 
 /// A special name for wrapper [LocaleName] to use as button that show other locales.
-const showOtherLocales = 'show_other_locales_button';
+const showOtherLocales = 'showOtherLocalesButton';
 
 /// A special name for wrapper [LocaleName] to use as system locale option.
 const systemLocale = 'system';

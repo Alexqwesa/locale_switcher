@@ -86,7 +86,7 @@ class LocaleName {
   /// Search in [LocaleManager.reassignFlags] first, and if not found return [name].
   String get language {
     _language ??= (languageToCountry[name.toLowerCase()]?[1] ??
-            languageToCountry[name.substring(0, 2).toLowerCase()]?[1]) ??
+            languageToCountry[name.split("_").first.toLowerCase()]?[1]) ??
         name;
     return _language!;
   }

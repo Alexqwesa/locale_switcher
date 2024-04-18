@@ -24,7 +24,7 @@ class LocaleMatcher {
 
   /// Search by first 2 letter, return first found or null.
   static LocaleName? byLanguage(String name) {
-    final pattern = name.substring(0, 2);
+    final pattern = name.split("_").first.toLowerCase();
     final String langName = supported.names.firstWhere(
       (element) => element.startsWith(pattern),
       orElse: () => '',

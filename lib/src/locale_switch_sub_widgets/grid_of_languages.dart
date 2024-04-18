@@ -29,8 +29,8 @@ class GridOfLanguages extends StatelessWidget {
             maxCrossAxisExtent: 200,
           ),
       children: [
-        ...locales.map((locNameFlag) {
-          final lang = languageToCountry[locNameFlag] ??
+        ...locales.map((final LocaleName locNameFlag) {
+          final lang = languageToCountry[locNameFlag.name] ??
               [locNameFlag.name, locNameFlag.language];
           return Card(
             child: InkWell(
