@@ -24,13 +24,17 @@ void main() {
       expect(lc.values.map((e) => e[0]).toSet().length, count - severalLang);
 
       // see who has several language:
-      // final noDup = lc.values.map((e) => e[0]).toSet();
-      // final llc = lc.values.toList();
-      // noDup.forEach((key) {
-      //   final el = llc.firstWhere((element) => element[0] == key);
-      //   llc.remove(el);
-      //
-      // });
+      final noDup = lc.values.map((e) => e[0]).toSet();
+      final llc = lc.values.toList();
+      noDup.forEach((key) {
+        final el = llc.firstWhere((element) => element[0] == key);
+        llc.remove(el);
+      });
+
+      expect(llc.toSet().length, severalLang);
+      // final notUniq =  llc.map((e) => e[0]).toSet();
+      // lc.removeWhere((key, value) => !notUniq.contains(value[0]));
+      // lc.forEach((key, value) { print("'${key}': '${value[0]}',");});
     });
   });
 }
