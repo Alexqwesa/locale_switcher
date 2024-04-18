@@ -1,0 +1,11 @@
+{
+"@@locale": "as",
+"example": "লোকেল_সুইচাৰ_ব্যৱহাৰৰ উদাহৰণ",
+"chooseLanguage": "অনুগ্ৰহ কৰি ভাষা বাছনি কৰক",
+"increment": "আবৃদ্ধি",
+"counterDescription": "আপুনি এই অনেক সময় পুছতে বুটামটো টিপিছে:",
+"showIcons": "চিত্ৰসমূহ দেখাওঁ: ",
+"showLetters": "অক্ষৰসমূহ দেখাওঁ: ",
+"showEmoji": "Emoji দেখাওঁ: ",
+"circleOrSquare": "বৃত্ত অথবা বর্গ: "
+}

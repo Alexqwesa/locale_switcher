@@ -4,5 +4,5 @@ template-arb-file: intl_en.arb
 output-dir: lib/src/l10n/generated
 output-localization-file: app_localizations.dart
 untranslated-messages-file: desiredFileName.txt
-preferred-supported-locales: ["en", "vi", "de"]
+preferred-supported-locales: [ "en", "vi", "de", 'en_ZA', 'as' ]
 nullable-getter: false
