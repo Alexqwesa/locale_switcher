@@ -27,56 +27,372 @@ final Map<String, List<dynamic>> languageToCountry = {
     'Show other locales',
     const Icon(Icons.expand_more)
   ],
-  // English
-  'en': ['US', 'English'],
-  // Spanish
-  'es': ['ES', 'Español'],
-  // French
-  'fr': ['FR', 'Français'],
-  // German
-  'de': ['DE', 'Deutsch'],
-  // Italian
-  'it': ['IT', 'Italiano'],
-  // Portuguese
-  'pt': ['BR', 'Português'],
-  // Dutch
-  'nl': ['NL', 'Nederlands'],
-  // Russian
-  'ru': ['RU', 'Русский'],
-  // Chinese (Simplified)
-  'zh': ['CN', '中文'],
-  // Japanese
-  'ja': ['JP', '日本語'],
-  // Korean
-  'ko': ['KR', '한국어'],
-  // Arabic
-  'ar': ['SA', 'العربية'],
-  // Hindi
-  'hi': ['IN', 'हिन्दी'],
+
   // Bengali
   'bn': ['BD', 'বাঙালি'],
-  // Turkish
-  'tr': ['TR', 'Türkçe'],
-  // Vietnamese
-  'vi': ['VN', 'Tiếng Việt'],
   // Greek
   'el': ['GR', 'Ελληνικά'],
-  // Polish
-  'pl': ['PL', 'Polski'],
-  // Ukrainian
-  'uk': ['UA', 'Українська'],
-  // Thai
-  'th': ['TH', 'ไทย'],
-  // Indonesian
-  'id': ['ID', 'Bahasa Indonesia'],
-  // Malay
-  'ms': ['MY', 'Bahasa Melayu'],
-  // Swedish
-  'sv': ['SE', 'Svenska'],
+
+  // Afrikaans
+  'af': ['ZA', 'Afrikaans'],
+  // Akan
+  'ak': ['GH', 'Akan'],
+  // Amharic
+  'am': ['ET', 'Amharic'],
+  // Arabic (Iraq)
+  'ar_iq': ['IQ', 'Arabic (Iraq)'],
+  // Arabic
+  'ar': ['SA', 'العربية'],
+  // Aymara
+  'ay': ['BO', 'Aymara'],
+  // Azerbaijani
+  'az': ['AZ', 'Azerbaijani'],
+  // Belarusian
+  'be': ['BY', 'Belarusian'],
+  // Bulgarian
+  'bg': ['BG', 'Bulgarian'],
+  // Bislama
+  'bi': ['VU', 'Bislama'],
+  // Bambara
+  'bm': ['ML', 'Bambara'],
+  // Bosnian
+  'bs': ['BA', 'Bosnian'],
+  // Catalan
+  'ca': ['ES', 'Catalan'],
+  // Cebuano
+  'ceb': ['PH', 'Cebuano'],
+  // Chamorro
+  'ch': ['GU', 'Chamorro'],
+  // Mari
+  'chm': ['RU', 'Mari'],
+  // Corsican
+  'co': ['FR', 'Corsican'],
+  // Czech
+  'cs': ['CZ', 'Czech'],
+  // Welsh
+  'cy': ['GB', 'Welsh'],
+  // Danish
+  'da': ['DK', 'Danish'],
+  // German
+  'de': ['DE', 'Deutsch'],
+  // Divehi
+  'dv': ['MV', 'Divehi'],
+  // Dzongkha
+  'dz': ['BT', 'Dzongkha'],
+
+  // English (Australia)
+  'en_au': ['AU', 'English (Australia)'],
+  // English (Canada)
+  'en_ca': ['CA', 'English (Canada)'],
+  // English (India)
+  'en_in': ['IN', 'English (India)'],
+  // English (Nigeria)
+  'en_ng': ['NG', 'English (Nigeria)'],
+  // English (New Zealand)
+  'en_nz': ['NZ', 'English (New Zealand)'],
+  // English (South Africa)
+  'en_za': ['ZA', 'English (South Africa)'],
+  // English
+  'en': ['US', 'English'],
+
+  // Hindi
+  'hi': ['IN', 'हिन्दी'],
+  // Bhojpuri
+  'bho': ['IN', 'Bhojpuri'],
+  // Assamese
+  'as': ['IN', 'Assamese'],
+  // Punjabi
+  'pa': ['IN', 'Punjabi'],
+  // Tamil
+  'ta': ['IN', 'Tamil'],
+  // Telugu
+  'te': ['IN', 'Telugu'],
+  // Gujarati
+  'gu': ['IN', 'Gujarati'],
+  // Kannada
+  'kn': ['IN', 'Kannada'],
+  // Malayalam
+  'ml': ['IN', 'Malayalam'],
+  // Marathi
+  'mr': ['IN', 'Marathi'],
+
+  // Spanish
+  'es': ['ES', 'Español'],
+  // Estonian
+  'et': ['EE', 'Estonian'],
+  // Basque - Spain and France
+  'eu': ['ES', 'Basque'],
+  // Persian
+  'fa': ['IR', 'Persian'],
+
   // Finnish
   'fi': ['FI', 'Suomi'],
+  // Filipino
+  'fil': ['PH', 'Filipino'],
+  // Fijian
+  'fj': ['FJ', 'Fijian'],
+  // Faroese
+  'fo': ['FO', 'Faroese'],
+  // French
+  'fr': ['FR', 'Français'],
+  // Irish
+  'ga': ['IE', 'Irish'],
+  // Galician
+  'gl': ['ES', 'Galician'],
+  // Guarani
+  'gn': ['PY', 'Guarani'],
+  // Manx
+  'gv': ['IM', 'Manx'],
+  // Hausa
+  'ha': ['NG', 'Hausa'],
+  // Hawaiian
+  'haw': ['US', 'Hawaiian'],
+  // Hebrew
+  'he': ['IL', 'Hebrew'],
+
+  // Hiri Motu
+  'ho': ['PG', 'Hiri Motu'],
+  // Croatian
+  'hr': ['HR', 'Croatian'],
+  // Haitian
+  'ht': ['HT', 'Haitian'],
+  // Hungarian
+  'hu': ['HU', 'Hungarian'],
+  // Armenian
+  'hy': ['AM', 'Armenian'],
+  // Indonesian
+  'id': ['ID', 'Bahasa Indonesia'],
+  // Igbo
+  'ig': ['NG', 'Igbo'],
+  // Iloko
+  'ilo': ['PH', 'Iloko'],
+  // Icelandic +
+  'icl': ['IS', 'Icelandic'],
+  // Italian
+  'it': ['IT', 'Italiano'],
+  // Japanese
+  'ja': ['JP', '日本語'],
+  // Javanese
+  'jv': ['ID', 'Javanese'],
+  // Georgian
+  'ka': ['GE', 'Georgian'],
+  // Kazakh
+  'kk': ['KZ', 'Kazakh'],
+  // Kalaallisut
+  'kl': ['GL', 'Kalaallisut'],
+  // Central Khmer
+  'km': ['KH', 'Central Khmer'],
+
+  // Korean
+  'ko': ['KR', '한국어'],
+  // Krio
+  'kri': ['SL', 'Krio'],
+  // Kurdish
+  'ku': ['TR', 'Kurdish'],
+  // Kirghiz
+  'ky': ['KG', 'Kirghiz'],
+  // Latin
+  'la': ['VA', 'Latin'],
+  // Luxembourgish
+  'lb': ['LU', 'Luxembourgish'],
+  // Ganda
+  'lg': ['UG', 'Ganda'],
+  // Lingala
+  'ln': ['CD', 'Lingala'],
+  // Lao
+  'lo': ['LA', 'Lao'],
+  // Lithuanian
+  'lt': ['LT', 'Lithuanian'],
+  // Luba-Katanga
+  'lu': ['CD', 'Luba-Katanga'],
+  // Latvian
+  'lv': ['LV', 'Latvian'],
+  // Malagasy
+  'mg': ['MG', 'Malagasy'],
+  // Marshallese
+  'mh': ['MH', 'Marshallese'],
+  // Maori
+  'mi': ['NZ', 'Maori'],
+  // Macedonian
+  'mk': ['MK', 'Macedonian'],
+  // Mongolian
+  'mn': ['MN', 'Mongolian'],
+  // Malay
+  'ms': ['MY', 'Malay'],
+  // Maltese
+  'mt': ['MT', 'Maltese'],
+  // Burmese
+  'my': ['MM', 'Burmese'],
+  // Nauru
+  'na': ['NR', 'Nauru'],
+  // North Ndebele
+  'nd': ['ZW', 'North Ndebele'],
+  // Nepali
+  'ne': ['NP', 'Nepali'],
+  // Nederlands
+  // Belgium
+  // Suriname
+  // France (Nord)
+  'nl': ['NL', 'Dutch'],
+
   // Norwegian
   'no': ['NO', 'Norsk'],
+  // Norwegian Bokmål
+  'nb': ['NO', 'Norwegian Bokmål'],
+  // Norwegian Nynorsk
+  'nn': ['NO', 'Norwegian Nynorsk'],
+
+  // South Ndebele
+  'nr': ['ZA', 'South Ndebele'],
+  // Chichewa
+  'ny': ['MW', 'Chichewa'],
+  // Papiamento
+  'pap': ['AW', 'Papiamento'],
+  // Polish
+  'pl': ['PL', 'Polski'],
+  // Pashto
+  'ps': ['AF', 'Pashto'],
+  // Portuguese (Brazil)
+  'pt_br': ['BR', 'Português (Brazil)'],
+  // Portuguese
+  'pt': ['PT', 'Português'],
+  // Rundi
+  'rn': ['BI', 'Rundi'],
+  // Romanian
+  'ro': ['RO', 'Romanian'],
+
+  // Russian
+  'ru': ['RU', 'Русский'],
+  // Western Mari
+  'mrj': ['RU', 'Western Mari'],
+
+  // Kinyarwanda
+  'rw': ['RW', 'Kinyarwanda'],
+  // Sindhi
+  'sd': ['PK', 'Sindhi'],
+  // Sango
+  'sg': ['CF', 'Sango'],
+  // Sinhala
+  'si': ['LK', 'Sinhala'],
+  // Slovak
+  'sk': ['SK', 'Slovak'],
+  // Slovenian
+  'sl': ['SI', 'Slovenian'],
+  // Samoan
+  'sm': ['WS', 'Samoan'],
+  // Shona
+  'sn': ['ZW', 'Shona'],
+  // Somali
+  'so': ['SO', 'Somali'],
+  // Albanian
+  'sq': ['AL', 'Albanian'],
+  // Serbian
+  'sr': ['RS', 'Serbian'],
+  // Swati
+  'ss': ['SZ', 'Swati'],
+  // Southern Sotho
+  'st': ['LS', 'Southern Sotho'],
+  // Sundanese
+  'su': ['ID', 'Sundanese'],
+  // Swedish
+  'sv': ['SE', 'Svenska'],
+  // Swahili
+  'sw': ['TZ', 'Swahili'],
+  // Tajik
+  'tg': ['TJ', 'Tajik'],
+  // Thai
+  'th': ['TH', 'ไทย'],
+  // Turkmen
+  'tk': ['TM', 'Turkmen'],
+  // Tagalog
+  'tl': ['PH', 'Tagalog'],
+  // Tswana
+  'tn': ['BW', 'Tswana'],
+  // Tonga
+  'to': ['TO', 'Tonga'],
+  // Turkish
+  'tr': ['TR', 'Türkçe'],
+  // Tahitian
+  'ty': ['PF', 'Tahitian'],
+  // Ukrainian
+  'uk': ['UA', 'Українська'],
+  // Urdu
+  'ur': ['PK', 'Urdu'],
+  // Uzbek
+  'uz': ['UZ', 'Uzbek'],
+  // Vietnamese
+  'vi': ['VN', 'Tiếng Việt'],
+  // Xhosa
+  'xh': ['ZA', 'Xhosa'],
+  // Unknown Language
+  'xx': ['XX', 'Unknown Language'],
+  // Yiddish
+  'yi': ['US', 'Yiddish'],
+  // Yoruba
+  'yo': ['NG', 'Yoruba'],
+  // Yucateco
+  'yua': ['MX', 'Yucateco'],
+  // Chinese - Traditional
+  'zh_tw': ['TW', 'Chinese - Traditional'],
+  // Chinese
+  'zh': ['CN', '中文'],
+  // Zulu
+  'zu': ['ZA', 'Zulu']
+};
+
+final countriesWithMulti = <String, String>{
+  'af': 'ZA',
+  'ca': 'ES',
+  'ceb': 'PH',
+  'chm': 'RU',
+  'co': 'FR',
+  'en_in': 'IN',
+  'en_ng': 'NG',
+  'en_nz': 'NZ',
+  'en_za': 'ZA',
+  'en': 'US',
+  'hi': 'IN',
+  'bho': 'IN',
+  'as': 'IN',
+  'pa': 'IN',
+  'ta': 'IN',
+  'te': 'IN',
+  'gu': 'IN',
+  'kn': 'IN',
+  'ml': 'IN',
+  'mr': 'IN',
+  'es': 'ES',
+  'eu': 'ES',
+  'fil': 'PH',
+  'fr': 'FR',
+  'gl': 'ES',
+  'ha': 'NG',
+  'haw': 'US',
+  'id': 'ID',
+  'ig': 'NG',
+  'ilo': 'PH',
+  'jv': 'ID',
+  'ku': 'TR',
+  'ln': 'CD',
+  'lu': 'CD',
+  'mi': 'NZ',
+  'nd': 'ZW',
+  'no': 'NO',
+  'nb': 'NO',
+  'nn': 'NO',
+  'nr': 'ZA',
+  'ru': 'RU',
+  'mrj': 'RU',
+  'sd': 'PK',
+  'sn': 'ZW',
+  'su': 'ID',
+  'tl': 'PH',
+  'tr': 'TR',
+  'ur': 'PK',
+  'xh': 'ZA',
+  'yi': 'US',
+  'yo': 'NG',
+  'zu': 'ZA',
 };
 
 extension StringToLocale on String {
@@ -228,7 +544,7 @@ extension LocaleFlag on Locale {
     }
 
     if (str.length > 2) {
-      fb = findFlagFor(language: str.substring(0, 2)) ?? fb;
+      fb = findFlagFor(language: localeList.first) ?? fb;
     }
 
     switch (localeList.length) {
@@ -257,3 +573,51 @@ extension LocaleFlag on Locale {
 //   /// Get class with translation strings for this locale.
 //   AppLocalizations get tr => lookupAppLocalizations(this);
 // }
+
+class FlagWithCode extends StatelessWidget {
+  final Widget wTop;
+  final Widget wDown;
+
+  const FlagWithCode({super.key, required this.wTop, required this.wDown});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 48,
+      height: 48,
+      child: Stack(
+        children: [
+          Positioned(height: 48, width: 48, top: 0, left: 0, child: wTop),
+          Positioned(
+              height: 20,
+              width: 28,
+              top: 30,
+              left: 24,
+              child: Container(
+                decoration: BoxDecoration(
+                    // shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(14),
+                    gradient: LinearGradient(
+                        stops: const [0, 0.3, 1],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Theme.of(context).cardColor.withAlpha(10),
+                          Colors.white,
+                          Colors.white,
+                          // Colors.white,
+
+                          // Theme.of(context).cardColor.withAlpha(20),
+                        ])),
+              )),
+          Positioned(
+              height: 34,
+              width: 34,
+              top: 20,
+              left: 20,
+              child: FittedBox(child: wDown)),
+        ],
+      ),
+    );
+  }
+}
