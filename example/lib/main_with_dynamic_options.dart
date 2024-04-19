@@ -57,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool useEmoji = false;
 
+  double size = 1;
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context); // localization shortcut
@@ -86,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         LocaleSwitcher.menu(
                           width: 310,
+                          iconRadius: 38 * size,
                           title: loc.chooseLanguage,
                           useNLettersInsteadOfIcon: showNletters,
                           useEmoji: useEmoji,
@@ -111,6 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
                               return AnimatedToggleSwitch<LocaleName>.rolling(
                                 values: langCodes,
+                                height: 48 * size,
+                                indicatorSize: Size(48 * size, 48 * size),
+                                fittingMode: FittingMode.none,
                                 current: LocaleSwitcher.current,
                                 onChanged: (langCode) {
                                   if (langCode.name == showOtherLocales) {
@@ -122,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 iconBuilder: (lang, foreground) =>
                                     LangIconWithToolTip(
                                   localeNameFlag: lang,
+                                  radius: 48 * size,
                                   useNLettersInsteadOfIcon: showNletters,
                                 ),
                                 allowUnlistedValues: true,
@@ -139,8 +146,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         TitleForLocaleSwitch(
                           title: loc.chooseLanguage,
+                          childSize: Size(400, 48 * size),
                           child: LocaleSwitcher.segmentedButton(
-                            width: 400,
+                            iconRadius: 32 * size,
+                            // width: 400,
                             useNLettersInsteadOfIcon: showNletters,
                             useEmoji: useEmoji,
                             numberOfShown: 2,
@@ -204,6 +213,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                     ),
+                    Slider(
+                        min: 0.2,
+                        max: 2,
+                        value: size,
+                        onChanged: (val) {
+                          setState(() {
+                            size = val;
+                          });
+                        }),
                   ],
                 )
               ];
