@@ -126,7 +126,5 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
 
   /// Just flag for [showOtherLocales].
   static Widget get flagForOtherLocales =>
-      ((languageToCountry[showOtherLocales]?.length ?? 0) > 2)
-          ? languageToCountry[showOtherLocales]![2]
-          : const Icon(Icons.expand_more);
+      languageToCountry[showOtherLocales]?[2] ?? const Icon(Icons.expand_more);
 }

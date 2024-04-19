@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+* Added a lot of languages.
+
+* Added graceful ways to display Locales for countries with multiple languages,
+  for this purpose added:
+
+- [MultiLangCountries] - enum to select how to display countries with multiple languages,
+- [countriesWithMulti] - list of such countries, add you own here,
+- [popularInCountry] - for [MultiLangCountries.auto] - country most popular language.
+
 ## 1.1.1
 
 * LocaleSwitch support emoji,
@@ -12,7 +23,7 @@
 
 * no breaking changes - v1.0 just to indication what it is stable,
 * all major localization system tested (intl, easy_localization, slang),
-and have examples.
+  and have examples.
 
 ## 0.12.2
 

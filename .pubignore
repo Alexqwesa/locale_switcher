@@ -29,4 +29,4 @@ build.yaml
 lib/src/preference_repository_*
 examples/**
 example/lib/src/packages/
-
+lib/src/stub/**

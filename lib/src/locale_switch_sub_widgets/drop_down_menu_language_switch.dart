@@ -1,38 +1,25 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
 class DropDownMenuLanguageSwitch extends StatelessWidget {
-  final String? title;
+  final ItemBuilder itemBuilder;
 
-  final int useNLettersInsteadOfIcon;
-
-  final bool showLeading;
-
-  final ShapeBorder? shape;
-
-  final Function(BuildContext)? setLocaleCallBack;
-
-  final bool useEmoji;
-
-  final double? width;
+  final LocaleSwitcher widget;
 
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
-    this.title,
-    this.useNLettersInsteadOfIcon = 0,
-    this.showLeading = true,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.setLocaleCallBack,
-    this.useEmoji = false,
-    this.width,
+    required this.itemBuilder,
+    required this.widget,
   });
 
   final SupportedLocaleNames locales;
 
   @override
   Widget build(BuildContext context) {
-    const radius = 38.0;
+    final radius = widget.iconRadius;
     int indexOfSelected = locales.indexOf(LocaleSwitcher.current);
     if (indexOfSelected == -1) {
       indexOfSelected = 0;
@@ -42,19 +29,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
           (e) => DropdownMenuEntry<LocaleName>(
             value: e,
             label: e.language,
-            leadingIcon: showLeading
+            leadingIcon: widget.showLeading
                 ? SizedBox(
                     width: radius,
                     height: radius,
                     key: ValueKey('item-${e.name}'),
-                    child: FittedBox(
-                        child: LangIconWithToolTip(
-                      useEmoji: useEmoji,
-                      localeNameFlag: e,
-                      radius: radius,
-                      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                      shape: shape,
-                    )),
+                    child: itemBuilder(e),
                   )
                 : null,
           ),
@@ -62,13 +42,13 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleName>(
-      width: width,
+      width: widget.width,
       initialSelection: LocaleSwitcher.current,
-      leadingIcon: showLeading
+      leadingIcon: widget.showLeading
           ? Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(4.0),
               child: SizedBox(
-                height: radius - 8,
+                height: max(0, radius - 8),
                 child: FittedBox(
                   child: localeEntries[indexOfSelected].leadingIcon!,
                 ),
@@ -76,19 +56,19 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
             )
           : null,
       // controller: colorController,
-      label: title != null ? Text(title!) : null,
+      label: widget.title != null ? Text(widget.title!) : null,
       dropdownMenuEntries: localeEntries,
       onSelected: (LocaleName? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
             showSelectLocaleDialog(
               context,
-              useEmoji: useEmoji,
-              setLocaleCallBack: setLocaleCallBack,
+              useEmoji: widget.useEmoji,
+              setLocaleCallBack: widget.setLocaleCallBack,
             );
           } else {
             LocaleSwitcher.current = langCode;
-            setLocaleCallBack?.call(context);
+            widget.setLocaleCallBack?.call(context);
           }
         }
       },

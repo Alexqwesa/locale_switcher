@@ -32,9 +32,14 @@ void main() {
       });
 
       expect(llc.toSet().length, severalLang);
-      // final notUniq =  llc.map((e) => e[0]).toSet();
+      // final notUniq = llc.map((e) => e[0]).toSet();
       // lc.removeWhere((key, value) => !notUniq.contains(value[0]));
-      // lc.forEach((key, value) { print("'${key}': '${value[0]}',");});
+      // lc.entries.toList()
+      //   ..sort((a, b) => a.value[0].compareTo(b.value[0]))
+      //   ..forEach((entry) {
+      //     final MapEntry(:key, :value) = entry;
+      //     print("'${key}': '${value[0]}',");
+      //   });
     });
   });
 }

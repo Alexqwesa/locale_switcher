@@ -4,16 +4,16 @@ repository: https://github.com/Alexqwesa/locale_switcher
 homepage: https://github.com/Alexqwesa/locale_switcher
 #author: Alexqwesa <alexo.veto@gmail.com>
 
-version: 1.1.1
+version: 1.2.0
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
-  flutter_svg: ^2.0.7
+  flutter_svg: ^2.0.10+1
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.1
+  shared_preferences: ^2.2.3
 
 dev_dependencies:         # for tests and examples
   animated_toggle_switch:

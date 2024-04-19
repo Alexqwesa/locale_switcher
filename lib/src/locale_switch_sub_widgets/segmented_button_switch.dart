@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
@@ -15,6 +17,8 @@ class SegmentedButtonSwitch extends StatelessWidget {
 
   final double? width;
 
+  final ItemBuilder itemBuilder;
+
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
@@ -24,6 +28,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
     this.setLocaleCallBack,
     this.useEmoji = false,
     this.width,
+    required this.itemBuilder,
   });
 
   @override
@@ -31,40 +36,13 @@ class SegmentedButtonSwitch extends StatelessWidget {
     final height = (radius ?? (useEmoji ? 42 : 34));
     final segmentedButton = LayoutBuilder(
       builder: (context, constrains) {
-        final inSet = (constrains.maxHeight - height) / 2;
-        double scale = 1;
-        if (constrains.maxWidth < (width ?? 0)) {
-          scale = constrains.maxWidth / width! / 3;
-        } else if (constrains.maxWidth < (height * 3 * locales.length)) {
-          scale = constrains.maxWidth / (height * 3 * locales.length) / 3;
-        }
+        final scale = min(1, height / 32);
+        final inSet = max(0.0, scale * (constrains.maxHeight - height) / 2);
 
         return SegmentedButton<LocaleName>(
           emptySelectionAllowed: false,
           showSelectedIcon: false,
-          segments: locales.map<ButtonSegment<LocaleName>>(
-            (e) {
-              return ButtonSegment<LocaleName>(
-                value: e,
-                tooltip: e.language,
-                label: Padding(
-                  padding:
-                      // e.name == systemLocale
-                      //     ? const EdgeInsets.all(0.0)
-                      //     :
-                      EdgeInsets.fromLTRB(
-                          inSet * scale, inSet, inSet * scale, inSet),
-                  child: LangIconWithToolTip(
-                    useEmoji: useEmoji,
-                    localeNameFlag: e,
-                    radius: e.name == systemLocale ? (radius ?? 36) : height,
-                    useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                    shape: shape,
-                  ),
-                ),
-              );
-            },
-          ).toList(),
+          segments: segmentBuilder(inSet, height),
           selected: {LocaleSwitcher.current},
           multiSelectionEnabled: false,
           onSelectionChanged: (Set<LocaleName> newSelection) {
@@ -88,5 +66,26 @@ class SegmentedButtonSwitch extends StatelessWidget {
     } else {
       return segmentedButton;
     }
+  }
+
+  segmentBuilder(double inSet, double height) {
+    return locales.map<ButtonSegment<LocaleName>>(
+      (e) {
+        return ButtonSegment<LocaleName>(
+          value: e,
+          tooltip: e.language,
+          label: Padding(
+            padding:
+                // e.name == systemLocale
+                //     ? const EdgeInsets.all(0.0)
+                //     :
+                EdgeInsets.all(inSet),
+            child: SizedBox(
+                height: radius ?? 32,
+                child: FittedBox(fit: BoxFit.fitHeight, child: itemBuilder(e))),
+          ),
+        );
+      },
+    ).toList();
   }
 }

@@ -7,16 +7,13 @@ class GridOfLanguages extends StatelessWidget {
   final SliverGridDelegate? gridDelegate;
   final Function(BuildContext)? setLocaleCallBack;
 
-  final ShapeBorder? shape;
-
-  final bool useEmoji;
+  final ItemBuilder itemBuilder;
 
   const GridOfLanguages({
     super.key,
     this.gridDelegate,
     this.setLocaleCallBack,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.useEmoji = false,
+    required this.itemBuilder,
   });
 
   @override
@@ -42,13 +39,8 @@ class GridOfLanguages extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: LangIconWithToolTip(
-                        useEmoji: useEmoji,
-                        localeNameFlag: locNameFlag,
-                        shape: shape,
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(4.0),
+                        child: FittedBox(child: itemBuilder(locNameFlag))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),

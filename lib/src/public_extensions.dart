@@ -10,7 +10,9 @@ import 'package:locale_switcher/src/generated/asset_strings.dart';
 /// You can also use [LocaleManager.reassignFlags] to update these values.
 ///
 /// Do not remove first two keys!
-// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+///
+/// Ref: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+// todo use record instead of list
 final Map<String, List<dynamic>> languageToCountry = {
   /// special entry name for [LocaleSwitcher.supportedLocaleNames] - OS locale
   systemLocale: [
@@ -340,59 +342,65 @@ final Map<String, List<dynamic>> languageToCountry = {
   'zu': ['ZA', 'Zulu']
 };
 
+/// For [MultiLangCountries.auto] - country most popular language.
+///
+/// Note: pairs like 'tr': 'tr' are assumed automatically, you don't need to add them.
+final popularInCountry = {'us': 'en', 'in': 'hi', 'zh': 'cn'};
+
+/// A map to connect language to country, only for country with multiple languages.
 final countriesWithMulti = <String, String>{
-  'af': 'ZA',
+  'lu': 'CD',
+  'ln': 'CD',
   'ca': 'ES',
-  'ceb': 'PH',
-  'chm': 'RU',
+  'es': 'ES',
+  'eu': 'ES',
+  'gl': 'ES',
   'co': 'FR',
-  'en_in': 'IN',
-  'en_ng': 'NG',
-  'en_nz': 'NZ',
-  'en_za': 'ZA',
-  'en': 'US',
-  'hi': 'IN',
-  'bho': 'IN',
-  'as': 'IN',
+  'fr': 'FR',
+  'su': 'ID',
+  'id': 'ID',
+  'jv': 'ID',
+  'kn': 'IN',
   'pa': 'IN',
   'ta': 'IN',
   'te': 'IN',
   'gu': 'IN',
-  'kn': 'IN',
   'ml': 'IN',
   'mr': 'IN',
-  'es': 'ES',
-  'eu': 'ES',
-  'fil': 'PH',
-  'fr': 'FR',
-  'gl': 'ES',
+  'en_in': 'IN',
+  'as': 'IN',
+  'bho': 'IN',
+  'hi': 'IN',
+  'yo': 'NG',
+  'en_ng': 'NG',
   'ha': 'NG',
-  'haw': 'US',
-  'id': 'ID',
   'ig': 'NG',
-  'ilo': 'PH',
-  'jv': 'ID',
-  'ku': 'TR',
-  'ln': 'CD',
-  'lu': 'CD',
-  'mi': 'NZ',
-  'nd': 'ZW',
   'no': 'NO',
-  'nb': 'NO',
   'nn': 'NO',
-  'nr': 'ZA',
+  'nb': 'NO',
+  'en_nz': 'NZ',
+  'mi': 'NZ',
+  'ceb': 'PH',
+  'ilo': 'PH',
+  'fil': 'PH',
+  'tl': 'PH',
+  'ur': 'PK',
+  'sd': 'PK',
   'ru': 'RU',
   'mrj': 'RU',
-  'sd': 'PK',
-  'sn': 'ZW',
-  'su': 'ID',
-  'tl': 'PH',
+  'chm': 'RU',
+  'ku': 'TR',
   'tr': 'TR',
-  'ur': 'PK',
-  'xh': 'ZA',
+  'en': 'US',
   'yi': 'US',
-  'yo': 'NG',
+  'haw': 'US',
   'zu': 'ZA',
+  'nr': 'ZA',
+  'af': 'ZA',
+  'xh': 'ZA',
+  'en_za': 'ZA',
+  'nd': 'ZW',
+  'sn': 'ZW',
 };
 
 extension StringToLocale on String {
@@ -574,47 +582,71 @@ extension LocaleFlag on Locale {
 //   AppLocalizations get tr => lookupAppLocalizations(this);
 // }
 
-class FlagWithCode extends StatelessWidget {
+class DoubleFlag extends StatelessWidget {
   final Widget wTop;
   final Widget wDown;
 
-  const FlagWithCode({super.key, required this.wTop, required this.wDown});
+  final double? radius;
+
+  const DoubleFlag({
+    super.key,
+    required this.wTop,
+    required this.wDown,
+    this.radius,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final rad = radius ?? 48;
+    final pad = rad / 6;
+
+    final top = (wTop is Text)
+        ? Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, pad),
+            child: wTop,
+          )
+        : wTop;
+
     return SizedBox(
-      width: 48,
-      height: 48,
+      width: rad,
+      height: rad,
       child: Stack(
         children: [
-          Positioned(height: 48, width: 48, top: 0, left: 0, child: wTop),
           Positioned(
-              height: 20,
-              width: 28,
-              top: 30,
-              left: 24,
+              height: rad,
+              width: rad,
+              top: 0,
+              left: 0,
+              child: FittedBox(fit: BoxFit.fitHeight, child: top)),
+          Positioned(
+              height: rad / 2.2,
+              width: rad / 1.6,
+              top: rad / 1.6,
+              left: rad / 2.2,
               child: Container(
                 decoration: BoxDecoration(
-                    // shape: BoxShape.circle,
-                    borderRadius: BorderRadius.circular(14),
-                    gradient: LinearGradient(
-                        stops: const [0, 0.3, 1],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Theme.of(context).cardColor.withAlpha(10),
-                          Colors.white,
-                          Colors.white,
-                          // Colors.white,
-
-                          // Theme.of(context).cardColor.withAlpha(20),
-                        ])),
+                  // shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).canvasColor,
+                  // gradient: LinearGradient(
+                  //     stops: const [0, 0.3, 1],
+                  //     begin: Alignment.topLeft,
+                  //     end: Alignment.bottomRight,
+                  //     colors: [
+                  //       Theme.of(context).cardColor.withAlpha(10),
+                  //       Colors.white,
+                  //       Colors.white,
+                  //       // Colors.white,
+                  //
+                  //       // Theme.of(context).cardColor.withAlpha(20),
+                  //     ])
+                ),
               )),
           Positioned(
-              height: 34,
-              width: 34,
-              top: 20,
-              left: 20,
+              height: rad / 1.6,
+              width: rad / 1.6,
+              top: rad / 2.0,
+              left: rad / 2.3,
               child: FittedBox(child: wDown)),
         ],
       ),
