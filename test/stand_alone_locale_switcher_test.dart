@@ -1,3 +1,4 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,16 +36,32 @@ void main() {
 
       // Verify that en locale is loaded
 
-      final enFlag = find.byTooltip(languageToCountry['en']![1]);
-      await tester.tap(enFlag.at(1));
+      final enFlag = find.descendant(
+        of: find.byType(AnimatedToggleSwitch<LocaleName>),
+        matching: find.byTooltip(languageToCountry['en']![1]),
+      );
+      await tester.tap(enFlag);
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
       expect(LocaleSwitcher.current.name, "en");
       expect(find.text(enLoc.counterDescription), findsOneWidget);
       expect(find.text(deLoc.counterDescription), findsNothing);
 
+      final vi2 = find.descendant(
+        of: find.byType(AnimatedToggleSwitch<LocaleName>),
+        matching: find.byTooltip(languageToCountry['vi']![1]),
+      );
+      await tester.tap(vi2);
+      await tester.pumpAndSettle();
+      expect(LocaleSwitcher.current.locale?.languageCode, "vi");
+      expect(LocaleSwitcher.current.name, "vi");
+      expect(
+          find.text(const Locale('vi').tr.counterDescription), findsOneWidget);
+      expect(find.text(enLoc.counterDescription), findsNothing);
+      expect(find.text(deLoc.counterDescription), findsNothing);
+
       final sysFlag = find.byTooltip(languageToCountry['system']![1]);
-      await tester.tap(enFlag.at(1));
+      await tester.tap(enFlag);
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
       expect(LocaleSwitcher.current.name, "en");

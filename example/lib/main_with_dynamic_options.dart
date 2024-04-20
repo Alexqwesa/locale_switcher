@@ -1,7 +1,9 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Useful extension, in case you need to use localization outside of MaterialApp.
 extension LocaleWithDelegate on Locale {
@@ -159,6 +161,27 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         const CounterWidget(),
+                        Center(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: 'Source code of this page: ',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: 'here',
+                                  style: const TextStyle(color: Colors.blue),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(Uri.dataFromString(
+                                          'https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart'));
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

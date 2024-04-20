@@ -139,19 +139,25 @@ class LangIconWithToolTip extends StatelessWidget {
     final lang = languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
 
-    final fittedIcon = switch (locCode) {
-      systemLocale => Padding(
-          padding: EdgeInsets.all(specialFlagsPadding),
-          child: FittedBox(
-            child: languageToCountry[locCode]?[2] ?? const Icon(Icons.language),
+    final fittedIcon = Tooltip(
+      message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
+      waitDuration: const Duration(milliseconds: 50),
+      preferBelow: true,
+      child: switch (locCode) {
+        systemLocale => Padding(
+            padding: EdgeInsets.all(specialFlagsPadding),
+            child: FittedBox(
+              child:
+                  languageToCountry[locCode]?[2] ?? const Icon(Icons.language),
+            ),
           ),
-        ),
-      showOtherLocales => Padding(
-          padding: EdgeInsets.all(specialFlagsPadding),
-          child: FittedBox(child: SupportedLocaleNames.flagForOtherLocales),
-        ),
-      _ => fittedFlag(getFlag(), locCode, lang),
-    };
+        showOtherLocales => Padding(
+            padding: EdgeInsets.all(specialFlagsPadding),
+            child: FittedBox(child: SupportedLocaleNames.flagForOtherLocales),
+          ),
+        _ => fittedFlag(getFlag(), locCode, lang),
+      },
+    );
 
     return (radius != null)
         ? SizedBox(
@@ -212,12 +218,7 @@ class LangIconWithToolTip extends StatelessWidget {
     // Simple case - country with one language
     if (!forceMulti && !countriesWithMulti.containsKey(locCode)) {
       return FittedBox(
-        child: Tooltip(
-          message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
-          waitDuration: const Duration(milliseconds: 50),
-          preferBelow: true,
-          child: flag ?? flagError,
-        ),
+        child: flag ?? flagError,
       );
     }
 
@@ -229,56 +230,50 @@ class LangIconWithToolTip extends StatelessWidget {
         : multiLangCountries;
 
     return FittedBox(
-        child: Tooltip(
-            message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
-            waitDuration: const Duration(milliseconds: 50),
-            preferBelow: true,
-            child: switch (mlc) {
-              MultiLangCountries.auto when language == country =>
-                flag ?? Text(language),
-              MultiLangCountries.auto
-                  when language == popularInCountry[country.toLowerCase()] =>
-                flag ?? Text(language),
-              MultiLangCountries.auto when flag == null => DoubleFlag(
-                  radius: radius,
-                  wTop: Text(language),
-                  wDown: Text(country),
-                ),
-              MultiLangCountries.auto => DoubleFlag(
-                  radius: radius,
-                  wTop: flag!,
-                  wDown: Text(language),
-                ),
-              MultiLangCountries.flagWithSmallLang when flag != null =>
-                DoubleFlag(
-                  radius: radius,
-                  wTop: flag,
-                  wDown: Text(language),
-                ),
-              MultiLangCountries.flagWithSmallLang => Text(locCode),
-              MultiLangCountries.langWithSmallFlag => DoubleFlag(
-                  radius: radius,
-                  wTop: Text(language),
-                  wDown: flag ?? Text(country),
-                ),
-              MultiLangCountries.asBigLittle when language.length >= 2 =>
-                DoubleFlag(
-                  radius: radius,
-                  wTop: Text(language),
-                  wDown: Text(country),
-                ),
-              MultiLangCountries.asBigLittle => Text(language),
-              MultiLangCountries.onlyLanguage => Text(language),
-              // TODO: Handle this case.
-              MultiLangCountries.onlyFlag => FittedBox(
-                  child: Tooltip(
-                    message:
-                        toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
-                    waitDuration: const Duration(milliseconds: 50),
-                    preferBelow: true,
-                    child: flag ?? flagError,
-                  ),
-                ),
-            }));
+      child: switch (mlc) {
+        MultiLangCountries.auto when language == country =>
+          flag ?? Text(language),
+        MultiLangCountries.auto
+            when language == popularInCountry[country.toLowerCase()] =>
+          flag ?? Text(language),
+        MultiLangCountries.auto when flag == null => DoubleFlag(
+            radius: radius,
+            wTop: Text(language),
+            wDown: Text(country),
+          ),
+        MultiLangCountries.auto => DoubleFlag(
+            radius: radius,
+            wTop: flag!,
+            wDown: Text(language),
+          ),
+        MultiLangCountries.flagWithSmallLang when flag != null => DoubleFlag(
+            radius: radius,
+            wTop: flag,
+            wDown: Text(language),
+          ),
+        MultiLangCountries.flagWithSmallLang => Text(locCode),
+        MultiLangCountries.langWithSmallFlag => DoubleFlag(
+            radius: radius,
+            wTop: Text(language),
+            wDown: flag ?? Text(country),
+          ),
+        MultiLangCountries.asBigLittle when language.length >= 2 => DoubleFlag(
+            radius: radius,
+            wTop: Text(language),
+            wDown: Text(country),
+          ),
+        MultiLangCountries.asBigLittle => Text(language),
+        MultiLangCountries.onlyLanguage => Text(language),
+        // TODO: Handle this case.
+        MultiLangCountries.onlyFlag => FittedBox(
+            child: Tooltip(
+              message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
+              waitDuration: const Duration(milliseconds: 50),
+              preferBelow: true,
+              child: flag ?? flagError,
+            ),
+          ),
+      },
+    );
   }
 }

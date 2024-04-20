@@ -15,6 +15,7 @@ dependencies:
   locale_switcher:
     path: ../
   intl:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:

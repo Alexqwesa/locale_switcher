@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,12 +25,14 @@ class MyAppCupertinoTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final supported = AppLocalizations.supportedLocales
+        .where((element) => ['en', 'de', 'vi'].contains(element.languageCode));
     // ============= THIS 5 LINES REQUIRED =============
     return LocaleManager(
       child: CupertinoApp(
         locale: LocaleSwitcher.localeBestMatch,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        supportedLocales: supported,
         // ...
         title: LocaleSwitcher.current.locale!.tr.example,
         home: MyHomePage(title: LocaleSwitcher.current.locale!.tr.example),
@@ -99,8 +102,11 @@ void main() {
 
       // Verify that en locale is loaded
 
-      final enFlag = find.byTooltip(languageToCountry['en']![1]);
-      await tester.tap(enFlag.at(1));
+      final enFlag = find.descendant(
+        of: find.byType(AnimatedToggleSwitch<LocaleName>),
+        matching: find.byTooltip(languageToCountry['en']![1]),
+      );
+      await tester.tap(enFlag);
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
       expect(LocaleSwitcher.current.name, "en");

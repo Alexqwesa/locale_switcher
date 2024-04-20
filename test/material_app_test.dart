@@ -53,20 +53,20 @@ void main() {
       // Verify that en locale is loaded
 
       final enFlag = find.byTooltip(languageToCountry['en']![1]);
-      await tester.tap(enFlag.at(1));
+      await tester.tap(enFlag.at(2));
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
       expect(LocaleSwitcher.current.name, "en");
       // expect(find.text(enLoc.counterDescription), findsOneWidget);
       // expect(find.text(deLoc.counterDescription), findsNothing);
 
-      final sysFlag = find.byTooltip(languageToCountry['system']![1]);
       await tester.tap(enFlag.at(1));
       await tester.pumpAndSettle();
       expect(LocaleSwitcher.current.locale?.languageCode, "en");
       expect(LocaleSwitcher.current.name, "en");
 
-      await tester.tap(sysFlag.at(1)); // restore ?
+      // final sysFlag = find.byTooltip(languageToCountry['system']![1]);
+      // await tester.tap(sysFlag.at(1)); // restore ?
     });
 
     testWidgets('it change locale via popUp dialog',
