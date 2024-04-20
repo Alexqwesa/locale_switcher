@@ -364,7 +364,7 @@ class LocaleSwitcher extends StatefulWidget {
     this.setLocaleCallBack,
     this.specialFlagsPadding = 2,
     this.forceMulti = false,
-    this.multiLangCountries = MultiLangCountries.onlyFlag,
+    this.multiLangCountries = MultiLangCountries.auto,
   })  : type = LocaleSwitcherType.segmentedButton,
         title = '',
         builder = null,
@@ -492,12 +492,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
             ),
           LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
               locales: locales,
-              radius: widget.iconRadius,
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
-              width: widget.width,
+              widget: widget,
               itemBuilder: itemBuilder,
             ),
         };
@@ -526,27 +521,6 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
         ),
       );
     }
-
-    // return LayoutBuilder(builder: (context, constraints) {
-    //
-    //   Widget sizedChild = ConstrainedBox(
-    //     constraints: BoxConstraints(
-    //       maxWidth: max(constraints.minWidth, constraints.maxWidth - 1),
-    //       maxHeight: constraints.maxHeight,
-    //     ),
-    //     child: child,
-    //   );
-    //
-    //   return IntrinsicWidth(
-    //     child: Row(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         Expanded(child: sizedChild),
-    //         sBox,
-    //       ],
-    //     ),
-    //   );
-    // });
   }
 }
 

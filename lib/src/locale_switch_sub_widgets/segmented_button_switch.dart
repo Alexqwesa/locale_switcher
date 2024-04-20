@@ -5,35 +5,23 @@ import 'package:locale_switcher/locale_switcher.dart';
 
 class SegmentedButtonSwitch extends StatelessWidget {
   final SupportedLocaleNames locales;
-  final int useNLettersInsteadOfIcon;
-
-  final double? radius;
-
-  final ShapeBorder? shape;
-
-  final Function(BuildContext)? setLocaleCallBack;
-
-  final bool useEmoji;
-
-  final double? width;
-
+  final LocaleSwitcher widget;
   final ItemBuilder itemBuilder;
 
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
-    this.useNLettersInsteadOfIcon = 0,
-    this.radius,
-    this.shape,
-    this.setLocaleCallBack,
-    this.useEmoji = false,
-    this.width,
+    required this.widget,
     required this.itemBuilder,
   });
 
   @override
   Widget build(BuildContext context) {
-    final height = (radius ?? (useEmoji ? 42 : 34));
+    final radius = widget.iconRadius;
+    final setLocaleCallBack = widget.setLocaleCallBack;
+    final width = widget.width;
+
+    final height = radius;
     final segmentedButton = LayoutBuilder(
       builder: (context, constrains) {
         final scale = min(1, height / 32);
@@ -75,13 +63,9 @@ class SegmentedButtonSwitch extends StatelessWidget {
           value: e,
           tooltip: e.language,
           label: Padding(
-            padding:
-                // e.name == systemLocale
-                //     ? const EdgeInsets.all(0.0)
-                //     :
-                EdgeInsets.all(inSet),
+            padding: EdgeInsets.all(inSet),
             child: SizedBox(
-                height: radius ?? 32,
+                height: widget.iconRadius,
                 child: FittedBox(fit: BoxFit.fitHeight, child: itemBuilder(e))),
           ),
         );

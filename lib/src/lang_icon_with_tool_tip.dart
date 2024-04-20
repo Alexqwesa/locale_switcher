@@ -234,7 +234,8 @@ class LangIconWithToolTip extends StatelessWidget {
         MultiLangCountries.auto when language == country =>
           flag ?? Text(language),
         MultiLangCountries.auto
-            when language == popularInCountry[country.toLowerCase()] =>
+            when language ==
+                popularInCountry[country.toLowerCase()]?.toUpperCase() =>
           flag ?? Text(language),
         MultiLangCountries.auto when flag == null => DoubleFlag(
             radius: radius,
