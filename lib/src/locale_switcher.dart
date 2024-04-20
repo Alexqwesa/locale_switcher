@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/helpers/state_box_to_access_context.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -222,7 +223,9 @@ class LocaleSwitcher extends StatefulWidget {
 
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
   ///
-  /// Example: [online app](https://alexqwesa.github.io/locale_switcher/), [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
+  /// Example:
+  /// [online app](https://alexqwesa.github.io/locale_switcher/),
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
   const LocaleSwitcher.menu({
     super.key,
     this.title = 'Language:',
@@ -248,7 +251,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// A Widget to switch locale of App with [GridView](https://api.flutter.dev/flutter/widgets/GridView-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
-  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - click on icon in AppBar to see this widget.
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - click on icon in AppBar to see this widget.
   const LocaleSwitcher.grid({
     super.key,
     this.gridDelegate,
@@ -312,46 +315,34 @@ class LocaleSwitcher extends StatefulWidget {
   /// A Widget to switch locale of App with [IconButton](https://api.flutter.dev/flutter/material/IconButton-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
-  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - it is an icon in AppBar.
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - it is an icon in AppBar.
   ///
   /// In popup window will be displayed [LocaleSwitcher.grid].
-  factory LocaleSwitcher.iconButton({
-    Key? key,
-    String? toolTipPrefix = 'Current language: ',
-    bool useEmoji = false,
-
-    /// Title of popup dialog.
-    String? title = 'Select language: ',
-    Icon? useStaticIcon,
-    double iconRadius = 32,
-    // required LocaleSwitchBuilder builder,
-    int numberOfShown = 200,
-    bool showOsLocale = true,
-    int? useNLettersInsteadOfIcon,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
-    Function(BuildContext)? setLocaleCallBack,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      title: title,
-      toolTipPrefix: toolTipPrefix,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      useStaticIcon: useStaticIcon,
-      iconRadius: iconRadius,
-      type: LocaleSwitcherType.iconButton,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      shape: shape,
-      setLocaleCallBack: setLocaleCallBack,
-      useEmoji: useEmoji,
-      // builder: builder,
-    );
-  }
+  LocaleSwitcher.iconButton({
+    super.key,
+    this.toolTipPrefix = 'Current language: ',
+    this.useEmoji = false,
+    this.title = 'Select language: ',
+    this.useStaticIcon,
+    this.iconRadius = 32,
+    this.numberOfShown = 200,
+    this.showOsLocale = true,
+    this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
+    this.setLocaleCallBack,
+    this.multiLangCountries = MultiLangCountries.auto,
+    this.forceMulti = false,
+    this.specialFlagsPadding = 0,
+  })  : width = null,
+        type = LocaleSwitcherType.iconButton,
+        builder = null,
+        gridDelegate = null,
+        showLeading = false;
 
   /// A Widget to switch locale of App with [SegmentedButton](https://api.flutter.dev/flutter/material/SegmentedButton-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
-  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
+  /// [exemple code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
   const LocaleSwitcher.segmentedButton({
     super.key,
     this.useEmoji = false,
@@ -435,7 +426,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   Widget build(BuildContext context) {
     // send globalKey
-    final stateBox = _StateBoxToAccessContext(key: globalKey);
+    final stateBox = StateBoxToAccessContext(key: globalKey);
     PreferenceRepository.sendGlobalKeyToRepository(globalKey);
 
     final child = ValueListenableBuilder(
@@ -480,15 +471,8 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
               itemBuilder: itemBuilder,
             ),
           LocaleSwitcherType.iconButton => SelectLocaleButton(
-              radius: widget.iconRadius ?? 32,
-              popUpWindowTitle: widget.title ?? '',
               updateIconOnChange: (widget.useStaticIcon != null),
-              useStaticIcon: widget.useStaticIcon,
-              toolTipPrefix: widget.toolTipPrefix ?? '',
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
+              widget: widget,
             ),
           LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
               locales: locales,
@@ -521,22 +505,5 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
         ),
       );
     }
-  }
-}
-
-class _StateBoxToAccessContext extends StatefulWidget {
-  const _StateBoxToAccessContext({
-    super.key,
-  });
-
-  @override
-  State<_StateBoxToAccessContext> createState() =>
-      _StateBoxToAccessContextState();
-}
-
-class _StateBoxToAccessContextState extends State<_StateBoxToAccessContext> {
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(width: 1, height: 1);
   }
 }
