@@ -128,7 +128,7 @@ Future safeTapByKey(WidgetTester tester, String key) async {
   await tester.tap(find.byKey(Key(key)));
 }
 
-extension safe on WidgetTester {
+extension Safe on WidgetTester {
   Future safeTap(Finder finder) async {
     await scrollUntilVisible(
       finder,

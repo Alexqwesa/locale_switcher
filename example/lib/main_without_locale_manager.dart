@@ -52,7 +52,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        actions: [
+        actions: const [
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(),
         ],

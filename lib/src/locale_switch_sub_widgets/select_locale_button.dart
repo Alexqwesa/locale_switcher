@@ -7,34 +7,12 @@ import 'package:locale_switcher/src/current_locale.dart';
 /// In popup window will be displayed [LocaleSwitcher.grid].
 class SelectLocaleButton extends StatelessWidget {
   final bool updateIconOnChange;
-
-  final String toolTipPrefix;
-
-  final double radius;
-
-  final Widget? useStaticIcon;
-
-  final String popUpWindowTitle;
-
-  final int useNLettersInsteadOfIcon;
-
-  final ShapeBorder? shape;
-
-  final Function(BuildContext)? setLocaleCallBack;
-
-  final bool useEmoji;
+  final LocaleSwitcher widget;
 
   const SelectLocaleButton({
     super.key,
     this.updateIconOnChange = true,
-    this.toolTipPrefix = 'Current language: ',
-    this.radius = 32,
-    this.useStaticIcon,
-    this.popUpWindowTitle = "",
-    this.useNLettersInsteadOfIcon = 0,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.setLocaleCallBack,
-    this.useEmoji = false,
+    required this.widget,
   });
 
   @override
@@ -43,20 +21,20 @@ class SelectLocaleButton extends StatelessWidget {
       valueListenable: CurrentLocale.allNotifiers,
       builder: (BuildContext context, value, Widget? child) {
         return IconButton(
-          icon: useStaticIcon ??
+          icon: widget.useStaticIcon ??
               LangIconWithToolTip(
-                useEmoji: useEmoji,
-                toolTipPrefix: toolTipPrefix,
+                useEmoji: widget.useEmoji,
+                toolTipPrefix: widget.toolTipPrefix ?? '',
                 localeNameFlag: LocaleSwitcher.current,
-                radius: radius,
-                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                shape: shape,
+                radius: widget.iconRadius,
+                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+                shape: widget.shape,
               ),
           onPressed: () => showSelectLocaleDialog(
             context,
-            title: popUpWindowTitle,
-            setLocaleCallBack: setLocaleCallBack,
-            useEmoji: useEmoji,
+            title: widget.title ?? '',
+            setLocaleCallBack: widget.setLocaleCallBack,
+            useEmoji: widget.useEmoji,
           ),
         );
       },

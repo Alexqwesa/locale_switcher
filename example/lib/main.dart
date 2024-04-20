@@ -48,7 +48,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        actions: [
+        actions: const [
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(),
         ],
@@ -74,7 +74,7 @@ class MyHomePage extends StatelessWidget {
             TitleForLocaleSwitch(
               title: loc.chooseLanguage,
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.segmentedButton(
+              child: const LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
               ),
             ),

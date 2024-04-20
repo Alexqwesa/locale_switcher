@@ -68,7 +68,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        actions: [
+        actions: const [
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(
             setLocaleCallBack: activateSelectedLocale,
@@ -98,7 +98,7 @@ class MyHomePage extends StatelessWidget {
             TitleForLocaleSwitch(
               title: LocaleKeys.chooseLanguage.tr(),
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.segmentedButton(
+              child: const LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
                 setLocaleCallBack: activateSelectedLocale,
               ),

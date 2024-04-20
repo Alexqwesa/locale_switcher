@@ -26,10 +26,10 @@ void main() {
       // see who has several language:
       final noDup = lc.values.map((e) => e[0]).toSet();
       final llc = lc.values.toList();
-      noDup.forEach((key) {
+      for (final key in noDup) {
         final el = llc.firstWhere((element) => element[0] == key);
         llc.remove(el);
-      });
+      }
 
       expect(llc.toSet().length, severalLang);
       // final notUniq = llc.map((e) => e[0]).toSet();
