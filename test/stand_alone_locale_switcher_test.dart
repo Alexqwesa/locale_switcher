@@ -3,9 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locale_switcher/locale_switcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: avoid_relative_lib_imports
 import '../example/lib/main_without_locale_manager.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final supported = AppLocalizations.supportedLocales
+        .where((element) => ['en', 'de', 'vi'].contains(element.languageCode))
+        .where((element) => !element.toString().contains('_'));
+    // ============= THIS 5 LINES REQUIRED =============
+    return LocaleManager(
+      child: MaterialApp(
+        locale: LocaleSwitcher.localeBestMatch,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: supported,
+        // ...
+        title: LocaleSwitcher.current.locale!.tr.example,
+        home: MyHomePage(title: LocaleSwitcher.current.locale!.tr.example),
+      ),
+    );
+  }
+}
 
 void main() {
   {

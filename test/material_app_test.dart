@@ -28,7 +28,7 @@ void main() {
       // final deLoc = const Locale('de').tr;
       final enLoc = const Locale('en').tr;
       final flags = find.byType(SvgPicture);
-      expect(flags, findsNWidgets(5)); // 2 + 3
+      expect(flags, findsNWidgets(7)); // 2 + 3
 
       // test start with english locale
       expect(find.text(enLoc.counterDescription), findsOneWidget);

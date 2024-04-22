@@ -26,7 +26,8 @@ class MyAppCupertinoTest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final supported = AppLocalizations.supportedLocales
-        .where((element) => ['en', 'de', 'vi'].contains(element.languageCode));
+        .where((element) => ['en', 'de', 'vi'].contains(element.languageCode))
+        .where((element) => !element.toString().contains('_'));
     // ============= THIS 5 LINES REQUIRED =============
     return LocaleManager(
       child: CupertinoApp(

@@ -14,13 +14,14 @@ import 'package:locale_switcher/locale_switcher.dart';
 // ignore: avoid_relative_lib_imports
 import '../example/lib/main_with_dynamic_options.dart';
 
-class MyAppCupertinoTest extends StatelessWidget {
-  const MyAppCupertinoTest({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     final supported = AppLocalizations.supportedLocales
-        .where((element) => ['en', 'de', 'vi'].contains(element.languageCode));
+        .where((element) => ['en', 'de', 'vi'].contains(element.languageCode))
+        .where((element) => !element.toString().contains('_'));
     // ============= THIS 5 LINES REQUIRED =============
     return LocaleManager(
       child: MaterialApp(
