@@ -65,7 +65,7 @@ class MyHomePage extends StatelessWidget {
             TitleForLocaleSwitch(
               title: loc.chooseLanguage,
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.custom(
+              child: const LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
               ),
@@ -92,7 +92,8 @@ Widget animatedToggleSwitchBuilder(
     langCodes.addShowOtherLocales();
   }
 
-  return AnimatedToggleSwitch<LocaleName>.rolling( // package: animated_toggle_switch
+  return AnimatedToggleSwitch<LocaleName>.rolling(
+    // package: animated_toggle_switch
     values: langCodes,
     current: LocaleSwitcher.current,
     onChanged: (langCode) {

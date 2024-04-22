@@ -22,7 +22,7 @@ dev_dependencies: # for tests and examples
   build_runner:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.0
   flutter_localizations:
     sdk: flutter
   intl:

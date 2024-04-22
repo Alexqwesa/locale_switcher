@@ -198,29 +198,6 @@ class LocaleSwitcher extends StatefulWidget {
   /// Null for square.
   final ShapeBorder? shape;
 
-  /// A Widget to switch locale of App.
-  const LocaleSwitcher._({
-    super.key,
-    this.showOsLocale = true,
-    this.title = 'Choose language:',
-    this.numberOfShown = 4,
-    this.type = LocaleSwitcherType.segmentedButton,
-    this.builder,
-    this.gridDelegate,
-    this.setLocaleCallBack,
-    this.toolTipPrefix,
-    this.useStaticIcon,
-    this.iconRadius = 32,
-    this.useNLettersInsteadOfIcon = 0,
-    this.showLeading = true,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.useEmoji = false,
-    this.width,
-    this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
-    this.specialFlagsPadding = 0,
-  }) : assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
-
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
   ///
   /// Example:
@@ -297,20 +274,26 @@ class LocaleSwitcher extends StatefulWidget {
   ///     );
   ///   })
   /// ```
-  factory LocaleSwitcher.custom({
-    Key? key,
-    required LocaleSwitchBuilder builder,
-    int numberOfShown = 4,
-    bool showOsLocale = true,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      type: LocaleSwitcherType.custom,
-      builder: builder,
-    );
-  }
+  const LocaleSwitcher.custom({
+    super.key,
+    this.builder,
+    this.numberOfShown = 4,
+    this.showOsLocale = true,
+  })  : type = LocaleSwitcherType.custom,
+        title = '',
+        useStaticIcon = null,
+        toolTipPrefix = '',
+        showLeading = true,
+        gridDelegate = null,
+        useEmoji = false,
+        forceMulti = false,
+        specialFlagsPadding = 0,
+        shape = const CircleBorder(eccentricity: 0),
+        iconRadius = 32,
+        setLocaleCallBack = null,
+        multiLangCountries = MultiLangCountries.auto,
+        width = null,
+        useNLettersInsteadOfIcon = 0;
 
   /// A Widget to switch locale of App with [IconButton](https://api.flutter.dev/flutter/material/IconButton-class.html).
   ///

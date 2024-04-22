@@ -89,7 +89,7 @@ class MyHomePage extends StatelessWidget {
             const Divider(),
             TitleForLocaleSwitch(
               title: LocaleKeys.chooseLanguage.tr(),
-              child: LocaleSwitcher.custom(
+              child: const LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
               ),
