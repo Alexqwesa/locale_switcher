@@ -12,13 +12,13 @@ void main() {
   group('Languages', () {
     // Build our app and trigger a frame.
     test('it check showOtherLocales', () async {
-      const count = 150;
-      const severalLang = 37;
+      const count = 151;
+      const severalLang = 38;
       final lc = languageToCountry;
       expect(lc.keys.toSet().length, count);
       expect(lc.values.toSet().length, count);
       final multi = lc.keys.where((e) => e.contains('_')).toSet().length;
-      expect(multi, 9);
+      expect(multi, 10);
       expect(lc.values.map((e) => (e[0], e[1])).toSet().length, count);
       expect(lc.values.map((e) => e[1]).toSet().length, count);
       expect(lc.values.map((e) => e[0]).toSet().length, count - severalLang);

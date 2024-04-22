@@ -9,7 +9,7 @@
 
 - [MultiLangCountries] - enum to select how to display countries with multiple languages,
 - [countriesWithMulti] - list of such countries, add you own here,
-- [popularInCountry] - for [MultiLangCountries.auto] - country most popular language.
+- [popularInCountry] - for [MultiLangCountries.auto] - country's most popular language.
 
 ## 1.1.1
 

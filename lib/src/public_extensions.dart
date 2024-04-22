@@ -96,6 +96,8 @@ final Map<String, List<dynamic>> languageToCountry = {
   'en_za': ['ZA', 'English (South Africa)'],
   // English
   'en': ['US', 'English'],
+  // English Great Britain
+  'en_gb': ['GB', 'English(Britain)'],
 
   // Hindi
   'hi': ['IN', 'हिन्दी'],
