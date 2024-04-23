@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/helpers/state_box_to_access_context.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/state_box_to_access_context.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -28,6 +28,7 @@ enum LocaleSwitcherType {
   segmentedButton,
 }
 
+/// A custom builder type for [LocaleSwitcher.custom].
 typedef LocaleSwitchBuilder = Widget Function(
     SupportedLocaleNames, BuildContext);
 
@@ -53,10 +54,25 @@ class LocaleSwitcher extends StatefulWidget {
   final MultiLangCountries multiLangCountries;
 
   /// Force all Locales to be displayed as [MultiLangCountries].
-  final bool forceMulti;
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [multiLangCountries],
+  /// [multiLangWidget].
+  final bool multiLangForceAll;
 
   /// Padding for special icons ([systemLocale], [showOtherLocales]).
   final double specialFlagsPadding;
+
+  /// Custom builder function to display Locales for countries with multiple languages,
+  ///
+  /// By default used: (wTop, wDown, [radius]) => [MultiLangFlag] (wTop, wDown, [radius])
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [multiLangCountries],
+  /// [multiLangForceAll].
+  final MultiLangBuilder? multiLangWidget;
 
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
   ///
@@ -139,7 +155,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (locales) {
+  ///   builder: (locales, context) {
   ///     return AnimatedToggleSwitch<String>.rolling(
   ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
@@ -214,8 +230,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
+    this.multiLangForceAll = false,
     this.multiLangCountries = MultiLangCountries.onlyFlag,
-    this.forceMulti = false,
+    this.multiLangWidget,
     this.iconRadius = 38,
     this.specialFlagsPadding = 0,
   })  : type = LocaleSwitcherType.menu,
@@ -238,8 +255,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.shape = const CircleBorder(eccentricity: 0),
     this.useEmoji = false,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.multiLangCountries = MultiLangCountries.onlyFlag,
+    this.multiLangWidget,
     this.specialFlagsPadding = 0,
   })  : type = LocaleSwitcherType.grid,
         width = null,
@@ -256,7 +274,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (supportedLocNames) { // widget AnimatedToggleSwitch from package:
+  ///   builder: (supportedLocNames, context) { // widget AnimatedToggleSwitch from package:
   ///     return AnimatedToggleSwitch<LocaleName>.rolling( // animated_toggle_switch
   ///       current: LocaleSwitcher.current,
   ///       values: supportedLocNames,
@@ -286,12 +304,13 @@ class LocaleSwitcher extends StatefulWidget {
         showLeading = true,
         gridDelegate = null,
         useEmoji = false,
-        forceMulti = false,
+        multiLangForceAll = false,
+        multiLangWidget = null,
+        multiLangCountries = MultiLangCountries.auto,
         specialFlagsPadding = 0,
         shape = const CircleBorder(eccentricity: 0),
         iconRadius = 32,
         setLocaleCallBack = null,
-        multiLangCountries = MultiLangCountries.auto,
         width = null,
         useNLettersInsteadOfIcon = 0;
 
@@ -314,7 +333,8 @@ class LocaleSwitcher extends StatefulWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
     this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
+    this.multiLangWidget,
     this.specialFlagsPadding = 0,
   })  : width = null,
         type = LocaleSwitcherType.iconButton,
@@ -338,8 +358,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.shape,
     this.setLocaleCallBack,
     this.specialFlagsPadding = 2,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.multiLangCountries = MultiLangCountries.auto,
+    this.multiLangWidget,
   })  : type = LocaleSwitcherType.segmentedButton,
         title = '',
         builder = null,
@@ -437,7 +458,8 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
             useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
             shape: widget.shape,
             multiLangCountries: widget.multiLangCountries,
-            forceMulti: widget.forceMulti,
+            multiLangForceAll: widget.multiLangForceAll,
+            multiLangWidget: widget.multiLangWidget,
             specialFlagsPadding: widget.specialFlagsPadding,
           );
         }

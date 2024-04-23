@@ -84,10 +84,20 @@ class LangIconWithToolTip extends StatelessWidget {
   final MultiLangCountries multiLangCountries;
 
   /// Force all Locales to be displayed as [MultiLangCountries].
-  final bool forceMulti;
+  final bool multiLangForceAll;
 
   /// Padding for special icons ([systemLocale], [showOtherLocales]).
   final double specialFlagsPadding;
+
+  /// Custom builder function to display Locales for countries with multiple languages,
+  ///
+  /// By default used: (wTop, wDown, radius) => [MultiLangFlag] (wTop, wDown, radius)
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [LocaleSwitcher.multiLangCountries],
+  /// [LocaleSwitcher.multiLangForceAll].
+  final MultiLangBuilder? multiLangWidget;
 
   /// Just a shortcut to use as tear-off in builders of
   /// widgets that generate lists of elements.
@@ -105,8 +115,9 @@ class LangIconWithToolTip extends StatelessWidget {
     this.langCode,
     this.useEmoji = false,
     this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.specialFlagsPadding = 3.5,
+    this.multiLangWidget,
   });
 
   const LangIconWithToolTip({
@@ -120,8 +131,9 @@ class LangIconWithToolTip extends StatelessWidget {
     this.localeNameFlag,
     this.useEmoji = false,
     this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.specialFlagsPadding = 3.5,
+    this.multiLangWidget,
   })  : assert(langCode != null || localeNameFlag != null),
         assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
@@ -216,7 +228,7 @@ class LangIconWithToolTip extends StatelessWidget {
     const flagError = Icon(Icons.error_outline_rounded);
 
     // Simple case - country with one language
-    if (!forceMulti && !countriesWithMulti.containsKey(locCode)) {
+    if (!multiLangForceAll && !countriesWithMulti.containsKey(locCode)) {
       return FittedBox(
         child: flag ?? flagError,
       );
@@ -229,6 +241,14 @@ class LangIconWithToolTip extends StatelessWidget {
         ? MultiLangCountries.asBigLittle
         : multiLangCountries;
 
+    final doubleFlag = (multiLangWidget != null)
+        ? multiLangWidget!
+        : (wTop, wDown, [double? radius, Key? key]) => MultiLangFlag(
+              wTop: wTop,
+              wDown: wDown,
+              radius: radius,
+            );
+
     return FittedBox(
       child: switch (mlc) {
         MultiLangCountries.auto when language == country =>
@@ -237,31 +257,31 @@ class LangIconWithToolTip extends StatelessWidget {
             when language ==
                 popularInCountry[country.toLowerCase()]?.toUpperCase() =>
           flag ?? Text(language),
-        MultiLangCountries.auto when flag == null => DoubleFlag(
-            radius: radius,
-            wTop: Text(language),
-            wDown: Text(country),
+        MultiLangCountries.auto when flag == null => doubleFlag(
+            Text(language),
+            Text(country),
+            radius,
           ),
-        MultiLangCountries.auto => DoubleFlag(
-            radius: radius,
-            wTop: flag!,
-            wDown: Text(language),
+        MultiLangCountries.auto => doubleFlag(
+            flag!,
+            Text(language),
+            radius,
           ),
-        MultiLangCountries.flagWithSmallLang when flag != null => DoubleFlag(
-            radius: radius,
-            wTop: flag,
-            wDown: Text(language),
+        MultiLangCountries.flagWithSmallLang when flag != null => doubleFlag(
+            flag,
+            Text(language),
+            radius,
           ),
         MultiLangCountries.flagWithSmallLang => Text(locCode),
-        MultiLangCountries.langWithSmallFlag => DoubleFlag(
-            radius: radius,
-            wTop: Text(language),
-            wDown: flag ?? Text(country),
+        MultiLangCountries.langWithSmallFlag => doubleFlag(
+            Text(language),
+            flag ?? Text(country),
+            radius,
           ),
-        MultiLangCountries.asBigLittle when language.length >= 2 => DoubleFlag(
-            radius: radius,
-            wTop: Text(language),
-            wDown: Text(country),
+        MultiLangCountries.asBigLittle when language.length >= 2 => doubleFlag(
+            Text(language),
+            Text(country),
+            radius,
           ),
         MultiLangCountries.asBigLittle => Text(language),
         MultiLangCountries.onlyLanguage => Text(language),

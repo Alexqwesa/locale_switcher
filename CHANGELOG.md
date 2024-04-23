@@ -1,11 +1,18 @@
 # Changelog
 
+## 1.2.2
+
+In [LocaleSwitcher]:
+
+* rename [forceMulti] -> [multiLangForceAll]
+* added: [multiLangWidget] (default to [MultiLangFlag])
+
 ## 1.2.1
 
 * Added a lot of languages.
 
 * Added graceful ways to display Locales for countries with multiple languages,
-  for this purpose added:
+  for this purpose added these parameters to [LocaleSwitcher]:
 
 - [MultiLangCountries] - enum to select how to display countries with multiple languages,
 - [countriesWithMulti] - list of such countries, add you own here,
