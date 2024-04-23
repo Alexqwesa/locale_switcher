@@ -8,13 +8,14 @@ export 'package:locale_switcher/src/lang_icon_with_tool_tip.dart';
 export 'package:locale_switcher/src/locale_manager.dart';
 export 'package:locale_switcher/src/locale_matcher.dart';
 export 'package:locale_switcher/src/locale_name.dart';
+export 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_locale_switch.dart';
 export 'package:locale_switcher/src/locale_switcher.dart';
+export 'package:locale_switcher/src/multi_lang_flag.dart';
 export 'package:locale_switcher/src/public_extensions.dart';
 
 // export 'package:locale_switcher/src/current_locale.dart';
 export 'package:locale_switcher/src/show_select_locale_dialog.dart';
 export 'package:locale_switcher/src/supported_locale_names.dart';
-export 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_locale_switch.dart';
 ''',
   'src': <String, dynamic>{
     'current_locale': r'''import 'package:flutter/material.dart';
@@ -140,6 +141,34 @@ abstract class CurrentSystemLocale {
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
+typedef ItemBuilder = LangIconWithToolTip Function(LocaleName e);
+
+/// How to display Locales for countries with multiple languages:
+///
+/// See also:
+/// - [countriesWithMulti] - list of countries with multiple languages,
+/// - [popularInCountry] - for [MultiLangCountries.auto],
+/// - [languageToCountry] - list of all languages.
+enum MultiLangCountries {
+  /// Will be displayed big flag, and small language code.
+  flagWithSmallLang,
+
+  /// The same as [flagWithSmallLang], but for most popular Language - just flag.
+  auto,
+
+  /// Will be displayed big Language code, and small flag.
+  langWithSmallFlag,
+
+  /// Only show language code(text).
+  onlyLanguage,
+
+  /// Only show Flag.
+  onlyFlag,
+
+  /// Will be displayed big Language code, and small country code.
+  asBigLittle
+}
+
 /// Icon representing the language (with tooltip).
 ///
 /// It will search icon, in this order:
@@ -188,6 +217,27 @@ class LangIconWithToolTip extends StatelessWidget {
   /// Can not be used with [useNLettersInsteadOfIcon]..
   final bool useEmoji;
 
+  /// How to display Locales for countries with multiple languages:
+  ///
+  /// see [MultiLangCountries].
+  final MultiLangCountries multiLangCountries;
+
+  /// Force all Locales to be displayed as [MultiLangCountries].
+  final bool multiLangForceAll;
+
+  /// Padding for special icons ([systemLocale], [showOtherLocales]).
+  final double specialFlagsPadding;
+
+  /// Custom builder function to display Locales for countries with multiple languages,
+  ///
+  /// By default used: (wTop, wDown, radius) => [MultiLangFlag] (wTop, wDown, radius)
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [LocaleSwitcher.multiLangCountries],
+  /// [LocaleSwitcher.multiLangForceAll].
+  final MultiLangBuilder? multiLangWidget;
+
   /// Just a shortcut to use as tear-off in builders of
   /// widgets that generate lists of elements.
   ///
@@ -203,6 +253,10 @@ class LangIconWithToolTip extends StatelessWidget {
     this.child,
     this.langCode,
     this.useEmoji = false,
+    this.multiLangCountries = MultiLangCountries.auto,
+    this.multiLangForceAll = false,
+    this.specialFlagsPadding = 3.5,
+    this.multiLangWidget,
   });
 
   const LangIconWithToolTip({
@@ -215,6 +269,10 @@ class LangIconWithToolTip extends StatelessWidget {
     this.child,
     this.localeNameFlag,
     this.useEmoji = false,
+    this.multiLangCountries = MultiLangCountries.auto,
+    this.multiLangForceAll = false,
+    this.specialFlagsPadding = 3.5,
+    this.multiLangWidget,
   })  : assert(langCode != null || localeNameFlag != null),
         assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
@@ -222,14 +280,48 @@ class LangIconWithToolTip extends StatelessWidget {
   final String? langCode;
 
   @override
+  String toStringShort() {
+    return "LangIcon: $langCode | ${localeNameFlag?.name} | ${localeNameFlag?.locale} ";
+  }
+
+  @override
   Widget build(BuildContext context) {
     final locCode = localeNameFlag?.name ?? langCode ?? '??';
+    final lang = languageToCountry[locCode] ??
+        <String>[locCode, 'Unknown language code: $locCode'];
 
-    if (locCode == showOtherLocales) {
-      return SizedBox(
-          height: (radius ?? 28) * 0.7,
-          child: FittedBox(child: SupportedLocaleNames.flagForOtherLocales));
-    }
+    final fittedIcon = Tooltip(
+      message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
+      waitDuration: const Duration(milliseconds: 50),
+      preferBelow: true,
+      child: switch (locCode) {
+        systemLocale => Padding(
+            padding: EdgeInsets.all(specialFlagsPadding),
+            child: FittedBox(
+              child:
+                  languageToCountry[locCode]?[2] ?? const Icon(Icons.language),
+            ),
+          ),
+        showOtherLocales => Padding(
+            padding: EdgeInsets.all(specialFlagsPadding),
+            child: FittedBox(child: SupportedLocaleNames.flagForOtherLocales),
+          ),
+        _ => fittedFlag(getFlag(), locCode, lang),
+      },
+    );
+
+    return (radius != null)
+        ? SizedBox(
+            width: radius,
+            height: radius,
+            child: fittedIcon,
+          )
+        : fittedIcon;
+  }
+
+  /// Get flag for this widget
+  Widget? getFlag() {
+    final locCode = localeNameFlag?.name ?? langCode ?? '??';
     final lang = languageToCountry[locCode] ??
         <String>[locCode, 'Unknown language code: $locCode'];
 
@@ -250,41 +342,99 @@ class LangIconWithToolTip extends StatelessWidget {
             size: radius ?? 48,
             child: Flags.instance[(lang[0]).toLowerCase()]!.svg)
         : null;
-    if (locCode != systemLocale && locCode != showOtherLocales) {
-      if (flag == null || useNLettersInsteadOfIcon > 0) {
-        flag = child ??
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: FittedBox(
-                  child: Text(
-                locCode.toUpperCase(),
-                semanticsLabel: localeNameFlag?.language ?? lang[1],
-              )),
+
+    if (flag == null || useNLettersInsteadOfIcon > 0) {
+      flag = child ??
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: FittedBox(
+                child: Text(
+              (countriesWithMulti.containsKey(locCode))
+                  ? locCode.split('_').first.toUpperCase()
+                  : locCode.split('_').last.toUpperCase(),
+              semanticsLabel: localeNameFlag?.language ?? lang[1],
+            )),
+          );
+    }
+
+    return flag;
+  }
+
+  /// Wrap flag with required widgets.
+  ///
+  /// also, here is logic for enum [MultiLangCountries].
+  FittedBox fittedFlag(Widget? flag, String locCode, List lang) {
+    const flagError = Icon(Icons.error_outline_rounded);
+
+    // Simple case - country with one language
+    if (!multiLangForceAll && !countriesWithMulti.containsKey(locCode)) {
+      return FittedBox(
+        child: flag ?? flagError,
+      );
+    }
+
+    // Country with many languages
+    final language = locCode.split('_').first.toUpperCase();
+    final country = lang.first.toLowerCase();
+    final mlc = useNLettersInsteadOfIcon > 0
+        ? MultiLangCountries.asBigLittle
+        : multiLangCountries;
+
+    final doubleFlag = (multiLangWidget != null)
+        ? multiLangWidget!
+        : (wTop, wDown, [double? radius, Key? key]) => MultiLangFlag(
+              wTop: wTop,
+              wDown: wDown,
+              radius: radius,
             );
-      }
-    }
 
-    var nLetters = useNLettersInsteadOfIcon;
-    if (nLetters == 0 &&
-        Flags.instance[(lang[0] as String).toLowerCase()] == null) {
-      nLetters = 2;
-    }
-
-    final fittedIcon = FittedBox(
-      child: Tooltip(
-          message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
-          waitDuration: const Duration(milliseconds: 50),
-          preferBelow: true,
-          child: flag ?? const Icon(Icons.error_outline_rounded)),
+    return FittedBox(
+      child: switch (mlc) {
+        MultiLangCountries.auto when language == country =>
+          flag ?? Text(language),
+        MultiLangCountries.auto
+            when language ==
+                popularInCountry[country.toLowerCase()]?.toUpperCase() =>
+          flag ?? Text(language),
+        MultiLangCountries.auto when flag == null => doubleFlag(
+            Text(language),
+            Text(country),
+            radius,
+          ),
+        MultiLangCountries.auto => doubleFlag(
+            flag!,
+            Text(language),
+            radius,
+          ),
+        MultiLangCountries.flagWithSmallLang when flag != null => doubleFlag(
+            flag,
+            Text(language),
+            radius,
+          ),
+        MultiLangCountries.flagWithSmallLang => Text(locCode),
+        MultiLangCountries.langWithSmallFlag => doubleFlag(
+            Text(language),
+            flag ?? Text(country),
+            radius,
+          ),
+        MultiLangCountries.asBigLittle when language.length >= 2 => doubleFlag(
+            Text(language),
+            Text(country),
+            radius,
+          ),
+        MultiLangCountries.asBigLittle => Text(language),
+        MultiLangCountries.onlyLanguage => Text(language),
+        // TODO: Handle this case.
+        MultiLangCountries.onlyFlag => FittedBox(
+            child: Tooltip(
+              message: toolTipPrefix + (localeNameFlag?.language ?? lang[1]),
+              waitDuration: const Duration(milliseconds: 50),
+              preferBelow: true,
+              child: flag ?? flagError,
+            ),
+          ),
+      },
     );
-
-    return (radius != null)
-        ? SizedBox(
-            width: radius,
-            height: radius,
-            child: fittedIcon,
-          )
-        : fittedIcon;
   }
 }
 ''',
@@ -468,7 +618,7 @@ class LocaleMatcher {
 
   /// Search by first 2 letter, return first found or null.
   static LocaleName? byLanguage(String name) {
-    final pattern = name.substring(0, 2);
+    final pattern = name.split("_").first.toLowerCase();
     final String langName = supported.names.firstWhere(
       (element) => element.startsWith(pattern),
       orElse: () => '',
@@ -617,7 +767,7 @@ class LocaleName {
   /// Search in [LocaleManager.reassignFlags] first, and if not found return [name].
   String get language {
     _language ??= (languageToCountry[name.toLowerCase()]?[1] ??
-            languageToCountry[name.substring(0, 2).toLowerCase()]?[1]) ??
+            languageToCountry[name.split("_").first.toLowerCase()]?[1]) ??
         name;
     return _language!;
   }
@@ -717,6 +867,7 @@ abstract class LocaleStore {
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/state_box_to_access_context.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -726,7 +877,7 @@ import 'locale_switch_sub_widgets/segmented_button_switch.dart';
 import 'locale_switch_sub_widgets/select_locale_button.dart';
 
 /// A special name for wrapper [LocaleName] to use as button that show other locales.
-const showOtherLocales = 'show_other_locales_button';
+const showOtherLocales = 'showOtherLocalesButton';
 
 /// A special name for wrapper [LocaleName] to use as system locale option.
 const systemLocale = 'system';
@@ -742,6 +893,7 @@ enum LocaleSwitcherType {
   segmentedButton,
 }
 
+/// A custom builder type for [LocaleSwitcher.custom].
 typedef LocaleSwitchBuilder = Widget Function(
     SupportedLocaleNames, BuildContext);
 
@@ -760,6 +912,32 @@ class LocaleSwitcher extends StatefulWidget {
 
   /// Just width of the widget.
   final double? width;
+
+  /// How to display Locales for countries with multiple languages:
+  ///
+  /// see [MultiLangCountries].
+  final MultiLangCountries multiLangCountries;
+
+  /// Force all Locales to be displayed as [MultiLangCountries].
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [multiLangCountries],
+  /// [multiLangWidget].
+  final bool multiLangForceAll;
+
+  /// Padding for special icons ([systemLocale], [showOtherLocales]).
+  final double specialFlagsPadding;
+
+  /// Custom builder function to display Locales for countries with multiple languages,
+  ///
+  /// By default used: (wTop, wDown, [radius]) => [MultiLangFlag] (wTop, wDown, [radius])
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [multiLangCountries],
+  /// [multiLangForceAll].
+  final MultiLangBuilder? multiLangWidget;
 
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
   ///
@@ -842,7 +1020,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (locales) {
+  ///   builder: (locales, context) {
   ///     return AnimatedToggleSwitch<String>.rolling(
   ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
@@ -884,7 +1062,7 @@ class LocaleSwitcher extends StatefulWidget {
   final String? toolTipPrefix;
 
   /// Only for [LocaleSwitcher.iconButton].
-  final double? iconRadius;
+  final double iconRadius;
 
   /// If null or 0 - used Icon, otherwise first N letters of language code.
   ///
@@ -901,89 +1079,67 @@ class LocaleSwitcher extends StatefulWidget {
   /// Null for square.
   final ShapeBorder? shape;
 
-  /// A Widget to switch locale of App.
-  const LocaleSwitcher._({
-    super.key,
-    this.showOsLocale = true,
-    this.title = 'Choose language:',
-    this.numberOfShown = 4,
-    this.type = LocaleSwitcherType.segmentedButton,
-    this.builder,
-    this.gridDelegate,
-    this.setLocaleCallBack,
-    this.toolTipPrefix,
-    this.useStaticIcon,
-    this.iconRadius,
-    this.useNLettersInsteadOfIcon = 0,
-    this.showLeading = true,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.useEmoji = false,
-    this.width,
-  }) : assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
-
   /// A Widget to switch locale of App with [DropDownMenu](https://api.flutter.dev/flutter/material/DropdownMenu-class.html).
   ///
-  /// Example: [online app](https://alexqwesa.github.io/locale_switcher/), [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
-  factory LocaleSwitcher.menu({
-    Key? key,
-    String? title = 'Language:',
-    int numberOfShown = 200,
-    bool showOsLocale = true,
-    int? useNLettersInsteadOfIcon,
-    bool useEmoji = false,
-    double width = 250,
-    bool showLeading = true,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
-    Function(BuildContext)? setLocaleCallBack,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      title: title,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      type: LocaleSwitcherType.menu,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      showLeading: showLeading,
-      shape: shape,
-      setLocaleCallBack: setLocaleCallBack,
-      useEmoji: useEmoji,
-      width: width,
-    );
-  }
+  /// Example:
+  /// [online app](https://alexqwesa.github.io/locale_switcher/),
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart).
+  const LocaleSwitcher.menu({
+    super.key,
+    this.title = 'Language:',
+    this.numberOfShown = 200,
+    this.showOsLocale = true,
+    this.useNLettersInsteadOfIcon = 0,
+    this.useEmoji = false,
+    this.width = 250,
+    this.showLeading = true,
+    this.shape = const CircleBorder(eccentricity: 0),
+    this.setLocaleCallBack,
+    this.multiLangForceAll = false,
+    this.multiLangCountries = MultiLangCountries.onlyFlag,
+    this.multiLangWidget,
+    this.iconRadius = 38,
+    this.specialFlagsPadding = 0,
+  })  : type = LocaleSwitcherType.menu,
+        useStaticIcon = null,
+        toolTipPrefix = null,
+        gridDelegate = null,
+        builder = null,
+        assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// A Widget to switch locale of App with [GridView](https://api.flutter.dev/flutter/widgets/GridView-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
-  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - click on icon in AppBar to see this widget.
-  factory LocaleSwitcher.grid({
-    Key? key,
-    int numberOfShown = 200,
-    bool showOsLocale = true,
-    SliverGridDelegate? gridDelegate,
-    Function(BuildContext)? setLocaleCallBack,
-    int? useNLettersInsteadOfIcon,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
-    useEmoji = false,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      type: LocaleSwitcherType.grid,
-      gridDelegate: gridDelegate,
-      setLocaleCallBack: setLocaleCallBack,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      shape: shape,
-      useEmoji: useEmoji,
-    );
-  }
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - click on icon in AppBar to see this widget.
+  const LocaleSwitcher.grid({
+    super.key,
+    this.gridDelegate,
+    this.numberOfShown = 200,
+    this.showOsLocale = true,
+    this.setLocaleCallBack,
+    this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
+    this.useEmoji = false,
+    this.multiLangForceAll = false,
+    this.multiLangCountries = MultiLangCountries.onlyFlag,
+    this.multiLangWidget,
+    this.specialFlagsPadding = 0,
+  })  : type = LocaleSwitcherType.grid,
+        width = null,
+        title = '',
+        builder = null,
+        useStaticIcon = null,
+        toolTipPrefix = '',
+        iconRadius = 32,
+        showLeading = true,
+        assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// A Widget to switch locale of App with your own widget:
   ///
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (supportedLocNames) { // widget AnimatedToggleSwitch from package:
+  ///   builder: (supportedLocNames, context) { // widget AnimatedToggleSwitch from package:
   ///     return AnimatedToggleSwitch<LocaleName>.rolling( // animated_toggle_switch
   ///       current: LocaleSwitcher.current,
   ///       values: supportedLocNames,
@@ -1001,93 +1157,83 @@ class LocaleSwitcher extends StatefulWidget {
   ///     );
   ///   })
   /// ```
-  factory LocaleSwitcher.custom({
-    Key? key,
-    required LocaleSwitchBuilder builder,
-    int numberOfShown = 4,
-    bool showOsLocale = true,
-    // Function(BuildContext)? setLocaleCallBack,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      type: LocaleSwitcherType.custom,
-      builder: builder,
-      // setLocaleCallBack: null,
-    );
-  }
+  const LocaleSwitcher.custom({
+    super.key,
+    this.builder,
+    this.numberOfShown = 4,
+    this.showOsLocale = true,
+  })  : type = LocaleSwitcherType.custom,
+        title = '',
+        useStaticIcon = null,
+        toolTipPrefix = '',
+        showLeading = true,
+        gridDelegate = null,
+        useEmoji = false,
+        multiLangForceAll = false,
+        multiLangWidget = null,
+        multiLangCountries = MultiLangCountries.auto,
+        specialFlagsPadding = 0,
+        shape = const CircleBorder(eccentricity: 0),
+        iconRadius = 32,
+        setLocaleCallBack = null,
+        width = null,
+        useNLettersInsteadOfIcon = 0;
 
   /// A Widget to switch locale of App with [IconButton](https://api.flutter.dev/flutter/material/IconButton-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
-  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - it is an icon in AppBar.
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) - it is an icon in AppBar.
   ///
   /// In popup window will be displayed [LocaleSwitcher.grid].
-  factory LocaleSwitcher.iconButton({
-    Key? key,
-    String? toolTipPrefix = 'Current language: ',
-    bool useEmoji = false,
-
-    /// Title of popup dialog.
-    String? title = 'Select language: ',
-    Icon? useStaticIcon,
-    double? iconRadius = 32,
-    // required LocaleSwitchBuilder builder,
-    int numberOfShown = 200,
-    bool showOsLocale = true,
-    int? useNLettersInsteadOfIcon,
-    ShapeBorder? shape = const CircleBorder(eccentricity: 0),
-    Function(BuildContext)? setLocaleCallBack,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      title: title,
-      toolTipPrefix: toolTipPrefix,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      useStaticIcon: useStaticIcon,
-      iconRadius: iconRadius,
-      type: LocaleSwitcherType.iconButton,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      shape: shape,
-      setLocaleCallBack: setLocaleCallBack,
-      useEmoji: useEmoji,
-      // builder: builder,
-    );
-  }
+  const LocaleSwitcher.iconButton({
+    super.key,
+    this.toolTipPrefix = 'Current language: ',
+    this.useEmoji = false,
+    this.title = 'Select language: ',
+    this.useStaticIcon,
+    this.iconRadius = 32,
+    this.numberOfShown = 200,
+    this.showOsLocale = true,
+    this.useNLettersInsteadOfIcon = 0,
+    this.shape = const CircleBorder(eccentricity: 0),
+    this.setLocaleCallBack,
+    this.multiLangCountries = MultiLangCountries.auto,
+    this.multiLangForceAll = false,
+    this.multiLangWidget,
+    this.specialFlagsPadding = 0,
+  })  : width = null,
+        type = LocaleSwitcherType.iconButton,
+        builder = null,
+        gridDelegate = null,
+        showLeading = false,
+        assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   /// A Widget to switch locale of App with [SegmentedButton](https://api.flutter.dev/flutter/material/SegmentedButton-class.html).
   ///
   /// Example: [online app](https://alexqwesa.github.io/locale_switcher/),
-  /// [source code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
-  factory LocaleSwitcher.segmentedButton({
-    Key? key,
-    bool useEmoji = false,
-
-    /// Width of widget, null for auto.
-    double? width,
-    // double? iconRadius = 32,
-    // required LocaleSwitchBuilder builder,
-    int numberOfShown = 4,
-    bool showOsLocale = true,
-    int? useNLettersInsteadOfIcon,
-    ShapeBorder? shape,
-    Function(BuildContext)? setLocaleCallBack,
-  }) {
-    return LocaleSwitcher._(
-      key: key,
-      showOsLocale: showOsLocale,
-      numberOfShown: numberOfShown,
-      type: LocaleSwitcherType.segmentedButton,
-      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon ?? 0,
-      shape: shape,
-      setLocaleCallBack: setLocaleCallBack,
-      useEmoji: useEmoji,
-      width: width,
-      // builder: builder,
-    );
-  }
+  /// [example code](https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main.dart) .
+  const LocaleSwitcher.segmentedButton({
+    super.key,
+    this.useEmoji = false,
+    this.width,
+    this.iconRadius = 32,
+    this.numberOfShown = 4,
+    this.showOsLocale = true,
+    this.useNLettersInsteadOfIcon = 0,
+    this.shape,
+    this.setLocaleCallBack,
+    this.specialFlagsPadding = 2,
+    this.multiLangForceAll = false,
+    this.multiLangCountries = MultiLangCountries.auto,
+    this.multiLangWidget,
+  })  : type = LocaleSwitcherType.segmentedButton,
+        title = '',
+        builder = null,
+        useStaticIcon = null,
+        toolTipPrefix = '',
+        showLeading = true,
+        gridDelegate = null,
+        assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
   @override
   State<LocaleSwitcher> createState() => _LocaleSwitcherState();
@@ -1150,7 +1296,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
   @override
   Widget build(BuildContext context) {
     // send globalKey
-    final stateBox = _StateBoxToAccessContext(key: globalKey);
+    final stateBox = StateBoxToAccessContext(key: globalKey);
     PreferenceRepository.sendGlobalKeyToRepository(globalKey);
 
     final child = ValueListenableBuilder(
@@ -1167,42 +1313,42 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
 
         // todo: add 0.5 second delayed check of app locale ? post frame callback ?
 
+        LangIconWithToolTip itemBuilder(LocaleName e) {
+          final radius = widget.iconRadius;
+
+          return LangIconWithToolTip(
+            useEmoji: widget.useEmoji,
+            localeNameFlag: e,
+            radius: radius,
+            useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+            shape: widget.shape,
+            multiLangCountries: widget.multiLangCountries,
+            multiLangForceAll: widget.multiLangForceAll,
+            multiLangWidget: widget.multiLangWidget,
+            specialFlagsPadding: widget.specialFlagsPadding,
+          );
+        }
+
         return switch (widget.type) {
           LocaleSwitcherType.custom => widget.builder!(locales, context),
           LocaleSwitcherType.menu => DropDownMenuLanguageSwitch(
               locales: locales,
-              title: widget.title,
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              showLeading: widget.showLeading,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
-              width: widget.width,
+              widget: widget,
+              itemBuilder: itemBuilder,
             ),
           LocaleSwitcherType.grid => GridOfLanguages(
               gridDelegate: widget.gridDelegate,
               setLocaleCallBack: widget.setLocaleCallBack,
-              shape: widget.shape,
-              useEmoji: widget.useEmoji,
+              itemBuilder: itemBuilder,
             ),
           LocaleSwitcherType.iconButton => SelectLocaleButton(
-              radius: widget.iconRadius ?? 32,
-              popUpWindowTitle: widget.title ?? '',
               updateIconOnChange: (widget.useStaticIcon != null),
-              useStaticIcon: widget.useStaticIcon,
-              toolTipPrefix: widget.toolTipPrefix ?? '',
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
+              widget: widget,
             ),
           LocaleSwitcherType.segmentedButton => SegmentedButtonSwitch(
               locales: locales,
-              useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
-              shape: widget.shape,
-              setLocaleCallBack: widget.setLocaleCallBack,
-              useEmoji: widget.useEmoji,
-              width: widget.width,
+              widget: widget,
+              itemBuilder: itemBuilder,
             ),
         };
       },
@@ -1230,44 +1376,98 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
         ),
       );
     }
-
-    // return LayoutBuilder(builder: (context, constraints) {
-    //
-    //   Widget sizedChild = ConstrainedBox(
-    //     constraints: BoxConstraints(
-    //       maxWidth: max(constraints.minWidth, constraints.maxWidth - 1),
-    //       maxHeight: constraints.maxHeight,
-    //     ),
-    //     child: child,
-    //   );
-    //
-    //   return IntrinsicWidth(
-    //     child: Row(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         Expanded(child: sizedChild),
-    //         sBox,
-    //       ],
-    //     ),
-    //   );
-    // });
   }
 }
+''',
+    'multi_lang_flag': r'''import 'package:flutter/material.dart';
+import 'package:locale_switcher/locale_switcher.dart';
 
-class _StateBoxToAccessContext extends StatefulWidget {
-  const _StateBoxToAccessContext({
+/// Builder function for [LocaleSwitcher.multiLangWidget].
+typedef MultiLangBuilder = Widget Function(Widget wTop, Widget wDown,
+    [double? radius, Key? key]);
+
+/// A Widget to display multi language locales for [LocaleSwitcher].
+///
+/// [wTop] - Bigger background widget,
+/// [wDown] - Small sticker on rightDown corner.
+///
+/// See also:
+/// [LocaleSwitcher.multiLangWidget] - look here first,
+/// [LocaleSwitcher.multiLangCountries],
+/// [LocaleSwitcher.multiLangWidget].
+class MultiLangFlag extends StatelessWidget {
+  /// Bigger background widget
+  final Widget wTop;
+
+  /// Small sticker on rightDown corner.
+  final Widget wDown;
+
+  /// Size/Radius of full widget.
+  final double? radius;
+
+  const MultiLangFlag({
     super.key,
+    required this.wTop,
+    required this.wDown,
+    this.radius,
   });
 
   @override
-  State<_StateBoxToAccessContext> createState() =>
-      _StateBoxToAccessContextState();
-}
-
-class _StateBoxToAccessContextState extends State<_StateBoxToAccessContext> {
-  @override
   Widget build(BuildContext context) {
-    return const SizedBox(width: 1, height: 1);
+    final rad = radius ?? 48;
+    final pad = rad / 6;
+
+    final top = (wTop is Text)
+        ? Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, pad),
+            child: wTop,
+          )
+        : wTop;
+
+    return SizedBox(
+      width: rad,
+      height: rad,
+      child: Stack(
+        children: [
+          Positioned(
+              height: rad,
+              width: rad,
+              top: 0,
+              left: 0,
+              child: FittedBox(fit: BoxFit.fitHeight, child: top)),
+          Positioned(
+              height: rad / 2.2,
+              width: rad / 1.6,
+              top: rad / 1.6,
+              left: rad / 2.2,
+              child: Container(
+                decoration: BoxDecoration(
+                  // shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).canvasColor,
+                  // gradient: LinearGradient(
+                  //     stops: const [0, 0.3, 1],
+                  //     begin: Alignment.topLeft,
+                  //     end: Alignment.bottomRight,
+                  //     colors: [
+                  //       Theme.of(context).cardColor.withAlpha(10),
+                  //       Colors.white,
+                  //       Colors.white,
+                  //       // Colors.white,
+                  //
+                  //       // Theme.of(context).cardColor.withAlpha(20),
+                  //     ])
+                ),
+              )),
+          Positioned(
+              height: rad / 1.6,
+              width: rad / 1.6,
+              top: rad / 2.0,
+              left: rad / 2.3,
+              child: FittedBox(child: wDown)),
+        ],
+      ),
+    );
   }
 }
 ''',
@@ -1380,7 +1580,9 @@ import 'package:locale_switcher/src/generated/asset_strings.dart';
 /// You can also use [LocaleManager.reassignFlags] to update these values.
 ///
 /// Do not remove first two keys!
-// https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+///
+/// Ref: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+// todo use record instead of list
 final Map<String, List<dynamic>> languageToCountry = {
   /// special entry name for [LocaleSwitcher.supportedLocaleNames] - OS locale
   systemLocale: [
@@ -1397,56 +1599,380 @@ final Map<String, List<dynamic>> languageToCountry = {
     'Show other locales',
     const Icon(Icons.expand_more)
   ],
-  // English
-  'en': ['US', 'English'],
-  // Spanish
-  'es': ['ES', 'Español'],
-  // French
-  'fr': ['FR', 'Français'],
-  // German
-  'de': ['DE', 'Deutsch'],
-  // Italian
-  'it': ['IT', 'Italiano'],
-  // Portuguese
-  'pt': ['BR', 'Português'],
-  // Dutch
-  'nl': ['NL', 'Nederlands'],
-  // Russian
-  'ru': ['RU', 'Русский'],
-  // Chinese (Simplified)
-  'zh': ['CN', '中文'],
-  // Japanese
-  'ja': ['JP', '日本語'],
-  // Korean
-  'ko': ['KR', '한국어'],
-  // Arabic
-  'ar': ['SA', 'العربية'],
-  // Hindi
-  'hi': ['IN', 'हिन्दी'],
+
   // Bengali
   'bn': ['BD', 'বাঙালি'],
-  // Turkish
-  'tr': ['TR', 'Türkçe'],
-  // Vietnamese
-  'vi': ['VN', 'Tiếng Việt'],
   // Greek
   'el': ['GR', 'Ελληνικά'],
-  // Polish
-  'pl': ['PL', 'Polski'],
-  // Ukrainian
-  'uk': ['UA', 'Українська'],
-  // Thai
-  'th': ['TH', 'ไทย'],
-  // Indonesian
-  'id': ['ID', 'Bahasa Indonesia'],
-  // Malay
-  'ms': ['MY', 'Bahasa Melayu'],
-  // Swedish
-  'sv': ['SE', 'Svenska'],
+
+  // Afrikaans
+  'af': ['ZA', 'Afrikaans'],
+  // Akan
+  'ak': ['GH', 'Akan'],
+  // Amharic
+  'am': ['ET', 'Amharic'],
+  // Arabic (Iraq)
+  'ar_iq': ['IQ', 'Arabic (Iraq)'],
+  // Arabic
+  'ar': ['SA', 'العربية'],
+  // Aymara
+  'ay': ['BO', 'Aymara'],
+  // Azerbaijani
+  'az': ['AZ', 'Azerbaijani'],
+  // Belarusian
+  'be': ['BY', 'Belarusian'],
+  // Bulgarian
+  'bg': ['BG', 'Bulgarian'],
+  // Bislama
+  'bi': ['VU', 'Bislama'],
+  // Bambara
+  'bm': ['ML', 'Bambara'],
+  // Bosnian
+  'bs': ['BA', 'Bosnian'],
+  // Catalan
+  'ca': ['ES', 'Catalan'],
+  // Cebuano
+  'ceb': ['PH', 'Cebuano'],
+  // Chamorro
+  'ch': ['GU', 'Chamorro'],
+  // Mari
+  'chm': ['RU', 'Mari'],
+  // Corsican
+  'co': ['FR', 'Corsican'],
+  // Czech
+  'cs': ['CZ', 'Czech'],
+  // Welsh
+  'cy': ['GB', 'Welsh'],
+  // Danish
+  'da': ['DK', 'Danish'],
+  // German
+  'de': ['DE', 'Deutsch'],
+  // Divehi
+  'dv': ['MV', 'Divehi'],
+  // Dzongkha
+  'dz': ['BT', 'Dzongkha'],
+
+  // English (Australia)
+  'en_au': ['AU', 'English (Australia)'],
+  // English (Canada)
+  'en_ca': ['CA', 'English (Canada)'],
+  // English (India)
+  'en_in': ['IN', 'English (India)'],
+  // English (Nigeria)
+  'en_ng': ['NG', 'English (Nigeria)'],
+  // English (New Zealand)
+  'en_nz': ['NZ', 'English (New Zealand)'],
+  // English (South Africa)
+  'en_za': ['ZA', 'English (South Africa)'],
+  // English
+  'en': ['US', 'English'],
+  // English Great Britain
+  'en_gb': ['GB', 'English(Britain)'],
+
+  // Hindi
+  'hi': ['IN', 'हिन्दी'],
+  // Bhojpuri
+  'bho': ['IN', 'Bhojpuri'],
+  // Assamese
+  'as': ['IN', 'Assamese'],
+  // Punjabi
+  'pa': ['IN', 'Punjabi'],
+  // Tamil
+  'ta': ['IN', 'Tamil'],
+  // Telugu
+  'te': ['IN', 'Telugu'],
+  // Gujarati
+  'gu': ['IN', 'Gujarati'],
+  // Kannada
+  'kn': ['IN', 'Kannada'],
+  // Malayalam
+  'ml': ['IN', 'Malayalam'],
+  // Marathi
+  'mr': ['IN', 'Marathi'],
+
+  // Spanish
+  'es': ['ES', 'Español'],
+  // Estonian
+  'et': ['EE', 'Estonian'],
+  // Basque - Spain and France
+  'eu': ['ES', 'Basque'],
+  // Persian
+  'fa': ['IR', 'Persian'],
+
   // Finnish
   'fi': ['FI', 'Suomi'],
+  // Filipino
+  'fil': ['PH', 'Filipino'],
+  // Fijian
+  'fj': ['FJ', 'Fijian'],
+  // Faroese
+  'fo': ['FO', 'Faroese'],
+  // French
+  'fr': ['FR', 'Français'],
+  // Irish
+  'ga': ['IE', 'Irish'],
+  // Galician
+  'gl': ['ES', 'Galician'],
+  // Guarani
+  'gn': ['PY', 'Guarani'],
+  // Manx
+  'gv': ['IM', 'Manx'],
+  // Hausa
+  'ha': ['NG', 'Hausa'],
+  // Hawaiian
+  'haw': ['US', 'Hawaiian'],
+  // Hebrew
+  'he': ['IL', 'Hebrew'],
+
+  // Hiri Motu
+  'ho': ['PG', 'Hiri Motu'],
+  // Croatian
+  'hr': ['HR', 'Croatian'],
+  // Haitian
+  'ht': ['HT', 'Haitian'],
+  // Hungarian
+  'hu': ['HU', 'Hungarian'],
+  // Armenian
+  'hy': ['AM', 'Armenian'],
+  // Indonesian
+  'id': ['ID', 'Bahasa Indonesia'],
+  // Igbo
+  'ig': ['NG', 'Igbo'],
+  // Iloko
+  'ilo': ['PH', 'Iloko'],
+  // Icelandic +
+  'icl': ['IS', 'Icelandic'],
+  // Italian
+  'it': ['IT', 'Italiano'],
+  // Japanese
+  'ja': ['JP', '日本語'],
+  // Javanese
+  'jv': ['ID', 'Javanese'],
+  // Georgian
+  'ka': ['GE', 'Georgian'],
+  // Kazakh
+  'kk': ['KZ', 'Kazakh'],
+  // Kalaallisut
+  'kl': ['GL', 'Kalaallisut'],
+  // Central Khmer
+  'km': ['KH', 'Central Khmer'],
+
+  // Korean
+  'ko': ['KR', '한국어'],
+  // Krio
+  'kri': ['SL', 'Krio'],
+  // Kurdish
+  'ku': ['TR', 'Kurdish'],
+  // Kirghiz
+  'ky': ['KG', 'Kirghiz'],
+  // Latin
+  'la': ['VA', 'Latin'],
+  // Luxembourgish
+  'lb': ['LU', 'Luxembourgish'],
+  // Ganda
+  'lg': ['UG', 'Ganda'],
+  // Lingala
+  'ln': ['CD', 'Lingala'],
+  // Lao
+  'lo': ['LA', 'Lao'],
+  // Lithuanian
+  'lt': ['LT', 'Lithuanian'],
+  // Luba-Katanga
+  'lu': ['CD', 'Luba-Katanga'],
+  // Latvian
+  'lv': ['LV', 'Latvian'],
+  // Malagasy
+  'mg': ['MG', 'Malagasy'],
+  // Marshallese
+  'mh': ['MH', 'Marshallese'],
+  // Maori
+  'mi': ['NZ', 'Maori'],
+  // Macedonian
+  'mk': ['MK', 'Macedonian'],
+  // Mongolian
+  'mn': ['MN', 'Mongolian'],
+  // Malay
+  'ms': ['MY', 'Malay'],
+  // Maltese
+  'mt': ['MT', 'Maltese'],
+  // Burmese
+  'my': ['MM', 'Burmese'],
+  // Nauru
+  'na': ['NR', 'Nauru'],
+  // North Ndebele
+  'nd': ['ZW', 'North Ndebele'],
+  // Nepali
+  'ne': ['NP', 'Nepali'],
+  // Nederlands
+  // Belgium
+  // Suriname
+  // France (Nord)
+  'nl': ['NL', 'Dutch'],
+
   // Norwegian
   'no': ['NO', 'Norsk'],
+  // Norwegian Bokmål
+  'nb': ['NO', 'Norwegian Bokmål'],
+  // Norwegian Nynorsk
+  'nn': ['NO', 'Norwegian Nynorsk'],
+
+  // South Ndebele
+  'nr': ['ZA', 'South Ndebele'],
+  // Chichewa
+  'ny': ['MW', 'Chichewa'],
+  // Papiamento
+  'pap': ['AW', 'Papiamento'],
+  // Polish
+  'pl': ['PL', 'Polski'],
+  // Pashto
+  'ps': ['AF', 'Pashto'],
+  // Portuguese (Brazil)
+  'pt_br': ['BR', 'Português (Brazil)'],
+  // Portuguese
+  'pt': ['PT', 'Português'],
+  // Rundi
+  'rn': ['BI', 'Rundi'],
+  // Romanian
+  'ro': ['RO', 'Romanian'],
+
+  // Russian
+  'ru': ['RU', 'Русский'],
+  // Western Mari
+  'mrj': ['RU', 'Western Mari'],
+
+  // Kinyarwanda
+  'rw': ['RW', 'Kinyarwanda'],
+  // Sindhi
+  'sd': ['PK', 'Sindhi'],
+  // Sango
+  'sg': ['CF', 'Sango'],
+  // Sinhala
+  'si': ['LK', 'Sinhala'],
+  // Slovak
+  'sk': ['SK', 'Slovak'],
+  // Slovenian
+  'sl': ['SI', 'Slovenian'],
+  // Samoan
+  'sm': ['WS', 'Samoan'],
+  // Shona
+  'sn': ['ZW', 'Shona'],
+  // Somali
+  'so': ['SO', 'Somali'],
+  // Albanian
+  'sq': ['AL', 'Albanian'],
+  // Serbian
+  'sr': ['RS', 'Serbian'],
+  // Swati
+  'ss': ['SZ', 'Swati'],
+  // Southern Sotho
+  'st': ['LS', 'Southern Sotho'],
+  // Sundanese
+  'su': ['ID', 'Sundanese'],
+  // Swedish
+  'sv': ['SE', 'Svenska'],
+  // Swahili
+  'sw': ['TZ', 'Swahili'],
+  // Tajik
+  'tg': ['TJ', 'Tajik'],
+  // Thai
+  'th': ['TH', 'ไทย'],
+  // Turkmen
+  'tk': ['TM', 'Turkmen'],
+  // Tagalog
+  'tl': ['PH', 'Tagalog'],
+  // Tswana
+  'tn': ['BW', 'Tswana'],
+  // Tonga
+  'to': ['TO', 'Tonga'],
+  // Turkish
+  'tr': ['TR', 'Türkçe'],
+  // Tahitian
+  'ty': ['PF', 'Tahitian'],
+  // Ukrainian
+  'uk': ['UA', 'Українська'],
+  // Urdu
+  'ur': ['PK', 'Urdu'],
+  // Uzbek
+  'uz': ['UZ', 'Uzbek'],
+  // Vietnamese
+  'vi': ['VN', 'Tiếng Việt'],
+  // Xhosa
+  'xh': ['ZA', 'Xhosa'],
+  // Unknown Language
+  'xx': ['XX', 'Unknown Language'],
+  // Yiddish
+  'yi': ['US', 'Yiddish'],
+  // Yoruba
+  'yo': ['NG', 'Yoruba'],
+  // Yucateco
+  'yua': ['MX', 'Yucateco'],
+  // Chinese - Traditional
+  'zh_tw': ['TW', 'Chinese - Traditional'],
+  // Chinese
+  'zh': ['CN', '中文'],
+  // Zulu
+  'zu': ['ZA', 'Zulu']
+};
+
+/// For [MultiLangCountries.auto] - country most popular language.
+///
+/// Note: pairs like 'tr': 'tr' are assumed automatically, you don't need to add them.
+final popularInCountry = {'us': 'en', 'in': 'hi', 'zh': 'cn'};
+
+/// A map to connect language to country, only for country with multiple languages.
+final countriesWithMulti = <String, String>{
+  'lu': 'CD',
+  'ln': 'CD',
+  'ca': 'ES',
+  'es': 'ES',
+  'eu': 'ES',
+  'gl': 'ES',
+  'co': 'FR',
+  'fr': 'FR',
+  'su': 'ID',
+  'id': 'ID',
+  'jv': 'ID',
+  'kn': 'IN',
+  'pa': 'IN',
+  'ta': 'IN',
+  'te': 'IN',
+  'gu': 'IN',
+  'ml': 'IN',
+  'mr': 'IN',
+  'en_in': 'IN',
+  'as': 'IN',
+  'bho': 'IN',
+  'hi': 'IN',
+  'yo': 'NG',
+  'en_ng': 'NG',
+  'ha': 'NG',
+  'ig': 'NG',
+  'no': 'NO',
+  'nn': 'NO',
+  'nb': 'NO',
+  'en_nz': 'NZ',
+  'mi': 'NZ',
+  'ceb': 'PH',
+  'ilo': 'PH',
+  'fil': 'PH',
+  'tl': 'PH',
+  'ur': 'PK',
+  'sd': 'PK',
+  'ru': 'RU',
+  'mrj': 'RU',
+  'chm': 'RU',
+  'ku': 'TR',
+  'tr': 'TR',
+  'en': 'US',
+  'yi': 'US',
+  'haw': 'US',
+  'zu': 'ZA',
+  'nr': 'ZA',
+  'af': 'ZA',
+  'xh': 'ZA',
+  'en_za': 'ZA',
+  'nd': 'ZW',
+  'sn': 'ZW',
 };
 
 extension StringToLocale on String {
@@ -1598,7 +2124,7 @@ extension LocaleFlag on Locale {
     }
 
     if (str.length > 2) {
-      fb = findFlagFor(language: str.substring(0, 2)) ?? fb;
+      fb = findFlagFor(language: localeList.first) ?? fb;
     }
 
     switch (localeList.length) {
@@ -1810,9 +2336,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
 
   /// Just flag for [showOtherLocales].
   static Widget get flagForOtherLocales =>
-      ((languageToCountry[showOtherLocales]?.length ?? 0) > 2)
-          ? languageToCountry[showOtherLocales]![2]
-          : const Icon(Icons.expand_more);
+      languageToCountry[showOtherLocales]?[2] ?? const Icon(Icons.expand_more);
 }
 ''',
     'system_locale_name': r'''import 'dart:ui';
@@ -1836,42 +2360,28 @@ class SystemLocaleName extends LocaleName {
 }
 ''',
     'locale_switch_sub_widgets': <String, dynamic>{
-      'drop_down_menu_language_switch':
-          r'''import 'package:flutter/material.dart';
+      'drop_down_menu_language_switch': r'''import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
 class DropDownMenuLanguageSwitch extends StatelessWidget {
-  final String? title;
+  final ItemBuilder itemBuilder;
 
-  final int useNLettersInsteadOfIcon;
-
-  final bool showLeading;
-
-  final ShapeBorder? shape;
-
-  final Function(BuildContext)? setLocaleCallBack;
-
-  final bool useEmoji;
-
-  final double? width;
+  final LocaleSwitcher widget;
 
   const DropDownMenuLanguageSwitch({
     super.key,
     required this.locales,
-    this.title,
-    this.useNLettersInsteadOfIcon = 0,
-    this.showLeading = true,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.setLocaleCallBack,
-    this.useEmoji = false,
-    this.width,
+    required this.itemBuilder,
+    required this.widget,
   });
 
   final SupportedLocaleNames locales;
 
   @override
   Widget build(BuildContext context) {
-    const radius = 38.0;
+    final radius = widget.iconRadius;
     int indexOfSelected = locales.indexOf(LocaleSwitcher.current);
     if (indexOfSelected == -1) {
       indexOfSelected = 0;
@@ -1881,19 +2391,12 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
           (e) => DropdownMenuEntry<LocaleName>(
             value: e,
             label: e.language,
-            leadingIcon: showLeading
+            leadingIcon: widget.showLeading
                 ? SizedBox(
                     width: radius,
                     height: radius,
                     key: ValueKey('item-${e.name}'),
-                    child: FittedBox(
-                        child: LangIconWithToolTip(
-                      useEmoji: useEmoji,
-                      localeNameFlag: e,
-                      radius: radius,
-                      useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                      shape: shape,
-                    )),
+                    child: itemBuilder(e),
                   )
                 : null,
           ),
@@ -1901,13 +2404,13 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
         .toList();
 
     return DropdownMenu<LocaleName>(
-      width: width,
+      width: widget.width,
       initialSelection: LocaleSwitcher.current,
-      leadingIcon: showLeading
+      leadingIcon: widget.showLeading
           ? Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(4.0),
               child: SizedBox(
-                height: radius - 8,
+                height: max(0, radius - 8),
                 child: FittedBox(
                   child: localeEntries[indexOfSelected].leadingIcon!,
                 ),
@@ -1915,19 +2418,19 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
             )
           : null,
       // controller: colorController,
-      label: title != null ? Text(title!) : null,
+      label: widget.title != null ? Text(widget.title!) : null,
       dropdownMenuEntries: localeEntries,
       onSelected: (LocaleName? langCode) {
         if (langCode != null) {
           if (langCode.name == showOtherLocales) {
             showSelectLocaleDialog(
               context,
-              useEmoji: useEmoji,
-              setLocaleCallBack: setLocaleCallBack,
+              useEmoji: widget.useEmoji,
+              setLocaleCallBack: widget.setLocaleCallBack,
             );
           } else {
             LocaleSwitcher.current = langCode;
-            setLocaleCallBack?.call(context);
+            widget.setLocaleCallBack?.call(context);
           }
         }
       },
@@ -1935,43 +2438,6 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
     );
   }
 }
-
-// class LeadingIcon extends StatelessWidget {
-//   const LeadingIcon({
-//     super.key,
-//     required this.radius,
-//     required this.localeEntries,
-//     required this.indexOfSelected,
-//   });
-//
-//   final double radius;
-//   final List<DropdownMenuEntry<LocaleName>> localeEntries;
-//   final int indexOfSelected;
-//
-//   @override
-//   bool operator ==(Object other) {
-//     if (identical(this, other)) return true;
-//     if (runtimeType != other.runtimeType) return false;
-//     return (other as LeadingIcon).key == key;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: SizedBox(
-//         height: radius - 8,
-//         child: FittedBox(
-//           child: ValueListenableBuilder(
-//               valueListenable: LocaleSwitcher.localeIndex,
-//               builder: (context, index, _) {
-//                 return localeEntries[indexOfSelected].leadingIcon!;
-//               }),
-//         ),
-//       ),
-//     );
-//   }
-// }
 ''',
       'grid_of_languages': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -1982,16 +2448,13 @@ class GridOfLanguages extends StatelessWidget {
   final SliverGridDelegate? gridDelegate;
   final Function(BuildContext)? setLocaleCallBack;
 
-  final ShapeBorder? shape;
-
-  final bool useEmoji;
+  final ItemBuilder itemBuilder;
 
   const GridOfLanguages({
     super.key,
     this.gridDelegate,
     this.setLocaleCallBack,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.useEmoji = false,
+    required this.itemBuilder,
   });
 
   @override
@@ -2004,8 +2467,8 @@ class GridOfLanguages extends StatelessWidget {
             maxCrossAxisExtent: 200,
           ),
       children: [
-        ...locales.map((locNameFlag) {
-          final lang = languageToCountry[locNameFlag] ??
+        ...locales.map((final LocaleName locNameFlag) {
+          final lang = languageToCountry[locNameFlag.name] ??
               [locNameFlag.name, locNameFlag.language];
           return Card(
             child: InkWell(
@@ -2017,13 +2480,8 @@ class GridOfLanguages extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: LangIconWithToolTip(
-                        useEmoji: useEmoji,
-                        localeNameFlag: locNameFlag,
-                        shape: shape,
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(4.0),
+                        child: FittedBox(child: itemBuilder(locNameFlag))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -2042,73 +2500,39 @@ class GridOfLanguages extends StatelessWidget {
   }
 }
 ''',
-      'segmented_button_switch': r'''import 'package:flutter/material.dart';
+      'segmented_button_switch': r'''import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
 class SegmentedButtonSwitch extends StatelessWidget {
   final SupportedLocaleNames locales;
-  final int useNLettersInsteadOfIcon;
-
-  final double? radius;
-
-  final ShapeBorder? shape;
-
-  final Function(BuildContext)? setLocaleCallBack;
-
-  final bool useEmoji;
-
-  final double? width;
+  final LocaleSwitcher widget;
+  final ItemBuilder itemBuilder;
 
   const SegmentedButtonSwitch({
     super.key,
     required this.locales,
-    this.useNLettersInsteadOfIcon = 0,
-    this.radius,
-    this.shape,
-    this.setLocaleCallBack,
-    this.useEmoji = false,
-    this.width,
+    required this.widget,
+    required this.itemBuilder,
   });
 
   @override
   Widget build(BuildContext context) {
-    final height = (radius ?? (useEmoji ? 42 : 34));
+    final radius = widget.iconRadius;
+    final setLocaleCallBack = widget.setLocaleCallBack;
+    final width = widget.width;
+
+    final height = radius;
     final segmentedButton = LayoutBuilder(
       builder: (context, constrains) {
-        final inSet = (constrains.maxHeight - height) / 2;
-        double scale = 1;
-        if (constrains.maxWidth < (width ?? 0)) {
-          scale = constrains.maxWidth / width! / 3;
-        } else if (constrains.maxWidth < (height * 3 * locales.length)) {
-          scale = constrains.maxWidth / (height * 3 * locales.length) / 3;
-        }
+        final scale = min(1, height / 32);
+        final inSet = max(0.0, scale * (constrains.maxHeight - height) / 2);
 
         return SegmentedButton<LocaleName>(
           emptySelectionAllowed: false,
           showSelectedIcon: false,
-          segments: locales.map<ButtonSegment<LocaleName>>(
-            (e) {
-              return ButtonSegment<LocaleName>(
-                value: e,
-                tooltip: e.language,
-                label: Padding(
-                  padding:
-                      // e.name == systemLocale
-                      //     ? const EdgeInsets.all(0.0)
-                      //     :
-                      EdgeInsets.fromLTRB(
-                          inSet * scale, inSet, inSet * scale, inSet),
-                  child: LangIconWithToolTip(
-                    useEmoji: useEmoji,
-                    localeNameFlag: e,
-                    radius: e.name == systemLocale ? (radius ?? 36) : height,
-                    useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                    shape: shape,
-                  ),
-                ),
-              );
-            },
-          ).toList(),
+          segments: segmentBuilder(inSet, height),
           selected: {LocaleSwitcher.current},
           multiSelectionEnabled: false,
           onSelectionChanged: (Set<LocaleName> newSelection) {
@@ -2133,6 +2557,23 @@ class SegmentedButtonSwitch extends StatelessWidget {
       return segmentedButton;
     }
   }
+
+  segmentBuilder(double inSet, double height) {
+    return locales.map<ButtonSegment<LocaleName>>(
+      (e) {
+        return ButtonSegment<LocaleName>(
+          value: e,
+          tooltip: e.language,
+          label: Padding(
+            padding: EdgeInsets.all(inSet),
+            child: SizedBox(
+                height: widget.iconRadius,
+                child: FittedBox(fit: BoxFit.fitHeight, child: itemBuilder(e))),
+          ),
+        );
+      },
+    ).toList();
+  }
 }
 ''',
       'select_locale_button': r'''import 'package:flutter/material.dart';
@@ -2144,34 +2585,12 @@ import 'package:locale_switcher/src/current_locale.dart';
 /// In popup window will be displayed [LocaleSwitcher.grid].
 class SelectLocaleButton extends StatelessWidget {
   final bool updateIconOnChange;
-
-  final String toolTipPrefix;
-
-  final double radius;
-
-  final Widget? useStaticIcon;
-
-  final String popUpWindowTitle;
-
-  final int useNLettersInsteadOfIcon;
-
-  final ShapeBorder? shape;
-
-  final Function(BuildContext)? setLocaleCallBack;
-
-  final bool useEmoji;
+  final LocaleSwitcher widget;
 
   const SelectLocaleButton({
     super.key,
     this.updateIconOnChange = true,
-    this.toolTipPrefix = 'Current language: ',
-    this.radius = 32,
-    this.useStaticIcon,
-    this.popUpWindowTitle = "",
-    this.useNLettersInsteadOfIcon = 0,
-    this.shape = const CircleBorder(eccentricity: 0),
-    this.setLocaleCallBack,
-    this.useEmoji = false,
+    required this.widget,
   });
 
   @override
@@ -2180,24 +2599,43 @@ class SelectLocaleButton extends StatelessWidget {
       valueListenable: CurrentLocale.allNotifiers,
       builder: (BuildContext context, value, Widget? child) {
         return IconButton(
-          icon: useStaticIcon ??
+          icon: widget.useStaticIcon ??
               LangIconWithToolTip(
-                useEmoji: useEmoji,
-                toolTipPrefix: toolTipPrefix,
+                useEmoji: widget.useEmoji,
+                toolTipPrefix: widget.toolTipPrefix ?? '',
                 localeNameFlag: LocaleSwitcher.current,
-                radius: radius,
-                useNLettersInsteadOfIcon: useNLettersInsteadOfIcon,
-                shape: shape,
+                radius: widget.iconRadius,
+                useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
+                shape: widget.shape,
               ),
           onPressed: () => showSelectLocaleDialog(
             context,
-            title: popUpWindowTitle,
-            setLocaleCallBack: setLocaleCallBack,
-            useEmoji: useEmoji,
+            title: widget.title ?? '',
+            setLocaleCallBack: widget.setLocaleCallBack,
+            useEmoji: widget.useEmoji,
           ),
         );
       },
     );
+  }
+}
+''',
+      'state_box_to_access_context': r'''import 'package:flutter/material.dart';
+
+class StateBoxToAccessContext extends StatefulWidget {
+  const StateBoxToAccessContext({
+    super.key,
+  });
+
+  @override
+  State<StateBoxToAccessContext> createState() =>
+      _StateBoxToAccessContextState();
+}
+
+class _StateBoxToAccessContextState extends State<StateBoxToAccessContext> {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(width: 1, height: 1);
   }
 }
 ''',
