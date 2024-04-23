@@ -174,8 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: const TextStyle(color: Colors.blue),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      launchUrl(Uri.dataFromString(
-                                          'https://github.com/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart'));
+                                      launchUrl(
+                                        Uri.https(
+                                          'github.com',
+                                          '/Alexqwesa/locale_switcher/blob/main/example/lib/main_with_dynamic_options.dart',
+                                        ),
+                                      );
                                     },
                                 ),
                               ],
