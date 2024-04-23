@@ -8,13 +8,14 @@ export 'package:locale_switcher/src/lang_icon_with_tool_tip.dart';
 export 'package:locale_switcher/src/locale_manager.dart';
 export 'package:locale_switcher/src/locale_matcher.dart';
 export 'package:locale_switcher/src/locale_name.dart';
+export 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_locale_switch.dart';
 export 'package:locale_switcher/src/locale_switcher.dart';
+export 'package:locale_switcher/src/multi_lang_flag.dart';
 export 'package:locale_switcher/src/public_extensions.dart';
 
 // export 'package:locale_switcher/src/current_locale.dart';
 export 'package:locale_switcher/src/show_select_locale_dialog.dart';
 export 'package:locale_switcher/src/supported_locale_names.dart';
-export 'package:locale_switcher/src/locale_switch_sub_widgets/title_of_locale_switch.dart';
 ''',
   'src': <String, dynamic>{
     'current_locale': r'''import 'package:flutter/material.dart';
@@ -222,10 +223,20 @@ class LangIconWithToolTip extends StatelessWidget {
   final MultiLangCountries multiLangCountries;
 
   /// Force all Locales to be displayed as [MultiLangCountries].
-  final bool forceMulti;
+  final bool multiLangForceAll;
 
   /// Padding for special icons ([systemLocale], [showOtherLocales]).
   final double specialFlagsPadding;
+
+  /// Custom builder function to display Locales for countries with multiple languages,
+  ///
+  /// By default used: (wTop, wDown, radius) => [MultiLangFlag] (wTop, wDown, radius)
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [LocaleSwitcher.multiLangCountries],
+  /// [LocaleSwitcher.multiLangForceAll].
+  final MultiLangBuilder? multiLangWidget;
 
   /// Just a shortcut to use as tear-off in builders of
   /// widgets that generate lists of elements.
@@ -243,8 +254,9 @@ class LangIconWithToolTip extends StatelessWidget {
     this.langCode,
     this.useEmoji = false,
     this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.specialFlagsPadding = 3.5,
+    this.multiLangWidget,
   });
 
   const LangIconWithToolTip({
@@ -258,8 +270,9 @@ class LangIconWithToolTip extends StatelessWidget {
     this.localeNameFlag,
     this.useEmoji = false,
     this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.specialFlagsPadding = 3.5,
+    this.multiLangWidget,
   })  : assert(langCode != null || localeNameFlag != null),
         assert(!useEmoji || (useEmoji == (useNLettersInsteadOfIcon == 0)));
 
@@ -354,7 +367,7 @@ class LangIconWithToolTip extends StatelessWidget {
     const flagError = Icon(Icons.error_outline_rounded);
 
     // Simple case - country with one language
-    if (!forceMulti && !countriesWithMulti.containsKey(locCode)) {
+    if (!multiLangForceAll && !countriesWithMulti.containsKey(locCode)) {
       return FittedBox(
         child: flag ?? flagError,
       );
@@ -367,6 +380,14 @@ class LangIconWithToolTip extends StatelessWidget {
         ? MultiLangCountries.asBigLittle
         : multiLangCountries;
 
+    final doubleFlag = (multiLangWidget != null)
+        ? multiLangWidget!
+        : (wTop, wDown, [double? radius, Key? key]) => MultiLangFlag(
+              wTop: wTop,
+              wDown: wDown,
+              radius: radius,
+            );
+
     return FittedBox(
       child: switch (mlc) {
         MultiLangCountries.auto when language == country =>
@@ -375,31 +396,31 @@ class LangIconWithToolTip extends StatelessWidget {
             when language ==
                 popularInCountry[country.toLowerCase()]?.toUpperCase() =>
           flag ?? Text(language),
-        MultiLangCountries.auto when flag == null => DoubleFlag(
-            radius: radius,
-            wTop: Text(language),
-            wDown: Text(country),
+        MultiLangCountries.auto when flag == null => doubleFlag(
+            Text(language),
+            Text(country),
+            radius,
           ),
-        MultiLangCountries.auto => DoubleFlag(
-            radius: radius,
-            wTop: flag!,
-            wDown: Text(language),
+        MultiLangCountries.auto => doubleFlag(
+            flag!,
+            Text(language),
+            radius,
           ),
-        MultiLangCountries.flagWithSmallLang when flag != null => DoubleFlag(
-            radius: radius,
-            wTop: flag,
-            wDown: Text(language),
+        MultiLangCountries.flagWithSmallLang when flag != null => doubleFlag(
+            flag,
+            Text(language),
+            radius,
           ),
         MultiLangCountries.flagWithSmallLang => Text(locCode),
-        MultiLangCountries.langWithSmallFlag => DoubleFlag(
-            radius: radius,
-            wTop: Text(language),
-            wDown: flag ?? Text(country),
+        MultiLangCountries.langWithSmallFlag => doubleFlag(
+            Text(language),
+            flag ?? Text(country),
+            radius,
           ),
-        MultiLangCountries.asBigLittle when language.length >= 2 => DoubleFlag(
-            radius: radius,
-            wTop: Text(language),
-            wDown: Text(country),
+        MultiLangCountries.asBigLittle when language.length >= 2 => doubleFlag(
+            Text(language),
+            Text(country),
+            radius,
           ),
         MultiLangCountries.asBigLittle => Text(language),
         MultiLangCountries.onlyLanguage => Text(language),
@@ -846,7 +867,7 @@ abstract class LocaleStore {
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
-import 'package:locale_switcher/src/locale_switch_sub_widgets/helpers/state_box_to_access_context.dart';
+import 'package:locale_switcher/src/locale_switch_sub_widgets/state_box_to_access_context.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
 import 'locale_store.dart';
@@ -872,6 +893,7 @@ enum LocaleSwitcherType {
   segmentedButton,
 }
 
+/// A custom builder type for [LocaleSwitcher.custom].
 typedef LocaleSwitchBuilder = Widget Function(
     SupportedLocaleNames, BuildContext);
 
@@ -897,10 +919,25 @@ class LocaleSwitcher extends StatefulWidget {
   final MultiLangCountries multiLangCountries;
 
   /// Force all Locales to be displayed as [MultiLangCountries].
-  final bool forceMulti;
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [multiLangCountries],
+  /// [multiLangWidget].
+  final bool multiLangForceAll;
 
   /// Padding for special icons ([systemLocale], [showOtherLocales]).
   final double specialFlagsPadding;
+
+  /// Custom builder function to display Locales for countries with multiple languages,
+  ///
+  /// By default used: (wTop, wDown, [radius]) => [MultiLangFlag] (wTop, wDown, [radius])
+  ///
+  /// See also:
+  /// [MultiLangFlag],
+  /// [multiLangCountries],
+  /// [multiLangForceAll].
+  final MultiLangBuilder? multiLangWidget;
 
   /// Currently selected entry in [supportedLocaleNames] that contains [Locale].
   ///
@@ -983,7 +1020,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (locales) {
+  ///   builder: (locales, context) {
   ///     return AnimatedToggleSwitch<String>.rolling(
   ///       current: LocaleManager.languageCode.value,
   ///       values: locales,
@@ -1058,8 +1095,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.showLeading = true,
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
+    this.multiLangForceAll = false,
     this.multiLangCountries = MultiLangCountries.onlyFlag,
-    this.forceMulti = false,
+    this.multiLangWidget,
     this.iconRadius = 38,
     this.specialFlagsPadding = 0,
   })  : type = LocaleSwitcherType.menu,
@@ -1082,8 +1120,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.useNLettersInsteadOfIcon = 0,
     this.shape = const CircleBorder(eccentricity: 0),
     this.useEmoji = false,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.multiLangCountries = MultiLangCountries.onlyFlag,
+    this.multiLangWidget,
     this.specialFlagsPadding = 0,
   })  : type = LocaleSwitcherType.grid,
         width = null,
@@ -1100,7 +1139,7 @@ class LocaleSwitcher extends StatefulWidget {
   /// Example:
   /// ```dart
   /// LocaleSwitcher.custom(
-  ///   builder: (supportedLocNames) { // widget AnimatedToggleSwitch from package:
+  ///   builder: (supportedLocNames, context) { // widget AnimatedToggleSwitch from package:
   ///     return AnimatedToggleSwitch<LocaleName>.rolling( // animated_toggle_switch
   ///       current: LocaleSwitcher.current,
   ///       values: supportedLocNames,
@@ -1130,12 +1169,13 @@ class LocaleSwitcher extends StatefulWidget {
         showLeading = true,
         gridDelegate = null,
         useEmoji = false,
-        forceMulti = false,
+        multiLangForceAll = false,
+        multiLangWidget = null,
+        multiLangCountries = MultiLangCountries.auto,
         specialFlagsPadding = 0,
         shape = const CircleBorder(eccentricity: 0),
         iconRadius = 32,
         setLocaleCallBack = null,
-        multiLangCountries = MultiLangCountries.auto,
         width = null,
         useNLettersInsteadOfIcon = 0;
 
@@ -1158,7 +1198,8 @@ class LocaleSwitcher extends StatefulWidget {
     this.shape = const CircleBorder(eccentricity: 0),
     this.setLocaleCallBack,
     this.multiLangCountries = MultiLangCountries.auto,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
+    this.multiLangWidget,
     this.specialFlagsPadding = 0,
   })  : width = null,
         type = LocaleSwitcherType.iconButton,
@@ -1182,8 +1223,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.shape,
     this.setLocaleCallBack,
     this.specialFlagsPadding = 2,
-    this.forceMulti = false,
+    this.multiLangForceAll = false,
     this.multiLangCountries = MultiLangCountries.auto,
+    this.multiLangWidget,
   })  : type = LocaleSwitcherType.segmentedButton,
         title = '',
         builder = null,
@@ -1281,7 +1323,8 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
             useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
             shape: widget.shape,
             multiLangCountries: widget.multiLangCountries,
-            forceMulti: widget.forceMulti,
+            multiLangForceAll: widget.multiLangForceAll,
+            multiLangWidget: widget.multiLangWidget,
             specialFlagsPadding: widget.specialFlagsPadding,
           );
         }
@@ -1333,6 +1376,98 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
         ),
       );
     }
+  }
+}
+''',
+    'multi_lang_flag': r'''import 'package:flutter/material.dart';
+import 'package:locale_switcher/locale_switcher.dart';
+
+/// Builder function for [LocaleSwitcher.multiLangWidget].
+typedef MultiLangBuilder = Widget Function(Widget wTop, Widget wDown,
+    [double? radius, Key? key]);
+
+/// A Widget to display multi language locales for [LocaleSwitcher].
+///
+/// [wTop] - Bigger background widget,
+/// [wDown] - Small sticker on rightDown corner.
+///
+/// See also:
+/// [LocaleSwitcher.multiLangWidget] - look here first,
+/// [LocaleSwitcher.multiLangCountries],
+/// [LocaleSwitcher.multiLangWidget].
+class MultiLangFlag extends StatelessWidget {
+  /// Bigger background widget
+  final Widget wTop;
+
+  /// Small sticker on rightDown corner.
+  final Widget wDown;
+
+  /// Size/Radius of full widget.
+  final double? radius;
+
+  const MultiLangFlag({
+    super.key,
+    required this.wTop,
+    required this.wDown,
+    this.radius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final rad = radius ?? 48;
+    final pad = rad / 6;
+
+    final top = (wTop is Text)
+        ? Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, pad),
+            child: wTop,
+          )
+        : wTop;
+
+    return SizedBox(
+      width: rad,
+      height: rad,
+      child: Stack(
+        children: [
+          Positioned(
+              height: rad,
+              width: rad,
+              top: 0,
+              left: 0,
+              child: FittedBox(fit: BoxFit.fitHeight, child: top)),
+          Positioned(
+              height: rad / 2.2,
+              width: rad / 1.6,
+              top: rad / 1.6,
+              left: rad / 2.2,
+              child: Container(
+                decoration: BoxDecoration(
+                  // shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).canvasColor,
+                  // gradient: LinearGradient(
+                  //     stops: const [0, 0.3, 1],
+                  //     begin: Alignment.topLeft,
+                  //     end: Alignment.bottomRight,
+                  //     colors: [
+                  //       Theme.of(context).cardColor.withAlpha(10),
+                  //       Colors.white,
+                  //       Colors.white,
+                  //       // Colors.white,
+                  //
+                  //       // Theme.of(context).cardColor.withAlpha(20),
+                  //     ])
+                ),
+              )),
+          Positioned(
+              height: rad / 1.6,
+              width: rad / 1.6,
+              top: rad / 2.0,
+              left: rad / 2.3,
+              child: FittedBox(child: wDown)),
+        ],
+      ),
+    );
   }
 }
 ''',
@@ -2018,78 +2153,6 @@ extension LocaleFlag on Locale {
 //   /// Get class with translation strings for this locale.
 //   AppLocalizations get tr => lookupAppLocalizations(this);
 // }
-
-class DoubleFlag extends StatelessWidget {
-  final Widget wTop;
-  final Widget wDown;
-
-  final double? radius;
-
-  const DoubleFlag({
-    super.key,
-    required this.wTop,
-    required this.wDown,
-    this.radius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final rad = radius ?? 48;
-    final pad = rad / 6;
-
-    final top = (wTop is Text)
-        ? Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, pad),
-            child: wTop,
-          )
-        : wTop;
-
-    return SizedBox(
-      width: rad,
-      height: rad,
-      child: Stack(
-        children: [
-          Positioned(
-              height: rad,
-              width: rad,
-              top: 0,
-              left: 0,
-              child: FittedBox(fit: BoxFit.fitHeight, child: top)),
-          Positioned(
-              height: rad / 2.2,
-              width: rad / 1.6,
-              top: rad / 1.6,
-              left: rad / 2.2,
-              child: Container(
-                decoration: BoxDecoration(
-                  // shape: BoxShape.circle,
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).canvasColor,
-                  // gradient: LinearGradient(
-                  //     stops: const [0, 0.3, 1],
-                  //     begin: Alignment.topLeft,
-                  //     end: Alignment.bottomRight,
-                  //     colors: [
-                  //       Theme.of(context).cardColor.withAlpha(10),
-                  //       Colors.white,
-                  //       Colors.white,
-                  //       // Colors.white,
-                  //
-                  //       // Theme.of(context).cardColor.withAlpha(20),
-                  //     ])
-                ),
-              )),
-          Positioned(
-              height: rad / 1.6,
-              width: rad / 1.6,
-              top: rad / 2.0,
-              left: rad / 2.3,
-              child: FittedBox(child: wDown)),
-        ],
-      ),
-    );
-  }
-}
 ''',
     'show_select_locale_dialog': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -2554,6 +2617,25 @@ class SelectLocaleButton extends StatelessWidget {
         );
       },
     );
+  }
+}
+''',
+      'state_box_to_access_context': r'''import 'package:flutter/material.dart';
+
+class StateBoxToAccessContext extends StatefulWidget {
+  const StateBoxToAccessContext({
+    super.key,
+  });
+
+  @override
+  State<StateBoxToAccessContext> createState() =>
+      _StateBoxToAccessContextState();
+}
+
+class _StateBoxToAccessContextState extends State<StateBoxToAccessContext> {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(width: 1, height: 1);
   }
 }
 ''',
