@@ -48,7 +48,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        actions: [
+        actions: const [
           // =============== THIS LINE ===============
           LocaleSwitcher.iconButton(),
         ],
@@ -65,7 +65,7 @@ class MyHomePage extends StatelessWidget {
             TitleForLocaleSwitch(
               title: loc.chooseLanguage,
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.custom(
+              child: const LocaleSwitcher.custom(
                 builder: animatedToggleSwitchBuilder,
                 numberOfShown: 2,
               ),
@@ -74,7 +74,7 @@ class MyHomePage extends StatelessWidget {
             TitleForLocaleSwitch(
               title: loc.chooseLanguage,
               // =============== THIS LINE ===============
-              child: LocaleSwitcher.segmentedButton(
+              child: const LocaleSwitcher.segmentedButton(
                 numberOfShown: 2,
               ),
             ),
@@ -85,6 +85,7 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+/// Builder function for [LocaleSwitcher.custom] that used [AnimatedToggleSwitch].
 Widget animatedToggleSwitchBuilder(
     SupportedLocaleNames langCodes, BuildContext context) {
   if (langCodes.length <= 1) {
@@ -93,6 +94,7 @@ Widget animatedToggleSwitchBuilder(
   }
 
   return AnimatedToggleSwitch<LocaleName>.rolling(
+    // package: animated_toggle_switch
     values: langCodes,
     current: LocaleSwitcher.current,
     onChanged: (langCode) {

@@ -1,9 +1,13 @@
 # Changelog
 
+## 1.2.6
+
+* sync with `locale_switcher` - update docs
+
 ## 1.2.2
 
-* sync with `locale_switcher`:
-* Added a lot of languages.
+* sync with `locale_switcher`
+* Added a lot of languages,
 
 * Added graceful ways to display Locales for countries with multiple languages,
   for this purpose added these parameters to [LocaleSwitcher]:
@@ -12,7 +16,7 @@
 - [countriesWithMulti] - list of such countries, add you own here,
 - [popularInCountry] - for [MultiLangCountries.auto] - country most popular language,
 - [multiLangWidget] (default to [MultiLangFlag]),
-- [multiLangForceAll] - force all flags to be displayed via multiLangWidget. 
+- [multiLangForceAll] - force all flags to be displayed via multiLangWidget.
 
 ## 1.1.1
 

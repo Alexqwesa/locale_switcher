@@ -141,7 +141,10 @@ abstract class CurrentSystemLocale {
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
-typedef ItemBuilder = LangIconWithToolTip Function(LocaleName e);
+/// A widget that represent a language, something like [LangIconWithToolTip].
+///
+/// See also: [LocaleName].
+typedef ItemBuilder = Widget Function(LocaleName e);
 
 /// How to display Locales for countries with multiple languages:
 ///
@@ -184,8 +187,14 @@ enum MultiLangCountries {
 ///
 /// Or just provide your own [child] widget.
 class LangIconWithToolTip extends StatelessWidget {
+  /// Prefix for [Tooltip].
+  ///
+  /// [Tooltip.message] = toolTipPrefix + Language
   final String toolTipPrefix;
 
+  /// Radius (Size) of icon.
+  ///
+  /// Default: 48.
   final double? radius;
 
   /// If zero - used Icon, otherwise first N letters of language code.
@@ -609,6 +618,7 @@ class LocaleMatcher {
   /// Global storage of [LocaleName] - instance of [SupportedLocaleNames].
   static SupportedLocaleNames get supported => LocaleStore.supportedLocaleNames;
 
+  /// Try to find [Locale] by name only.
   static LocaleName? byName(String name) {
     if (supported.names.contains(name.toLowerCase())) {
       return supported.entries[supported.names.indexOf(name.toLowerCase())];
@@ -641,7 +651,7 @@ class LocaleMatcher {
   ///
   /// Just wrapper around: [tryFindLocale] and [LocaleSwitcher.current] = newValue;
   ///
-  /// If not found: do [ifLocaleNotFound]
+  /// If not found, will do one of [IfLocaleNotFound].
   static void trySetLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = tryFindLocale(langCode, ifLocaleNotFound: ifLocaleNotFound);
@@ -652,7 +662,7 @@ class LocaleMatcher {
 
   /// Try to find [Locale] by string in [LocaleSwitcher.supportedLocaleNames].
   ///
-  /// If not found: do [ifLocaleNotFound]
+  /// If not found, will do one of [IfLocaleNotFound].
   // todo: similarity check?
   static LocaleName? tryFindLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
@@ -1975,6 +1985,10 @@ final countriesWithMulti = <String, String>{
   'sn': 'ZW',
 };
 
+/// Extension on [String] to convert it to [Locale].
+///
+/// Only special string are supported, like:
+/// LANGCODE, LANGCODE_COUNTRYCODE, LANGCODE_SCRIPT_COUNTRYCODE.
 extension StringToLocale on String {
   /// Convert string to [Locale] object
   Locale toLocale({String separator = '_'}) {
@@ -2041,8 +2055,11 @@ Widget? findFlagFor({String? language, String? country}) {
 }
 
 /// Offset of the emoji flags in Unicode table.
+///
+/// Used by extension [LocaleFlag] on [Locale].emoji.
 const emojiOffset = 127397;
 
+/// An extension on [Locale] add [emoji] and [flag] methods.
 extension LocaleFlag on Locale {
   /// Return Unicode character with flag or languageCode.
   ///
@@ -2077,6 +2094,8 @@ extension LocaleFlag on Locale {
   }
 
   /// Search for a flag for the given locale
+  ///
+  /// See [FlagNotFoundFallBack] for fallbacks.
   Widget? flag(
       {FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.emojiThenFull}) {
     final str = toString();
@@ -2218,10 +2237,17 @@ import 'package:locale_switcher/src/locale_store.dart';
 ///
 /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
 class SupportedLocaleNames with ListMixin<LocaleName> {
-  final List<Locale> supportedLocales;
-  final locales = <Locale?>[];
-  final names = <String>[];
+  /// Subset of [LocaleStore.supportedLocaleNames].
   final entries = <LocaleName>[];
+
+  /// List corresponded Names of [Locale]s for [entries].
+  final names = <String>[];
+
+  /// List corresponded [Locale]s for [entries].
+  final locales = <Locale?>[];
+
+  /// Subset of [locales] with only nonNull values.
+  final List<Locale> supportedLocales;
 
   SupportedLocaleNames(this.supportedLocales, {bool showOsLocale = true}) {
     if (showOsLocale) {
@@ -2241,6 +2267,9 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     }
   }
 
+  /// Create copy of [SupportedLocaleNames],
+  ///
+  /// for internal usage, and tests.
   SupportedLocaleNames.fromEntries(
     Iterable<LocaleName> list, {
     this.supportedLocales = const <Locale>[],
@@ -2260,6 +2289,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     }
   }
 
+  /// Replace last [LocaleName] in this list.
   bool replaceLast({String? str, LocaleName? localeName}) {
     LocaleName? entry = localeName;
 
@@ -2275,7 +2305,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     return false;
   }
 
-  /// Will search [LocaleStore.supportedLocaleNames] for name and add it.
+  /// Will search [LocaleStore.supportedLocaleNames] by name and add found [LocaleName] to this list.
   bool addName(String str) {
     if (str == showOtherLocales) {
       addShowOtherLocales();
@@ -2292,14 +2322,17 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     return false;
   }
 
+  /// Length of this list.
   @override
   int get length => entries.length;
 
+  /// Get entry of this list by index.
   @override
   operator [](int index) {
     return entries[index];
   }
 
+  /// Set entry of this list by index.
   @override
   void operator []=(int index, LocaleName entry) {
     locales[index] = entry.name == systemLocale ? null : entry.locale;
@@ -2307,6 +2340,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     entries[index] = entry;
   }
 
+  /// Set Length of this list.
   @override
   set length(int newLength) {
     entries.length = newLength;
@@ -2656,9 +2690,20 @@ class TitleForLocaleSwitch extends StatelessWidget {
       this.titlePadding = const EdgeInsets.all(4),
       this.childSize});
 
+  /// A widget to switch locale.
   final Widget child;
+
+  /// A size of child.
   final Size? childSize;
+
+  /// Default padding of whole widget.
+  ///
+  /// Default: EdgeInsets.all(8)
   final EdgeInsets padding;
+
+  /// Alignment of column.
+  ///
+  /// Default: CrossAxisAlignment.center
   final CrossAxisAlignment crossAxisAlignment;
 
   /// Title position,
@@ -2666,7 +2711,15 @@ class TitleForLocaleSwitch extends StatelessWidget {
   /// default `true` - on Top
   /// use `false` to show at Left side
   final bool titlePositionTop;
+
+  /// Padding of title.
+  ///
+  /// Default: EdgeInsets.all(4)
   final EdgeInsets titlePadding;
+
+  /// Title text.
+  ///
+  /// Default: 'Choose language:'
   final String? title;
 
   @override
