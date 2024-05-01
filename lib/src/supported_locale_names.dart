@@ -8,10 +8,17 @@ import 'package:locale_switcher/src/locale_store.dart';
 ///
 /// [supportedLocales] should be the same as [MaterialApp].supportedLocales
 class SupportedLocaleNames with ListMixin<LocaleName> {
-  final List<Locale> supportedLocales;
-  final locales = <Locale?>[];
-  final names = <String>[];
+  /// Subset of [LocaleStore.supportedLocaleNames].
   final entries = <LocaleName>[];
+
+  /// List corresponded Names of [Locale]s for [entries].
+  final names = <String>[];
+
+  /// List corresponded [Locale]s for [entries].
+  final locales = <Locale?>[];
+
+  /// Subset of [locales] with only nonNull values.
+  final List<Locale> supportedLocales;
 
   SupportedLocaleNames(this.supportedLocales, {bool showOsLocale = true}) {
     if (showOsLocale) {
@@ -31,6 +38,9 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     }
   }
 
+  /// Create copy of [SupportedLocaleNames],
+  ///
+  /// for internal usage, and tests.
   SupportedLocaleNames.fromEntries(
     Iterable<LocaleName> list, {
     this.supportedLocales = const <Locale>[],
@@ -50,6 +60,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     }
   }
 
+  /// Replace last [LocaleName] in this list.
   bool replaceLast({String? str, LocaleName? localeName}) {
     LocaleName? entry = localeName;
 
@@ -65,7 +76,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     return false;
   }
 
-  /// Will search [LocaleStore.supportedLocaleNames] for name and add it.
+  /// Will search [LocaleStore.supportedLocaleNames] by name and add found [LocaleName] to this list.
   bool addName(String str) {
     if (str == showOtherLocales) {
       addShowOtherLocales();
@@ -82,14 +93,17 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     return false;
   }
 
+  /// Length of this list.
   @override
   int get length => entries.length;
 
+  /// Get entry of this list by index.
   @override
   operator [](int index) {
     return entries[index];
   }
 
+  /// Set entry of this list by index.
   @override
   void operator []=(int index, LocaleName entry) {
     locales[index] = entry.name == systemLocale ? null : entry.locale;
@@ -97,6 +111,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
     entries[index] = entry;
   }
 
+  /// Set Length of this list.
   @override
   set length(int newLength) {
     entries.length = newLength;

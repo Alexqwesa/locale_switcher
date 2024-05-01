@@ -405,6 +405,10 @@ final countriesWithMulti = <String, String>{
   'sn': 'ZW',
 };
 
+/// Extension on [String] to convert it to [Locale].
+///
+/// Only special string are supported, like:
+/// LANGCODE, LANGCODE_COUNTRYCODE, LANGCODE_SCRIPT_COUNTRYCODE.
 extension StringToLocale on String {
   /// Convert string to [Locale] object
   Locale toLocale({String separator = '_'}) {
