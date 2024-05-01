@@ -15,6 +15,7 @@ class LocaleMatcher {
   /// Global storage of [LocaleName] - instance of [SupportedLocaleNames].
   static SupportedLocaleNames get supported => LocaleStore.supportedLocaleNames;
 
+  /// Try to find [Locale] by name only.
   static LocaleName? byName(String name) {
     if (supported.names.contains(name.toLowerCase())) {
       return supported.entries[supported.names.indexOf(name.toLowerCase())];
@@ -47,7 +48,7 @@ class LocaleMatcher {
   ///
   /// Just wrapper around: [tryFindLocale] and [LocaleSwitcher.current] = newValue;
   ///
-  /// If not found: do [ifLocaleNotFound]
+  /// If not found, will do one of [IfLocaleNotFound].
   static void trySetLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {
     var loc = tryFindLocale(langCode, ifLocaleNotFound: ifLocaleNotFound);
@@ -58,7 +59,7 @@ class LocaleMatcher {
 
   /// Try to find [Locale] by string in [LocaleSwitcher.supportedLocaleNames].
   ///
-  /// If not found: do [ifLocaleNotFound]
+  /// If not found, will do one of [IfLocaleNotFound].
   // todo: similarity check?
   static LocaleName? tryFindLocale(String langCode,
       {IfLocaleNotFound ifLocaleNotFound = IfLocaleNotFound.doNothing}) {

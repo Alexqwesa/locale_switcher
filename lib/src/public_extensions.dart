@@ -471,8 +471,11 @@ Widget? findFlagFor({String? language, String? country}) {
 }
 
 /// Offset of the emoji flags in Unicode table.
+///
+/// Used by extension [LocaleFlag] on [Locale].emoji.
 const emojiOffset = 127397;
 
+/// An extension on [Locale] add [emoji] and [flag] methods.
 extension LocaleFlag on Locale {
   /// Return Unicode character with flag or languageCode.
   ///
@@ -507,6 +510,8 @@ extension LocaleFlag on Locale {
   }
 
   /// Search for a flag for the given locale
+  ///
+  /// See [FlagNotFoundFallBack] for fallbacks.
   Widget? flag(
       {FlagNotFoundFallBack? fallBack = FlagNotFoundFallBack.emojiThenFull}) {
     final str = toString();

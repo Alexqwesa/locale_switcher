@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
-typedef ItemBuilder = LangIconWithToolTip Function(LocaleName e);
+/// A widget that represent a language, something like [LangIconWithToolTip].
+///
+/// See also: [LocaleName].
+typedef ItemBuilder = Widget Function(LocaleName e);
 
 /// How to display Locales for countries with multiple languages:
 ///
@@ -45,8 +48,14 @@ enum MultiLangCountries {
 ///
 /// Or just provide your own [child] widget.
 class LangIconWithToolTip extends StatelessWidget {
+  /// Prefix for [Tooltip].
+  ///
+  /// [Tooltip.message] = toolTipPrefix + Language
   final String toolTipPrefix;
 
+  /// Radius (Size) of icon.
+  ///
+  /// Default: 48.
   final double? radius;
 
   /// If zero - used Icon, otherwise first N letters of language code.

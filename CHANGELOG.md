@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.3
+
+* update documentation.
+
 ## 1.2.2
 
 In [LocaleSwitcher]:
