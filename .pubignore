@@ -34,4 +34,4 @@ lib/src/stub/**
 
 coverage/**
 locale_switcher.iml
-example/**
+# example/**

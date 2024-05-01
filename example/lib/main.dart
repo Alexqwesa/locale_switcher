@@ -85,6 +85,7 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+/// Builder function for [LocaleSwitcher.custom] that used [AnimatedToggleSwitch].
 Widget animatedToggleSwitchBuilder(
     SupportedLocaleNames langCodes, BuildContext context) {
   if (langCodes.length <= 1) {
