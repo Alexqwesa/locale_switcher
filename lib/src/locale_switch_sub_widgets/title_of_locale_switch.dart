@@ -15,9 +15,20 @@ class TitleForLocaleSwitch extends StatelessWidget {
       this.titlePadding = const EdgeInsets.all(4),
       this.childSize});
 
+  /// A widget to switch locale.
   final Widget child;
+
+  /// A size of child.
   final Size? childSize;
+
+  /// Default padding of whole widget.
+  ///
+  /// Default: EdgeInsets.all(8)
   final EdgeInsets padding;
+
+  /// Alignment of column.
+  ///
+  /// Default: CrossAxisAlignment.center
   final CrossAxisAlignment crossAxisAlignment;
 
   /// Title position,
@@ -25,7 +36,15 @@ class TitleForLocaleSwitch extends StatelessWidget {
   /// default `true` - on Top
   /// use `false` to show at Left side
   final bool titlePositionTop;
+
+  /// Padding of title.
+  ///
+  /// Default: EdgeInsets.all(4)
   final EdgeInsets titlePadding;
+
+  /// Title text.
+  ///
+  /// Default: 'Choose language:'
   final String? title;
 
   @override
