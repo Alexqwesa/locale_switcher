@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.2.6
+## 1.2.7
 
-* update documentation.
+* fix: [LocaleSwitcher].iconButton now also respect multiLang* options.
 
 ## 1.2.2
 

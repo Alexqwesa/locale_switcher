@@ -29,6 +29,9 @@ class SelectLocaleButton extends StatelessWidget {
                 radius: widget.iconRadius,
                 useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
                 shape: widget.shape,
+                multiLangCountries: widget.multiLangCountries,
+                multiLangForceAll: widget.multiLangForceAll,
+                multiLangWidget: widget.multiLangWidget,
               ),
           onPressed: () => showSelectLocaleDialog(
             context,
