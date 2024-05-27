@@ -3,7 +3,7 @@
 A widget for switching the locale of your application.
 
 [![codecov](https://codecov.io/gh/Alexqwesa/locale_switcher/graph/badge.svg?token=2F9HPWGCQE)](https://codecov.io/gh/Alexqwesa/locale_switcher)
-
+> [Online Example here](https://alexqwesa.github.io/locale_switcher/)
 
 <img align="right" src="https://raw.githubusercontent.com/alexqwesa/locale_switcher/master/screenshot.gif" width="262" height="540">
 
@@ -184,3 +184,7 @@ Locale("en").tr.example
 // or 
 LocaleManager.locale.value.tr.example
 ```
+
+#### - How to watch locale changes?
+
+Use this ValueNotifier<Locale>: [LocaleSwitcher.locale](https://pub.dev/documentation/locale_switcher/latest/locale_switcher/LocaleSwitcher/locale.html)

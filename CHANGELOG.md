@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.8
+
+* fix [LocaleManager] always update child.
+
 ## 1.2.7
 
 * fix: [LocaleSwitcher].iconButton now also respect multiLang* options.

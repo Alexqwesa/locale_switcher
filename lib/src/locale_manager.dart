@@ -148,6 +148,8 @@ class _LocaleManagerState extends State<LocaleManager> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return ValueListenableBuilder(
+        valueListenable: LocaleSwitcher.locale,
+        builder: (context, _, unUsed) => widget.child);
   }
 }
