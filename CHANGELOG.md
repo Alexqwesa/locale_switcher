@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.2.8
+## 1.2.9
 
-* fix [LocaleManager] always update child.
+* fix [LocaleManager] always update parents.
 
 ## 1.2.7
 

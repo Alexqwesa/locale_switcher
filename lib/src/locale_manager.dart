@@ -77,10 +77,16 @@ class LocaleManager extends StatefulWidget {
 
 class _LocaleManagerState extends State<LocaleManager> {
   void updateParent() => setState(() {
+        // Element? rootElement;
         context.visitAncestorElements((element) {
+          // rootElement = element;
           element.markNeedsBuild();
-          return false; // rebuild only first parent
+          return true;
         });
+        // (since locale is global - change of locale is global event)
+        // if (rootElement != null) {
+        //   rootElement!.markNeedsBuild();
+        // }
       });
 
   /// init [LocaleStore]'s supportedLocales
