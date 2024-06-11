@@ -18,8 +18,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // <MyApp> is optional here:
     // ============= THIS 4 LINES ARE REQUIRED =============
-    return LocaleManager<MyApp>( // <MyApp> is optional here
+    return LocaleManager<MyApp>(
       child: MaterialApp(
         locale: LocaleSwitcher.localeBestMatch,
         supportedLocales: AppLocalizations.supportedLocales,

@@ -1,6 +1,4 @@
-final package = <String, dynamic>{
-  'locale_switcher':
-      r'''/// # A widget for switching the locale of your application.
+final package = <String, dynamic>{  'locale_switcher': r'''/// # A widget for switching the locale of your application.
 ///
 library locale_switcher;
 
@@ -17,8 +15,8 @@ export 'package:locale_switcher/src/public_extensions.dart';
 export 'package:locale_switcher/src/show_select_locale_dialog.dart';
 export 'package:locale_switcher/src/supported_locale_names.dart';
 ''',
-  'src': <String, dynamic>{
-    'current_locale': r'''import 'package:flutter/material.dart';
+ 
+    'src': <String, dynamic>{  'current_locale': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_system_locale.dart';
 import 'package:locale_switcher/src/locale_store.dart';
@@ -104,7 +102,7 @@ abstract class CurrentLocale extends CurrentSystemLocale {
   }
 }
 ''',
-    'current_system_locale': r'''import 'package:flutter/material.dart';
+  'current_system_locale': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/src/locale_observable.dart';
 
 /// Observe change in system locale.
@@ -137,7 +135,7 @@ abstract class CurrentSystemLocale {
   }
 }
 ''',
-    'lang_icon_with_tool_tip': r'''import 'package:flutter/material.dart';
+  'lang_icon_with_tool_tip': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
@@ -447,7 +445,7 @@ class LangIconWithToolTip extends StatelessWidget {
   }
 }
 ''',
-    'locale_manager': r'''import 'package:flutter/cupertino.dart';
+  'locale_manager': r'''import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
@@ -460,7 +458,7 @@ import 'package:locale_switcher/src/locale_store.dart';
 /// - Setup(and activate) auto-save of the current locale to [SharedPreferences].
 /// - Loads the last used locale from [SharedPreferences] (on first load only).
 // todo: deactivate observing changes in the system locale(if not used).
-class LocaleManager extends StatefulWidget {
+class LocaleManager<T> extends StatefulWidget {
   /// Either [MaterialApp] or [CupertinoApp].
   final Widget child;
 
@@ -521,15 +519,30 @@ class LocaleManager extends StatefulWidget {
   });
 
   @override
-  State<LocaleManager> createState() => _LocaleManagerState();
+  _LocaleManagerState<T> createState() => _LocaleManagerState<T>();
 }
 
-class _LocaleManagerState extends State<LocaleManager> {
-  void updateParent() => setState(() {
-        context.visitAncestorElements((element) {
-          element.markNeedsBuild();
-          return false; // rebuild only first parent
-        });
+class _LocaleManagerState<T> extends State<LocaleManager> {
+  void updateParent({bool forceAll = false}) => setState(() {
+        if (T == dynamic || forceAll) {
+          context.visitAncestorElements((element) {
+            element.markNeedsBuild();
+            return true;
+          });
+        } else {
+          bool found = false;
+          context.visitAncestorElements((element) {
+            if (element.widget.runtimeType == T) {
+              found = true;
+              element.markNeedsBuild();
+              return false;
+            }
+            return true;
+          });
+          if (!found) {
+            updateParent(forceAll: true);
+          }
+        }
       });
 
   /// init [LocaleStore]'s supportedLocales
@@ -601,7 +614,7 @@ class _LocaleManagerState extends State<LocaleManager> {
   }
 }
 ''',
-    'locale_matcher': r'''import 'dart:ui';
+  'locale_matcher': r'''import 'dart:ui';
 
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
@@ -689,7 +702,7 @@ class LocaleMatcher {
   }
 }
 ''',
-    'locale_name': r'''import 'package:flutter/widgets.dart';
+  'locale_name': r'''import 'package:flutter/widgets.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 import 'package:locale_switcher/src/system_locale_name.dart';
@@ -788,7 +801,7 @@ class LocaleName {
   }
 }
 ''',
-    'locale_observable': r'''import 'package:flutter/foundation.dart';
+  'locale_observable': r'''import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 class TestablePlatformDispatcher {
@@ -815,7 +828,7 @@ class LocaleObserver extends WidgetsBindingObserver {
   }
 }
 ''',
-    'locale_store': r'''import 'package:flutter/material.dart';
+  'locale_store': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/preference_repository.dart';
 
@@ -873,7 +886,7 @@ abstract class LocaleStore {
   }
 }
 ''',
-    'locale_switcher': r'''import 'package:flutter/cupertino.dart';
+  'locale_switcher': r'''import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
@@ -1389,7 +1402,7 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
   }
 }
 ''',
-    'multi_lang_flag': r'''import 'package:flutter/material.dart';
+  'multi_lang_flag': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
 /// Builder function for [LocaleSwitcher.multiLangWidget].
@@ -1481,7 +1494,7 @@ class MultiLangFlag extends StatelessWidget {
   }
 }
 ''',
-    'preference_repository': r'''import 'package:flutter/widgets.dart';
+  'preference_repository': r'''import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceRepository {
@@ -1504,8 +1517,7 @@ class PreferenceRepository {
   static void sendGlobalKeyToRepository(GlobalKey key) {}
 }
 ''',
-    'preference_repository_easy_localization':
-        r'''// ignore_for_file: depend_on_referenced_packages
+  'preference_repository_easy_localization': r'''// ignore_for_file: depend_on_referenced_packages
 
 import 'dart:developer' as dev;
 
@@ -1556,7 +1568,7 @@ class PreferenceRepository {
   }
 }
 ''',
-    'preference_repository_stub': r'''import 'package:flutter/widgets.dart';
+  'preference_repository_stub': r'''import 'package:flutter/widgets.dart';
 
 /// Stub class, in case: shared_preferences: false
 class PreferenceRepository {
@@ -1578,7 +1590,7 @@ class PreferenceRepository {
   static void sendGlobalKeyToRepository(GlobalKey key) {}
 }
 ''',
-    'public_extensions': r'''import 'package:flutter/material.dart';
+  'public_extensions': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/generated/asset_strings.dart';
 
@@ -2173,7 +2185,7 @@ extension LocaleFlag on Locale {
 //   AppLocalizations get tr => lookupAppLocalizations(this);
 // }
 ''',
-    'show_select_locale_dialog': r'''import 'package:flutter/material.dart';
+  'show_select_locale_dialog': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 
 /// Show popup dialog to select Language.
@@ -2227,7 +2239,7 @@ Future<void> showSelectLocaleDialog(
   );
 }
 ''',
-    'supported_locale_names': r'''import 'dart:collection';
+  'supported_locale_names': r'''import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -2373,7 +2385,7 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
       languageToCountry[showOtherLocales]?[2] ?? const Icon(Icons.expand_more);
 }
 ''',
-    'system_locale_name': r'''import 'dart:ui';
+  'system_locale_name': r'''import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -2393,8 +2405,8 @@ class SystemLocaleName extends LocaleName {
   }) : super(name: systemLocale);
 }
 ''',
-    'locale_switch_sub_widgets': <String, dynamic>{
-      'drop_down_menu_language_switch': r'''import 'dart:math';
+ 
+    'locale_switch_sub_widgets': <String, dynamic>{  'drop_down_menu_language_switch': r'''import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -2473,7 +2485,7 @@ class DropDownMenuLanguageSwitch extends StatelessWidget {
   }
 }
 ''',
-      'grid_of_languages': r'''import 'package:flutter/material.dart';
+  'grid_of_languages': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/locale_store.dart';
 
@@ -2534,7 +2546,7 @@ class GridOfLanguages extends StatelessWidget {
   }
 }
 ''',
-      'segmented_button_switch': r'''import 'dart:math';
+  'segmented_button_switch': r'''import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -2610,7 +2622,7 @@ class SegmentedButtonSwitch extends StatelessWidget {
   }
 }
 ''',
-      'select_locale_button': r'''import 'package:flutter/material.dart';
+  'select_locale_button': r'''import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
 import 'package:locale_switcher/src/current_locale.dart';
 
@@ -2641,6 +2653,9 @@ class SelectLocaleButton extends StatelessWidget {
                 radius: widget.iconRadius,
                 useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
                 shape: widget.shape,
+                multiLangCountries: widget.multiLangCountries,
+                multiLangForceAll: widget.multiLangForceAll,
+                multiLangWidget: widget.multiLangWidget,
               ),
           onPressed: () => showSelectLocaleDialog(
             context,
@@ -2654,7 +2669,7 @@ class SelectLocaleButton extends StatelessWidget {
   }
 }
 ''',
-      'state_box_to_access_context': r'''import 'package:flutter/material.dart';
+  'state_box_to_access_context': r'''import 'package:flutter/material.dart';
 
 class StateBoxToAccessContext extends StatefulWidget {
   const StateBoxToAccessContext({
@@ -2673,7 +2688,7 @@ class _StateBoxToAccessContextState extends State<StateBoxToAccessContext> {
   }
 }
 ''',
-      'title_of_locale_switch': r'''import 'dart:math';
+  'title_of_locale_switch': r'''import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:locale_switcher/locale_switcher.dart';
@@ -2776,6 +2791,7 @@ class TitleForLocaleSwitch extends StatelessWidget {
   }
 }
 ''',
-    },
-  },
+},
+ 
+},
 };
