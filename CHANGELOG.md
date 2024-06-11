@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1
+
+* sync with `locale_switcher` 
+
 ## 1.2.6
 
 * sync with `locale_switcher` - update docs

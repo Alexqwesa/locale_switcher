@@ -460,7 +460,7 @@ import 'package:locale_switcher/src/locale_store.dart';
 /// - Setup(and activate) auto-save of the current locale to [SharedPreferences].
 /// - Loads the last used locale from [SharedPreferences] (on first load only).
 // todo: deactivate observing changes in the system locale(if not used).
-class LocaleManager extends StatefulWidget {
+class LocaleManager<T> extends StatefulWidget {
   /// Either [MaterialApp] or [CupertinoApp].
   final Widget child;
 
@@ -521,15 +521,30 @@ class LocaleManager extends StatefulWidget {
   });
 
   @override
-  State<LocaleManager> createState() => _LocaleManagerState();
+  _LocaleManagerState<T> createState() => _LocaleManagerState<T>();
 }
 
-class _LocaleManagerState extends State<LocaleManager> {
-  void updateParent() => setState(() {
-        context.visitAncestorElements((element) {
-          element.markNeedsBuild();
-          return false; // rebuild only first parent
-        });
+class _LocaleManagerState<T> extends State<LocaleManager> {
+  void updateParent({bool forceAll = false}) => setState(() {
+        if (T == dynamic || forceAll) {
+          context.visitAncestorElements((element) {
+            element.markNeedsBuild();
+            return true;
+          });
+        } else {
+          bool found = false;
+          context.visitAncestorElements((element) {
+            if (element.widget.runtimeType == T) {
+              found = true;
+              element.markNeedsBuild();
+              return false;
+            }
+            return true;
+          });
+          if (!found) {
+            updateParent(forceAll: true);
+          }
+        }
       });
 
   /// init [LocaleStore]'s supportedLocales
@@ -1172,6 +1187,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.builder,
     this.numberOfShown = 4,
     this.showOsLocale = true,
+    this.multiLangForceAll = false,
+    this.multiLangWidget,
+    this.multiLangCountries = MultiLangCountries.auto,
   })  : type = LocaleSwitcherType.custom,
         title = '',
         useStaticIcon = null,
@@ -1179,9 +1197,6 @@ class LocaleSwitcher extends StatefulWidget {
         showLeading = true,
         gridDelegate = null,
         useEmoji = false,
-        multiLangForceAll = false,
-        multiLangWidget = null,
-        multiLangCountries = MultiLangCountries.auto,
         specialFlagsPadding = 0,
         shape = const CircleBorder(eccentricity: 0),
         iconRadius = 32,
@@ -1293,7 +1308,11 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
     );
 
     if (!locales.names.contains(LocaleSwitcher.current.name)) {
-      locales.replaceLast(localeName: LocaleSwitcher.current);
+      if (widget.numberOfShown < locales.length) {
+        locales.replaceLast(localeName: LocaleSwitcher.current);
+      } else {
+        locales.add(LocaleSwitcher.current);
+      }
     }
     if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
       locales
@@ -2343,9 +2362,17 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
   /// Set Length of this list.
   @override
   set length(int newLength) {
-    entries.length = newLength;
-    locales.length = newLength;
-    names.length = newLength;
+    // entries.length = newLength;
+    // locales.length = newLength;
+    // names.length = newLength;
+  }
+
+  // List interface.
+  @override
+  void add(LocaleName element) {
+    locales.add(element.locale);
+    names.add(element.name);
+    entries.add(element);
   }
 
   /// Add special entry into [SupportedLocaleNames].
@@ -2641,6 +2668,9 @@ class SelectLocaleButton extends StatelessWidget {
                 radius: widget.iconRadius,
                 useNLettersInsteadOfIcon: widget.useNLettersInsteadOfIcon,
                 shape: widget.shape,
+                multiLangCountries: widget.multiLangCountries,
+                multiLangForceAll: widget.multiLangForceAll,
+                multiLangWidget: widget.multiLangWidget,
               ),
           onPressed: () => showSelectLocaleDialog(
             context,
