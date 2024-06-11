@@ -1,8 +1,9 @@
 # Changelog
 
-## 1.2.9
+## 1.3.0
 
-* fix [LocaleManager] always update parents.
+* Optional: allow [LocaleManager<MyApp>] to only update MyApp parent on language change
+(by default LocaleManager will update all parents).
 
 ## 1.2.7
 

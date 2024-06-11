@@ -11,7 +11,7 @@ import 'package:locale_switcher/src/locale_store.dart';
 /// - Setup(and activate) auto-save of the current locale to [SharedPreferences].
 /// - Loads the last used locale from [SharedPreferences] (on first load only).
 // todo: deactivate observing changes in the system locale(if not used).
-class LocaleManager extends StatefulWidget {
+class LocaleManager<T> extends StatefulWidget {
   /// Either [MaterialApp] or [CupertinoApp].
   final Widget child;
 
@@ -72,21 +72,30 @@ class LocaleManager extends StatefulWidget {
   });
 
   @override
-  State<LocaleManager> createState() => _LocaleManagerState();
+  _LocaleManagerState<T> createState() => _LocaleManagerState<T>();
 }
 
-class _LocaleManagerState extends State<LocaleManager> {
-  void updateParent() => setState(() {
-        // Element? rootElement;
-        context.visitAncestorElements((element) {
-          // rootElement = element;
-          element.markNeedsBuild();
-          return true;
-        });
-        // (since locale is global - change of locale is global event)
-        // if (rootElement != null) {
-        //   rootElement!.markNeedsBuild();
-        // }
+class _LocaleManagerState<T> extends State<LocaleManager> {
+  void updateParent({bool forceAll = false}) => setState(() {
+        if (T == dynamic || forceAll) {
+          context.visitAncestorElements((element) {
+            element.markNeedsBuild();
+            return true;
+          });
+        } else {
+          bool found = false;
+          context.visitAncestorElements((element) {
+            if (element.widget.runtimeType == T) {
+              found = true;
+              element.markNeedsBuild();
+              return false;
+            }
+            return true;
+          });
+          if (!found) {
+            updateParent(forceAll: true);
+          }
+        }
       });
 
   /// init [LocaleStore]'s supportedLocales
@@ -154,8 +163,6 @@ class _LocaleManagerState extends State<LocaleManager> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: LocaleSwitcher.locale,
-        builder: (context, _, unUsed) => widget.child);
+    return widget.child;
   }
 }
