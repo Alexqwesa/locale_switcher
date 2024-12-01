@@ -297,6 +297,9 @@ class LocaleSwitcher extends StatefulWidget {
     this.builder,
     this.numberOfShown = 4,
     this.showOsLocale = true,
+    this.multiLangForceAll = false,
+    this.multiLangWidget,
+    this.multiLangCountries = MultiLangCountries.auto,
   })  : type = LocaleSwitcherType.custom,
         title = '',
         useStaticIcon = null,
@@ -304,9 +307,6 @@ class LocaleSwitcher extends StatefulWidget {
         showLeading = true,
         gridDelegate = null,
         useEmoji = false,
-        multiLangForceAll = false,
-        multiLangWidget = null,
-        multiLangCountries = MultiLangCountries.auto,
         specialFlagsPadding = 0,
         shape = const CircleBorder(eccentricity: 0),
         iconRadius = 32,
@@ -418,7 +418,11 @@ class _LocaleSwitcherState extends State<LocaleSwitcher> {
     );
 
     if (!locales.names.contains(LocaleSwitcher.current.name)) {
-      locales.replaceLast(localeName: LocaleSwitcher.current);
+      if (widget.numberOfShown < locales.length) {
+        locales.replaceLast(localeName: LocaleSwitcher.current);
+      } else {
+        locales.add(LocaleSwitcher.current);
+      }
     }
     if (LocaleStore.supportedLocales.length > widget.numberOfShown) {
       locales

@@ -1,9 +1,15 @@
 # Changelog
 
+## 1.3.1
+
+* Added MultiLang parameters to LocaleManager.custom,
+* Current locale flag didn't replace last flag if LocaleManager.numberOfShown bigger
+  than number of currently displayed flags.
+
 ## 1.3.0
 
 * Optional: allow [LocaleManager<MyApp>] to only update MyApp parent on language change
-(by default LocaleManager will update all parents).
+  (by default LocaleManager will update all parents).
 
 ## 1.2.7
 

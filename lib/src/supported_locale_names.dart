@@ -114,9 +114,17 @@ class SupportedLocaleNames with ListMixin<LocaleName> {
   /// Set Length of this list.
   @override
   set length(int newLength) {
-    entries.length = newLength;
-    locales.length = newLength;
-    names.length = newLength;
+    // entries.length = newLength;
+    // locales.length = newLength;
+    // names.length = newLength;
+  }
+
+  // List interface.
+  @override
+  void add(LocaleName element) {
+    locales.add(element.locale);
+    names.add(element.name);
+    entries.add(element);
   }
 
   /// Add special entry into [SupportedLocaleNames].
